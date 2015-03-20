@@ -1,0 +1,25 @@
+{
+  "name": "ember-cli-solr",
+  "description": "Solr adapter for Ember Data",
+  "version": "0.0.0",
+  "options": {
+    "paths": [
+      "addon"
+    ],
+    "exclude": "vendor",
+    "outdir": "docs"
+  },
+      "external": {
+      "data": [
+        {
+          "base": "http://emberjs.com/api/",
+          "json": "http://builds.emberjs.com/tags/v1.10.0/ember-docs.json"
+        },
+        {
+          "base": "http://emberjs.com/api/data/",
+          "json": "http://builds.emberjs.com/tags/v1.0.0-beta.6/ember-data-docs.json"
+        }
+      ]
+    }
+
+}
