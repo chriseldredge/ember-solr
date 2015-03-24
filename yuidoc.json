@@ -1,7 +1,6 @@
 {
   "name": "ember-cli-solr",
   "description": "Solr adapter for Ember Data",
-  "version": "0.0.0",
   "options": {
     "paths": [
       "addon"
