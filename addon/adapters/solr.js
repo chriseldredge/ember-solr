@@ -12,6 +12,8 @@ import {
 
 import SolrRequest from 'ember-solr/requests/request';
 
+const forEach = Ember.ArrayPolyfills.forEach;
+
 /**
   Ember Data Adapter for Apache Solr.
   @class SolrAdapter
@@ -95,7 +97,7 @@ export default DS.Adapter.extend({
 
     @method findAll
   */
-  findAll: function(store, type, sinceToken) {
+  findAll: function(store, type) {
     var request = this.buildRequest(type.typeKey, 'findAll');
 
     return this.executeRequest(request);
@@ -174,7 +176,7 @@ export default DS.Adapter.extend({
       core: this.coreForType(type, operation),
       handler: handler,
       data: data
-    })
+    });
   },
 
   /**
@@ -251,7 +253,7 @@ export default DS.Adapter.extend({
     @return {String} core name
     @protected
   */
-  coreForType: function(type, operation) {
+  coreForType: function() {
     return this.get('defaultCore');
   },
 
@@ -264,7 +266,7 @@ export default DS.Adapter.extend({
     @return {String}
     @protected
   */
-  uniqueKeyForType: function(type) {
+  uniqueKeyForType: function() {
     return 'id';
   },
 
@@ -316,7 +318,7 @@ export default DS.Adapter.extend({
     @return {String} a filter query or `null`
     @protected
   */
-  filterQueryForType: function(type) {
+  filterQueryForType: function() {
     return null;
   },
 
@@ -348,12 +350,14 @@ export default DS.Adapter.extend({
     @return {string}
     @protected
   */
-  combinePath: function(path1, path2) {
+  combinePath: function(path1) {
     var s = path1;
 
     for (var i = 1; i < arguments.length; i++) {
       var part = arguments[i];
-      if (!part) continue;
+      if (!part) {
+        continue;
+      }
 
       if (s[s.length - 1] !== '/' && part[0] !== '/') {
         s += '/';

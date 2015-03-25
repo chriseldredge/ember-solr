@@ -2,7 +2,7 @@ import Ember from 'ember';
 import SolrRequest from 'ember-solr/requests/request';
 import { module, test } from 'qunit';
 
-module('requests');
+module('SolrRequest');
 
 test('init binds method', function(assert) {
   Ember.run(function() {

@@ -2,7 +2,6 @@
   @module solr
 */
 
-import Ember from 'ember';
 import DS from 'ember-data';
 
 /**

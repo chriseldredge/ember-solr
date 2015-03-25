@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import DS from 'ember-data';
 import SolrAdapter from '../adapters/solr';
 import SolrSerializer from '../serializers/solr';
