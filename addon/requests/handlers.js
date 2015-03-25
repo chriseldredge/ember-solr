@@ -6,7 +6,7 @@ import Ember from 'ember';
 import DS from 'ember-data';
 
 /**
-  An enumeration of handler types that `ember-cli-solr`
+  An enumeration of handler types that `ember-solr`
   knows how to interact with.
 
   @class SolrHandlerType

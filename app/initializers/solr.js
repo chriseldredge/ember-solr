@@ -1,3 +1,3 @@
-import SolrInitializer from 'solr/initializers/solr';
+import SolrInitializer from 'ember-solr/initializers/solr';
 
 export default SolrInitializer;

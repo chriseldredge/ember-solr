@@ -8,9 +8,9 @@ import {
   SolrHandlerType,
   SolrSearchHandler,
   SolrRealTimeGetHandler
-} from 'solr/requests/handlers';
+} from 'ember-solr/requests/handlers';
 
-import SolrRequest from 'solr/requests/request';
+import SolrRequest from 'ember-solr/requests/request';
 
 /**
   Ember Data Adapter for Apache Solr.

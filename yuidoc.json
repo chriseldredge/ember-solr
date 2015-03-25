@@ -1,5 +1,5 @@
 {
-  "name": "ember-cli-solr",
+  "name": "ember-solr",
   "description": "Solr adapter for Ember Data",
   "options": {
     "paths": [

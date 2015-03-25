@@ -2,7 +2,7 @@
 'use strict';
 
 module.exports = {
-  name: 'Solr',
+  name: 'ember-solr',
 
   config: function(environment, appConfig) {
     if (!appConfig.solrBaseURL || appConfig.solrBaseURL.indexOf(':') === -1) {
