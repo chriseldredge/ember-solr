@@ -40,7 +40,10 @@
     "solr"
   ],
   "dependencies": {
-    "ember-cli-babel": "^4.0.0"
+    "chalk": "^1.0.0",
+    "ember-cli-babel": "^4.0.0",
+    "fs-extra": "^0.16.5",
+    "rsvp": "^3.0.17"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
