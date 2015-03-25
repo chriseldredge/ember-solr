@@ -33,7 +33,8 @@
     "ember-export-application-global": "^1.0.2"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "solr"
   ],
   "dependencies": {
     "ember-cli-babel": "^4.0.0"
