@@ -4,6 +4,13 @@
 
 import Ember from 'ember';
 import DS from 'ember-data';
+import {
+  SolrHandlerType,
+  SolrSearchHandler,
+  SolrRealTimeGetHandler
+} from 'solr/requests/handlers';
+
+import SolrRequest from 'solr/requests/request';
 
 /**
   Ember Data Adapter for Apache Solr.
@@ -34,17 +41,6 @@ export default DS.Adapter.extend({
   defaultCore: null,
 
   /**
-    Specifies a default handler to send requests to.
-    Standard Solr configurations include request handlers
-    like `/select`, `/search`, `/get`, etc.
-
-    @property defaultHandler
-    @type {string}
-    @default '/select'
-  */
-  defaultHandler: '/select',
-
-  /**
     Sets the default serializer for this adapter.
     Uses {{#crossLink "SolrSerializer"}}{{/crossLink}} by default.
     @property defaultSerializer
@@ -65,23 +61,124 @@ export default DS.Adapter.extend({
   */
   dataType: 'jsonp',
 
+  /**
+    Enables or disables sending requests to Solr's
+    Real Time Get handler. Note that this handler is
+    disabled by default on many Solr servers.
+
+    Real Time Get allows retrieval of documents that
+    have not yet been committed by retrieving them from
+    the update log.
+
+    If you are using SolrCloud, it is generally safe to
+    enable this feature.
+
+    @property enableRealTimeGet
+    @type {boolean}
+    @default `false`
+  */
+  enableRealTimeGet: false,
+
+  /**
+    Find a record by its unique ID.
+
+    @method find
+  */
   find: function(store, type, id) {
-    // TODO: support real-time get handler
-    return this.findQuery(store, type, {q: 'id:' + id});
-  },
+    var request = this.buildRequest(type.typeKey, 'find', id);
 
-  findQuery: function(store, type, query) {
-    var URL = this.buildURL(type.typeKey);
-    var solrQuery = this.buildSolrQuery(type.typeKey, query);
-    var options = {
-      data: solrQuery,
-    };
-
-    return this.ajax(URL, 'GET', options);
+    return this.executeRequest(request);
   },
 
   /**
-    Builds a Solr query to send in a request.
+    Find all documents of a type.
+
+    @method findAll
+  */
+  findAll: function(store, type, sinceToken) {
+    var request = this.buildRequest(type.typeKey, 'findAll');
+
+    return this.executeRequest(request);
+  },
+
+  /**
+    Find multiple documents in a single request.
+
+    @method findMany
+  */
+  findMany: function(store, type, ids) {
+    var request = this.buildRequest(type.typeKey, 'findMany', ids);
+
+    return this.executeRequest(request);
+  },
+
+  /**
+    Find one or more records by arbitrary query
+
+    The query hash should include the key `q` with
+    an appropriate Solr query to execute. If this key
+    is not specified, `*:*` will be used to match all
+    documents.
+
+    The query hash may include the keys `limit` and/or
+    `offset` to override the Solr request handler's
+    page size and retrieve rows from a given offset.
+
+    @method findQuery
+  */
+  findQuery: function(store, type, query) {
+    var request = this.buildRequest(type.typeKey, 'findQuery', query);
+
+    return this.executeRequest(request);
+  },
+
+  /**
+    Builds a request to send to Solr.
+
+    @method buildRequest
+    @param {string} type the model type
+    @param {string} operation one of `find`, `findQuery`, etc.
+    @param {data} data to be sent in the request
+    @return {SolrRequest} request
+    @protected
+  */
+  buildRequest: function(type, operation, data) {
+    var handler = this.handlerForType(type, operation);
+    var key = this.uniqueKeyForType(type);
+
+    if (handler.get('type') === SolrHandlerType.RealTimeGet) {
+      query = {};
+      query[key] = data;
+      data = query;
+    } else {
+      data = data || {};
+
+      if (Array.isArray(data)) {
+        var query = data.map(function(id) {
+          return key + ':' + id;
+        }).join(' OR ');
+
+        data = {
+          q: query
+        };
+      } else if (typeof data !== 'object') {
+        data = {
+          q: key + ':' + data
+        };
+      }
+
+      data = this.buildSolrQuery(type, operation, data);
+    }
+
+    return SolrRequest.create({
+      core: this.coreForType(type, operation),
+      handler: handler,
+      data: data
+    })
+  },
+
+  /**
+    Builds a Solr query to send in a search request.
     This method applies some defaults and converts
     idiomatic Ember query parameters to their
     Solr corollaries.
@@ -90,15 +187,20 @@ export default DS.Adapter.extend({
     * Converts `limit` to `rows`
     * Converts `offset` to `start`
     * Defaults to `q=*:*` when no query is specified
+    * Calls {{#crossLink "SolrAdapter/filterQueryForType:method"}}{{/crossLink}}
+    and sets `fq` when a non-blank filter query is returned
 
     Overrides of this method can return an object that includes
     other query options. Multipe `fq` parameters (and others)
-    can be defined by using an array for the value:
+    can be defined by using an array for the values:
     ```javascript
     App.ApplicationAdapter = SolrAdapter.extend({
       buildSolrQuery: function(type, query) {
         return {
-          fq: ['type:' + type, 'public:true']
+          fq: [
+            'type:' + type,
+            'public:true'
+          ]
         };
       }
     });
@@ -109,10 +211,12 @@ export default DS.Adapter.extend({
 
     @method buildSolrQuery
     @param {String} type
+    @param {String} operation
     @param {Object} query
     @return {Object} data hash for ajax request
+    @protected
   */
-  buildSolrQuery: function(type, query) {
+  buildSolrQuery: function(type, operation, query) {
     var solrQuery = {
       wt: 'json',
       fq: []
@@ -137,21 +241,101 @@ export default DS.Adapter.extend({
   },
 
   /**
-    Combines
-    {{#crossLink "SolrAdapter/baseURL:property"}}{{/crossLink}},
-    {{#crossLink "SolrAdapter/coreForType:method"}}{{/crossLink}},
-    and
-    {{#crossLink "SolrAdapter/handlerForType:method"}}{{/crossLink}}
-    into a request URL.
-    @method buildURL
+    Determines which Solr Core should handle queries for
+    a given type and oepration. By default,
+    {{#crossLink "SolrAdapter/defaultCore:property"}}{{/crossLink}}
+    is used.
+    @method coreForType
     @param {String} type
-    @return {String} A relative or absolute URL
+    @param {String} operation
+    @return {String} core name
+    @protected
   */
-  buildURL: function(type) {
-    return this.combinePath(
+  coreForType: function(type, operation) {
+    return this.get('defaultCore');
+  },
+
+  /**
+    Determines the [unique key](https://wiki.apache.org/solr/UniqueKey)
+    for a given type. Default Solr schemas use the canonical field `id`
+    and this method defaults to the same field.
+    @method uniqueKeyForType
+    @param {String} type
+    @return {String}
+    @protected
+  */
+  uniqueKeyForType: function(type) {
+    return 'id';
+  },
+
+  /**
+    Determines which Solr Core should handle queries for
+    a given type and operation.
+
+    When
+    {{#crossLink "SolrAdapter/enableRealTimeGet:property"}}{{/crossLink}}
+    is set to `true`, this method will choose RealTimeGet
+    for `find` and `findMany` operations.
+
+    Override this method to customize the path and type
+    of handler that should be used for given operations.
+
+    @method handlerForType
+    @param {String} type
+    @param {String} operation
+    @return {SolrRequestHandler} handler instance
+    @protected
+  */
+  handlerForType: function(type, operation) {
+    var enableRealTimeGet = this.get('enableRealTimeGet');
+
+    if (enableRealTimeGet &&
+        (operation === 'find' || operation === 'findMany')) {
+      return SolrRealTimeGetHandler.create();
+    }
+
+    return SolrSearchHandler.create();
+  },
+
+  /**
+    Builds an optional filter query (`fq`) to include in search requests.
+    If multiple models are stored in the same Solr Core, applying
+    an appropriate filter query will ensure only the documents of
+    the appropriate type are included.
+    Example
+    ```javascript
+    App.ApplicationAdapter = SolrAdapter.extend({
+      filterQueryForType: function(type) {
+        return 'doc_type:' + type;
+      }
+    });
+    ```
+    See [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters#fq).
+    @method filterQueryForType
+    @param {String} type
+    @return {String} a filter query or `null`
+    @protected
+  */
+  filterQueryForType: function(type) {
+    return null;
+  },
+
+  /**
+    Builds a complete URL and initiates
+    an AJAX request to Solr.
+
+    @method executeRequest
+    @param {SolrRequest} request
+    @return {Promise} promise
+    @protcted
+  */
+  executeRequest: function(request) {
+    var URL = this.combinePath(
       this.get('baseURL'),
-      this.coreForType(type),
-      this.handlerForType(type));
+      request.get('core'),
+      request.get('handler.path'));
+
+    return this.ajax(URL, request.get('method'), request.get('options'));
   },
 
   /**
@@ -183,52 +367,6 @@ export default DS.Adapter.extend({
     return s;
   },
 
-  /**
-    Determines which Solr Core should handle queries for
-    a given type. By default, {{#crossLink "SolrAdapter/defaultCore:property"}}{{/crossLink}}
-    is used.
-    @method coreForType
-    @param {String} type
-    @return {String} core name
-  */
-  coreForType: function(type) {
-    return this.get('defaultCore');
-  },
-
-  /**
-    Determines which Solr Core should handle queries for
-    a given type. By default, {{#crossLink "SolrAdapter/defaultHandler:property"}}{{/crossLink}}
-    is used.
-    @method handlerForType
-    @param {String} type
-    @return {String} handler
-  */
-  handlerForType: function(type) {
-    return this.get('defaultHandler');
-  },
-
-  /**
-    Builds an optional filter query (`fq`) to include in requests.
-    If multiple models are stored in the same Solr Core, applying
-    an appropriate filter query will ensure only the documents of
-    the appropriate type are included.
-    Example
-    ```javascript
-    App.ApplicationAdapter = SolrAdapter.extend({
-      filterQueryForType: function(type) {
-        return 'doc_type:' + type;
-      }
-    });
-    ```
-    See [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters#fq).
-    @method filterQueryForType
-    @param {String} type
-    @return {String} a filter query or `null`
-  */
-  filterQueryForType: function(type) {
-    return null;
-  },
-
     /**
     Takes a URL, an HTTP method and a hash of data, and makes an
     HTTP request.
@@ -248,6 +386,7 @@ export default DS.Adapter.extend({
     @param {String} type The request type GET, POST, PUT, DELETE etc.
     @param {Object} options
     @return {Promise} promise
+    @protected
   */
   ajax: function(url, type, options) {
     var adapter = this;
@@ -279,6 +418,7 @@ export default DS.Adapter.extend({
     @param {String} type The request type GET, POST, PUT, DELETE etc.
     @param {Object} options
     @return {Object}
+    @protected
   */
   ajaxOptions: function(url, type, options) {
     var hash = options || {};
@@ -324,6 +464,7 @@ export default DS.Adapter.extend({
     @param  {Object} jqXHR
     @param  {Object} jsonPayload
     @return {Object} jsonPayload
+    @protected
   */
   ajaxSuccess: function(jqXHR, jsonPayload) {
     return jsonPayload;
@@ -361,6 +502,7 @@ export default DS.Adapter.extend({
     @param  {Object} jqXHR
     @param  {Object} responseText
     @return {Object} jqXHR
+    @protected
   */
   ajaxError: function(jqXHR, responseText, errorThrown) {
     var isObject = jqXHR !== null && typeof jqXHR === 'object';

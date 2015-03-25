@@ -15,6 +15,10 @@ export default DS.JSONSerializer.extend({
 
   extractFind: function(store, type, payload, id, requestType) {
     var result = this._super(store, type, payload, id, requestType);
+    if (!Array.isArray(result)) {
+      return result;
+    }
+
     if (result.length !== 1) {
       throw new Error('Expected Solr response array with exactly one document but got `' + result.length + '`.');
     }
@@ -38,10 +42,10 @@ export default DS.JSONSerializer.extend({
   },
 
   normalizePayload: function(payload) {
-    payload = payload.response.docs;
+    payload = payload.doc || payload.response.docs;
 
     if (!payload) {
-      throw new Error('Expected Solr response payload to contain `response.docs`.');
+      throw new Error('Expected Solr response payload to contain property `doc` or `response.docs`.');
     }
 
     return this._super(payload);
