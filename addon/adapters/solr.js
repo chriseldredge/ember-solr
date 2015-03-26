@@ -77,7 +77,7 @@ export default DS.Adapter.extend({
 
     @property enableRealTimeGet
     @type {boolean}
-    @default `false`
+    @default false
   */
   enableRealTimeGet: false,
 
@@ -220,8 +220,7 @@ export default DS.Adapter.extend({
   */
   buildSolrQuery: function(type, operation, query) {
     var solrQuery = {
-      wt: 'json',
-      fq: []
+      wt: 'json'
     };
 
     if (query.limit) {
@@ -232,9 +231,9 @@ export default DS.Adapter.extend({
       solrQuery.start = query.offset;
     }
 
-    var typeFilter = this.filterQueryForType(type);
+    var typeFilter = !!this.filterQueryForType ? this.filterQueryForType(type, operation) : null;
     if (typeFilter) {
-      solrQuery.fq.push(typeFilter);
+      solrQuery.fq = typeFilter;
     }
 
     solrQuery.q = query.q || '*:*';
@@ -315,12 +314,10 @@ export default DS.Adapter.extend({
     See [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters#fq).
     @method filterQueryForType
     @param {String} type
+    @param {String} operation
     @return {String} a filter query or `null`
     @protected
   */
-  filterQueryForType: function() {
-    return null;
-  },
 
   /**
     Builds a complete URL and initiates
