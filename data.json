@@ -1,6 +1,6 @@
 {
     "project": {
-        "name": "ember-cli-solr",
+        "name": "ember-solr",
         "description": "Solr adapter for Ember Data",
         "external": {
             "data": [
@@ -14,7 +14,7 @@
                 }
             ]
         },
-        "version": "0.0.0.109ca9c4"
+        "version": "0.0.0.3588dd98"
     },
     "files": {
         "addon/adapters/solr.js": {
@@ -76,7 +76,7 @@
             "namespaces": {},
             "tag": "module",
             "file": "addon/serializers/solr.js",
-            "line": 8
+            "line": 7
         }
     },
     "classes": {
@@ -91,7 +91,7 @@
             "module": "solr",
             "namespace": "",
             "file": "addon/adapters/solr.js",
-            "line": 15,
+            "line": 17,
             "description": "Ember Data Adapter for Apache Solr.",
             "extends": "DS.Adapter"
         },
@@ -106,8 +106,8 @@
             "module": "solr",
             "namespace": "",
             "file": "addon/requests/handlers.js",
-            "line": 8,
-            "description": "An enumeration of handler types that `ember-cli-solr`\nknows how to interact with.",
+            "line": 7,
+            "description": "An enumeration of handler types that `ember-solr`\nknows how to interact with.",
             "static": 1
         },
         "SolrRequestHandler": {
@@ -121,7 +121,7 @@
             "module": "solr",
             "namespace": "",
             "file": "addon/requests/handlers.js",
-            "line": 49,
+            "line": 48,
             "description": "An abstract representation of a Solr request\nhandler, including its type, path and HTTP method."
         },
         "SolrSearchHandler": {
@@ -135,7 +135,7 @@
             "module": "solr",
             "namespace": "",
             "file": "addon/requests/handlers.js",
-            "line": 83,
+            "line": 82,
             "description": "Represents a default configuration of a request\nto a Solr search handler.",
             "extends": "SolrRequestHandler"
         },
@@ -150,7 +150,7 @@
             "module": "solr",
             "namespace": "",
             "file": "addon/requests/handlers.js",
-            "line": 104,
+            "line": 103,
             "description": "Represents a default configuration of a request\nto a Solr Real Time Get handler."
         },
         "SolrRequest": {
@@ -179,7 +179,7 @@
             "module": "solr",
             "namespace": "",
             "file": "addon/serializers/solr.js",
-            "line": 8,
+            "line": 7,
             "description": "Ember Data Serializer for Apache Solr.",
             "extends": "DS.JSONSerializer"
         }
@@ -187,7 +187,7 @@
     "classitems": [
         {
             "file": "addon/adapters/solr.js",
-            "line": 21,
+            "line": 23,
             "description": "The base URL where the Solr instance is hosted.\nThis property is typically configured by setting\n`ENV.solrBaseURL` in your `config/environment.js`\nfile.",
             "itemtype": "property",
             "name": "baseURL",
@@ -198,7 +198,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 32,
+            "line": 34,
             "description": "Specifies a default Solr Core to send requests\nto. If no default core is configured, this adapter\nwill not include a core in the request URI path\nand the Solr server will use its own default.",
             "itemtype": "property",
             "name": "defaultCore",
@@ -209,7 +209,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 43,
+            "line": 45,
             "description": "Sets the default serializer for this adapter.\nUses {{#crossLink \"SolrSerializer\"}}{{/crossLink}} by default.",
             "itemtype": "property",
             "name": "defaultSerializer",
@@ -220,7 +220,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 52,
+            "line": 54,
             "description": "Sets the data type for jQuery ajax requests.\nEither `json` or `jsonp` are supported.\n`jsonp` is provided as the default to allow cross-origin\nrequests to succeed without needing special customization\nof the Solr server.",
             "itemtype": "property",
             "name": "dataType",
@@ -231,18 +231,18 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 64,
+            "line": 66,
             "description": "Enables or disables sending requests to Solr's\nReal Time Get handler. Note that this handler is\ndisabled by default on many Solr servers.\n\nReal Time Get allows retrieval of documents that\nhave not yet been committed by retrieving them from\nthe update log.\n\nIf you are using SolrCloud, it is generally safe to\nenable this feature.",
             "itemtype": "property",
             "name": "enableRealTimeGet",
             "type": "{boolean}",
-            "default": "`false`",
+            "default": "false",
             "class": "SolrAdapter",
             "module": "solr"
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 82,
+            "line": 84,
             "description": "Find a record by its unique ID.",
             "itemtype": "method",
             "name": "find",
@@ -251,7 +251,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 93,
+            "line": 95,
             "description": "Find all documents of a type.",
             "itemtype": "method",
             "name": "findAll",
@@ -260,7 +260,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 104,
+            "line": 106,
             "description": "Find multiple documents in a single request.",
             "itemtype": "method",
             "name": "findMany",
@@ -269,7 +269,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 115,
+            "line": 117,
             "description": "Find one or more records by arbitrary query\n\nThe query hash should include the key `q` with\nan appropriate Solr query to execute. If this key\nis not specified, `*:*` will be used to match all\ndocuments.\n\nThe query hash may include the keys `limit` and/or\n`offset` to override the Solr request handler's\npage size and retrieve rows from a given offset.",
             "itemtype": "method",
             "name": "findQuery",
@@ -278,7 +278,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 135,
+            "line": 137,
             "description": "Builds a request to send to Solr.",
             "itemtype": "method",
             "name": "buildRequest",
@@ -310,7 +310,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 180,
+            "line": 182,
             "description": "Builds a Solr query to send in a search request.\nThis method applies some defaults and converts\nidiomatic Ember query parameters to their\nSolr corollaries.\n\n* Sets `wt=json`\n* Converts `limit` to `rows`\n* Converts `offset` to `start`\n* Defaults to `q=*:*` when no query is specified\n* Calls {{#crossLink \"SolrAdapter/filterQueryForType:method\"}}{{/crossLink}}\nand sets `fq` when a non-blank filter query is returned\n\nOverrides of this method can return an object that includes\nother query options. Multipe `fq` parameters (and others)\ncan be defined by using an array for the values:\n```javascript\nApp.ApplicationAdapter = SolrAdapter.extend({\n  buildSolrQuery: function(type, query) {\n    return {\n      fq: [\n        'type:' + type,\n        'public:true'\n      ]\n    };\n  }\n});\n```\n\nSee [QueryResponseWriter](https://wiki.apache.org/solr/QueryResponseWriter)\nand [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters).",
             "itemtype": "method",
             "name": "buildSolrQuery",
@@ -342,7 +342,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 243,
+            "line": 244,
             "description": "Determines which Solr Core should handle queries for\na given type and oepration. By default,\n{{#crossLink \"SolrAdapter/defaultCore:property\"}}{{/crossLink}}\nis used.",
             "itemtype": "method",
             "name": "coreForType",
@@ -369,7 +369,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 258,
+            "line": 259,
             "description": "Determines the [unique key](https://wiki.apache.org/solr/UniqueKey)\nfor a given type. Default Solr schemas use the canonical field `id`\nand this method defaults to the same field.",
             "itemtype": "method",
             "name": "uniqueKeyForType",
@@ -391,7 +391,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 271,
+            "line": 272,
             "description": "Determines which Solr Core should handle queries for\na given type and operation.\n\nWhen\n{{#crossLink \"SolrAdapter/enableRealTimeGet:property\"}}{{/crossLink}}\nis set to `true`, this method will choose RealTimeGet\nfor `find` and `findMany` operations.\n\nOverride this method to customize the path and type\nof handler that should be used for given operations.",
             "itemtype": "method",
             "name": "handlerForType",
@@ -418,13 +418,18 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 300,
+            "line": 301,
             "description": "Builds an optional filter query (`fq`) to include in search requests.\nIf multiple models are stored in the same Solr Core, applying\nan appropriate filter query will ensure only the documents of\nthe appropriate type are included.\nExample\n```javascript\nApp.ApplicationAdapter = SolrAdapter.extend({\n  filterQueryForType: function(type) {\n    return 'doc_type:' + type;\n  }\n});\n```\nSee [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters#fq).",
             "itemtype": "method",
             "name": "filterQueryForType",
             "params": [
                 {
                     "name": "type",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "operation",
                     "description": "",
                     "type": "String"
                 }
@@ -440,7 +445,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 323,
+            "line": 322,
             "description": "Builds a complete URL and initiates\nan AJAX request to Solr.",
             "itemtype": "method",
             "name": "executeRequest",
@@ -461,7 +466,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 341,
+            "line": 340,
             "description": "Joins two or more strings into a path delimited\nby forward slashes without adding redundant slashes.\nAny number of arguments can be passed into this method.",
             "itemtype": "method",
             "name": "combinePath",
@@ -488,7 +493,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 370,
+            "line": 371,
             "description": "Takes a URL, an HTTP method and a hash of data, and makes an\nHTTP request.\nWhen the server responds with a payload, Ember Data will call into `extractSingle`\nor `extractArray` (depending on whether the original query was for one record or\nmany records).\nBy default, `ajax` method has the following behavior:\n* It sets the response `dataType` to `\"json\"`\n* If the HTTP method is not `\"GET\"`, it sets the `Content-Type` to be\n  `application/json; charset=utf-8`\n* If the HTTP method is not `\"GET\"`, it stringifies the data passed in. The\n  data is the serialized record in the case of a save.\n* Registers success and failure handlers.",
             "itemtype": "method",
             "name": "ajax",
@@ -520,7 +525,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 414,
+            "line": 415,
             "itemtype": "method",
             "name": "ajaxOptions",
             "access": "protected",
@@ -551,7 +556,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 452,
+            "line": 453,
             "description": "Takes an ajax response, and returns the json payload.\nBy default this hook just returns the jsonPayload passed to it.\nYou might want to override it in two cases:\n1. Your API might return useful results in the request headers.\nIf you need to access these, you can override this hook to copy them\nfrom jqXHR to the payload object so they can be processed in you serializer.\n2. Your API might return errors as successful responses with status code\n200 and an Errors text or object. You can return a DS.InvalidError from\nthis hook and it will automatically reject the promise and put your record\ninto the invalid state.",
             "itemtype": "method",
             "name": "ajaxSuccess",
@@ -578,7 +583,7 @@
         },
         {
             "file": "addon/adapters/solr.js",
-            "line": 473,
+            "line": 474,
             "description": "Takes an ajax response, and returns an error payload.\nReturning a `DS.InvalidError` from this method will cause the\nrecord to transition into the `invalid` state and make the\n`errors` object available on the record.\nThis function should return the entire payload as received from the\nserver.  Error object extraction and normalization of model errors\nshould be performed by `extractErrors` on the serializer.\nExample\n```javascript\nApp.ApplicationAdapter = DS.RESTAdapter.extend({\n  ajaxError: function(jqXHR) {\n    var error = this._super(jqXHR);\n    if (jqXHR && jqXHR.status === 422) {\n      var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);\n      return new DS.InvalidError(jsonErrors);\n    } else {\n      return error;\n    }\n  }\n});\n```\nNote: As a correctness optimization, the default implementation of\nthe `ajaxError` method strips out the `then` method from jquery's\najax response (jqXHR). This is important because the jqXHR's\n`then` method fulfills the promise with itself resulting in a\ncircular \"thenable\" chain which may cause problems for some\npromise libraries.",
             "itemtype": "method",
             "name": "ajaxError",
@@ -605,7 +610,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 16,
+            "line": 15,
             "description": "Represents a requst to `select`, `search` and\nother standard request handlers.\n\nThis is the handler type that will be used in\n`findQuery`, and when real-time get is not enabled\nit will also be used in all `find*` operations.\n\nSee [SearchHandler](http://wiki.apache.org/solr/SearchHandler).",
             "itemtype": "property",
             "name": "Search",
@@ -616,7 +621,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 32,
+            "line": 31,
             "description": "Represents a requst to `get` and\nother real time get handlers.\n\nThis is the handler type that will be used when\n{{#crossLink \"SolrAdapter/enableRealTimeGet:property\"}}{{/crossLink}}\nis set to `true` for `find`, and `findMany`.\n\nSee [RealTimeGet](http://wiki.apache.org/solr/RealTimeGet).",
             "itemtype": "property",
             "name": "RealTimeGet",
@@ -627,7 +632,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 55,
+            "line": 54,
             "description": "The type of request.",
             "itemtype": "property",
             "name": "type",
@@ -637,7 +642,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 63,
+            "line": 62,
             "description": "The path to route the request to. Typical\nexamples include handler paths like `/search`,\n`/select`, `/get`, and `/update`.",
             "itemtype": "property",
             "name": "path",
@@ -647,7 +652,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 73,
+            "line": 72,
             "description": "The HTTP method (verb) to use in the request.",
             "itemtype": "property",
             "name": "method",
@@ -658,7 +663,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 91,
+            "line": 90,
             "itemtype": "property",
             "name": "type",
             "default": "`SolrHandlerType.Search`",
@@ -667,7 +672,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 97,
+            "line": 96,
             "itemtype": "property",
             "name": "path",
             "default": "'select'",
@@ -676,7 +681,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 111,
+            "line": 110,
             "itemtype": "property",
             "name": "type",
             "default": "`SolrHandlerType.RealTimeGet`",
@@ -685,7 +690,7 @@
         },
         {
             "file": "addon/requests/handlers.js",
-            "line": 117,
+            "line": 116,
             "itemtype": "property",
             "name": "path",
             "default": "'get'",
@@ -758,7 +763,7 @@
     "warnings": [
         {
             "message": "unknown tag: protcted",
-            "line": " addon/adapters/solr.js:323"
+            "line": " addon/adapters/solr.js:322"
         }
     ]
 }

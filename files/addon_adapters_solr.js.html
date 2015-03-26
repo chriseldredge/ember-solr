@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/adapters/solr.js - ember-cli-solr</title>
+    <title>addon/adapters/solr.js - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -14,10 +14,10 @@
 <div id="doc">
     <div id="hd" class="yui3-g header">
         <div class="yui3-u-3-4">
-                <h1><img src="../assets/css/logo.png" title="ember-cli-solr" width="117" height="52"></h1>
+                <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.109ca9c4</em>
+            <em>API Docs for: 0.0.0.3588dd98</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -96,9 +96,11 @@ import {
   SolrHandlerType,
   SolrSearchHandler,
   SolrRealTimeGetHandler
-} from &#x27;solr/requests/handlers&#x27;;
+} from &#x27;ember-solr/requests/handlers&#x27;;
 
-import SolrRequest from &#x27;solr/requests/request&#x27;;
+import SolrRequest from &#x27;ember-solr/requests/request&#x27;;
+
+const forEach = Ember.ArrayPolyfills.forEach;
 
 /**
   Ember Data Adapter for Apache Solr.
@@ -163,7 +165,7 @@ export default DS.Adapter.extend({
 
     @property enableRealTimeGet
     @type {boolean}
-    @default &#x60;false&#x60;
+    @default false
   */
   enableRealTimeGet: false,
 
@@ -183,7 +185,7 @@ export default DS.Adapter.extend({
 
     @method findAll
   */
-  findAll: function(store, type, sinceToken) {
+  findAll: function(store, type) {
     var request = this.buildRequest(type.typeKey, &#x27;findAll&#x27;);
 
     return this.executeRequest(request);
@@ -262,7 +264,7 @@ export default DS.Adapter.extend({
       core: this.coreForType(type, operation),
       handler: handler,
       data: data
-    })
+    });
   },
 
   /**
@@ -306,8 +308,7 @@ export default DS.Adapter.extend({
   */
   buildSolrQuery: function(type, operation, query) {
     var solrQuery = {
-      wt: &#x27;json&#x27;,
-      fq: []
+      wt: &#x27;json&#x27;
     };
 
     if (query.limit) {
@@ -318,9 +319,9 @@ export default DS.Adapter.extend({
       solrQuery.start = query.offset;
     }
 
-    var typeFilter = this.filterQueryForType(type);
+    var typeFilter = !!this.filterQueryForType ? this.filterQueryForType(type, operation) : null;
     if (typeFilter) {
-      solrQuery.fq.push(typeFilter);
+      solrQuery.fq = typeFilter;
     }
 
     solrQuery.q = query.q || &#x27;*:*&#x27;;
@@ -339,7 +340,7 @@ export default DS.Adapter.extend({
     @return {String} core name
     @protected
   */
-  coreForType: function(type, operation) {
+  coreForType: function() {
     return this.get(&#x27;defaultCore&#x27;);
   },
 
@@ -352,7 +353,7 @@ export default DS.Adapter.extend({
     @return {String}
     @protected
   */
-  uniqueKeyForType: function(type) {
+  uniqueKeyForType: function() {
     return &#x27;id&#x27;;
   },
 
@@ -401,12 +402,10 @@ export default DS.Adapter.extend({
     See [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters#fq).
     @method filterQueryForType
     @param {String} type
+    @param {String} operation
     @return {String} a filter query or &#x60;null&#x60;
     @protected
   */
-  filterQueryForType: function(type) {
-    return null;
-  },
 
   /**
     Builds a complete URL and initiates
@@ -436,12 +435,14 @@ export default DS.Adapter.extend({
     @return {string}
     @protected
   */
-  combinePath: function(path1, path2) {
+  combinePath: function(path1) {
     var s = path1;
 
     for (var i = 1; i &lt; arguments.length; i++) {
       var part = arguments[i];
-      if (!part) continue;
+      if (!part) {
+        continue;
+      }
 
       if (s[s.length - 1] !== &#x27;/&#x27; &amp;&amp; part[0] !== &#x27;/&#x27;) {
         s += &#x27;/&#x27;;
