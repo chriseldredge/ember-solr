@@ -38,6 +38,45 @@ and register it as the application adapter.
 * `handlerForType` select a Solr request handler path and type for an operation
 * `uniqueKeyForType` override the canonical `id` field with something else
 
+`SorlDynamicSerializer` provides a quick way to connect to a Solr server using
+[Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).
+
+To connect to the Solr Schemaless example, use these example in your `app/adapters/application.js`:
+
+```javascript
+import config from '../config/environment';
+import SolrAdapter from 'ember-solr/adapters/solr';
+
+export default SolrAdapter.extend({
+  baseURL: config.solrBaseURL,
+  defaultCore: 'gettingstarted',
+  defaultSerializer: '-solr-dynamic',
+  enableRealTimeGet: true
+});
+```
+
+Declare a model such as:
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  title: DS.attr(),
+  keywords: DS.attr('strings'),
+  body: DS.attr('text'),
+  popularity: DS.attr('float'),
+  isPublic: DS.attr('boolean')
+});
+```
+
+The attributes on this model would be mapped, by default, to:
+
+* title => title_s
+* keywords => keywords_ss
+* body => body_txt
+* popularity: popularity_f
+* isPublic: is_public_b
+
 # Contributing to ember-solr
 
 ## Installation
