@@ -1,4 +1,4 @@
-# ember-solr
+# ember-solr [![Build Status](https://travis-ci.org/chriseldredge/ember-solr.svg?branch=master)](https://travis-ci.org/chriseldredge/ember-solr)
 
 Ember Data adapter that connects to a Solr server.
 
