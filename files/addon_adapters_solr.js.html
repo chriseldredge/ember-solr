@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.3588dd98</em>
+            <em>API Docs for: 0.0.0.dad61b69</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
+                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
@@ -185,7 +186,8 @@ export default DS.Adapter.extend({
 
     @method findAll
   */
-  findAll: function(store, type) {
+  findAll: function(store, type, sinceToken) {
+    console.log(&#x27;findAll since&#x27;, sinceToken);
     var request = this.buildRequest(type.typeKey, &#x27;findAll&#x27;);
 
     return this.executeRequest(request);
@@ -220,6 +222,24 @@ export default DS.Adapter.extend({
     var request = this.buildRequest(type.typeKey, &#x27;findQuery&#x27;, query);
 
     return this.executeRequest(request);
+  },
+
+  createRecord: function(store, type, snapshot) {
+    var data = this.serialize(snapshot, { includeId: true});
+
+    console.log(&#x27;create&#x27;, data);
+    throw new Error(&#x27;not implemented&#x27;);
+  },
+
+  updateRecord: function(store, type, snapshot) {
+    var data = this.serialize(snapshot, { includeId: true});
+
+    console.log(&#x27;update&#x27;, data);
+    throw new Error(&#x27;not implemented&#x27;);
+  },
+
+  deleteRecord: function() {
+    throw new Error(&#x27;not implemented&#x27;);
   },
 
   /**

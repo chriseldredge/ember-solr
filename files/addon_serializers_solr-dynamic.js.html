@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>solr - ember-solr</title>
+    <title>addon/serializers/solr-dynamic.js - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -83,72 +83,149 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>solr Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: addon/serializers/solr-dynamic.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+import Ember from &#x27;ember&#x27;;
+import SolrSerializer from &#x27;./solr&#x27;;
+
+/**
+  Ember Data Serializer for Apache Solr [Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).
 
 
-        <div class="foundat">
-            Defined in: <a href="../files/addon_serializers_solr.js.html#l7"><code>addon&#x2F;serializers&#x2F;solr.js:7</code></a>
-        </div>
+  @class SolrDynamicSerializer
+  @extends SolrSerializer
+*/
+export default SolrSerializer.extend({
+  /**
+    Provides a mapping of types to dynamic field prefixes.
 
-</div>
+    The following example would cause all attributes of type &#x60;number&#x60;
+    to be mapped by prepending &#x60;int_&#x60; to the attribute name:
 
+    &#x60;&#x60;&#x60;javascript
+    App.ApplicationSerializer = SolrDynamicSerializer.extend({
+      dynamicFieldPrefixes: {
+        &#x27;number&#x27;: &#x27;int_&#x27;
+      }
+    });
+    &#x60;&#x60;&#x60;
 
-<div class="box intro">
-    
-</div>
+    This property is left null to follow the conventions in the
+    Solr Schemaless example configuration.
 
+    @property dynamicFieldPrefixes
+    @type {object}
+    @default null
+  */
+  dynamicFieldPrefixes: null,
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+  /**
+    Provides a mapping of types to dynamic field prefixes.
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/SolrAdapter.html">
-                        SolrAdapter
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrDynamicSerializer.html">
-                        SolrDynamicSerializer
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrHandlerType.html">
-                        SolrHandlerType
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrRealTimeGetHandler.html">
-                        SolrRealTimeGetHandler
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrRequest.html">
-                        SolrRequest
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrRequestHandler.html">
-                        SolrRequestHandler
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrSearchHandler.html">
-                        SolrSearchHandler
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrSerializer.html">
-                        SolrSerializer
-                    </a>
-                </li>
-            </ul>
-    </div>
+    The following example would cause all attributes of type &#x60;date&#x60;
+    to be mapped by appending &#x60;_date&#x60; to the attribute name:
 
-    <div class="yui3-u-1-2">
-    </div>
+    &#x60;&#x60;&#x60;javascript
+    App.ApplicationSerializer = SolrdynamicSerializer.extend({
+      dynamicFieldSuffixes: {
+        &#x27;date&#x27;: &#x27;_date&#x27;
+      }
+    });
+    &#x60;&#x60;&#x60;
+
+    See source code for default mappings that follow
+    conventions in the Solr Dynamic example configuration.
+
+    @property dynamicFieldSuffixes
+    @type {object}
+    @default null
+  */
+  dynamicFieldSuffixes: {
+    &#x27;boolean&#x27;: &#x27;_b&#x27;,
+    &#x27;booleans&#x27;: &#x27;_bs&#x27;,
+    &#x27;date&#x27;: &#x27;_dt&#x27;,
+    &#x27;dates&#x27;: &#x27;_dts&#x27;,
+    &#x27;double&#x27;: &#x27;_d&#x27;,
+    &#x27;doubles&#x27;: &#x27;_ds&#x27;,
+    &#x27;float&#x27;: &#x27;_f&#x27;,
+    &#x27;floats&#x27;: &#x27;_fs&#x27;,
+    &#x27;int&#x27;: &#x27;_i&#x27;,
+    &#x27;ints&#x27;: &#x27;_is&#x27;,
+    &#x27;long&#x27;: &#x27;_l&#x27;,
+    &#x27;longs&#x27;: &#x27;_ls&#x27;,
+    &#x27;number&#x27;: &#x27;_i&#x27;,
+    &#x27;numbers&#x27;: &#x27;_is&#x27;,
+    &#x27;string&#x27;: &#x27;_s&#x27;,
+    &#x27;strings&#x27;: &#x27;_ss&#x27;,
+    &#x27;text&#x27;: &#x27;_txt&#x27;
+  },
+
+  /**
+    Converts attributes to underscore and uses
+    {{#crossLink &quot;SolrAdapter/dynamicKeyForAttribute:method&quot;}}{{/crossLink}}.
+    to produce a dynamic field key. For a string attribute like &#x60;relatedArticles&#x60;
+    this method would return &#x60;related_articles_s&#x60;.
+
+    @method keyForAttribute
+    @param {string} attr
+    @return {string} key
+  */
+  keyForAttribute: function(attr) {
+    attr = this.dynamicKeyForAttribute(attr);
+    return Ember.String.underscore(attr);
+  },
+
+  /**
+    Uses
+    {{#crossLink &quot;SolrAdapter/dynamicFieldPrefixes:property&quot;}}{{/crossLink}}
+    and
+    {{#crossLink &quot;SolrAdapter/dynamicFieldSuffixes:property&quot;}}{{/crossLink}}
+    to produce a dynamic field key. For a string attribute like &#x60;related_articles&#x60;
+    this method would return &#x60;related_articles_s&#x60;.
+
+    @method dynamicKeyForAttribute
+    @param {string} attr
+    @return {string} key
+  */
+  dynamicKeyForAttribute: function(attr) {
+    var prefixes = this.get(&#x27;dynamicFieldPrefixes&#x27;),
+        suffixes = this.get(&#x27;dynamicFieldSuffixes&#x27;);
+
+    if (!prefixes &amp;&amp; !suffixes) {
+      return attr;
+    }
+
+    if (!this.currentType) {
+      throw new Error(&#x27;Cannot determine dynamic field without type metadata&#x27;);
+    }
+
+    var meta = this.currentType.metaForProperty(attr);
+    var attrType = meta.type || &#x27;string&#x27;;
+
+    if (prefixes &amp;&amp; prefixes[attrType]) {
+      attr = prefixes[attrType] + attr;
+    }
+    if (suffixes &amp;&amp; suffixes[attrType]) {
+      attr += suffixes[attrType];
+    }
+
+    return attr;
+  },
+
+  normalize: function(type) {
+    this.currentType = type;
+    return this._super.apply(this, arguments);
+  },
+
+  serialize: function(snapshot) {
+    this.currentType = snapshot.type;
+    return this._super.apply(this, arguments);
+  }
+});
+
+    </pre>
 </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>SolrSerializer - ember-solr</title>
+    <title>SolrDynamicSerializer - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -83,15 +83,15 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>SolrSerializer Class</h1>
+<h1>SolrDynamicSerializer Class</h1>
 <div class="box meta">
 
         <div class="extends">
-            Extends <a href="http://emberjs.com/api/data/classes/DS.JSONSerializer.html" class="crosslink external" target="_blank">DS.JSONSerializer</a>
+            Extends <a href="../classes/SolrSerializer.html" class="crosslink">SolrSerializer</a>
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/addon_serializers_solr.js.html#l7"><code>addon&#x2F;serializers&#x2F;solr.js:7</code></a>
+            Defined in: <a href="../files/addon_serializers_solr-dynamic.js.html#l4"><code>addon&#x2F;serializers&#x2F;solr-dynamic.js:4</code></a>
         </div>
 
             Module: <a href="../modules/solr.html">solr</a>
@@ -100,7 +100,7 @@
 
 
 <div class="box intro">
-    <p>Ember Data Serializer for Apache Solr.</p>
+    <p>Ember Data Serializer for Apache Solr <a href="https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields">Dynamic Fields</a>.</p>
 
 </div>
 
@@ -123,6 +123,10 @@
                     <ul class="index-list methods extends">
                             <li class="index-item method private inherited">
                                 <a href="#method_applyTransforms">applyTransforms</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#method_dynamicKeyForAttribute">dynamicKeyForAttribute</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -224,6 +228,14 @@
                     <h3>Properties</h3>
 
                     <ul class="index-list properties extends">
+                            <li class="index-item property">
+                                <a href="#property_dynamicFieldPrefixes">dynamicFieldPrefixes</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_dynamicFieldSuffixes">dynamicFieldSuffixes</a>
+
+                            </li>
                             <li class="index-item property inherited">
                                 <a href="#property_primaryKey">primaryKey</a>
 
@@ -291,7 +303,7 @@ serializer's <code>normalize</code> method.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -301,7 +313,7 @@ serializer's <code>normalize</code> method.</p>
 
 
                     <div class="param-description">
-                        <p>&lt;p&gt;The data to transform&lt;/p&gt;</p>
+                        <p>The data to transform</p>
 
                     </div>
 
@@ -314,7 +326,77 @@ serializer's <code>normalize</code> method.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;data The transformed data object&lt;/p&gt;</p>
+                    <p>data The transformed data object</p>
+
+            </div>
+        </div>
+
+
+</div>
+<div id="method_dynamicKeyForAttribute" class="method item">
+    <h3 class="name"><code>dynamicKeyForAttribute</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>attr</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/addon_serializers_solr-dynamic.js.html#l91"><code>addon&#x2F;serializers&#x2F;solr-dynamic.js:91</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>Uses
+SolrAdapter/dynamicFieldPrefixes:property
+and
+SolrAdapter/dynamicFieldSuffixes:property
+to produce a dynamic field key. For a string attribute like <code>related_articles</code>
+this method would return <code>related_articles_s</code>.</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">attr</code>
+                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
+                    <p>key</p>
 
             </div>
         </div>
@@ -396,7 +478,7 @@ socket.on('message', function(message) {
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -406,7 +488,7 @@ socket.on('message', function(message) {
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -416,7 +498,7 @@ socket.on('message', function(message) {
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -426,7 +508,7 @@ socket.on('message', function(message) {
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -436,7 +518,7 @@ socket.on('message', function(message) {
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -448,7 +530,7 @@ socket.on('message', function(message) {
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
@@ -517,7 +599,7 @@ returned from the adapter.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -527,7 +609,7 @@ returned from the adapter.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -537,7 +619,7 @@ returned from the adapter.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -549,7 +631,7 @@ returned from the adapter.</p>
 
             <div class="returns-description">
                         <span class="type">Array</span>:
-                    <p>&lt;p&gt;array An array of deserialized objects&lt;/p&gt;</p>
+                    <p>array An array of deserialized objects</p>
 
             </div>
         </div>
@@ -610,7 +692,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -620,7 +702,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -630,7 +712,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -642,7 +724,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
@@ -703,7 +785,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -713,7 +795,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -723,7 +805,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -735,7 +817,7 @@ alias for <a href="#method_extractSave">extractSave</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
@@ -796,7 +878,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -806,7 +888,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -816,7 +898,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -828,7 +910,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
@@ -889,7 +971,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -899,7 +981,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -909,7 +991,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -921,7 +1003,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Array</span>:
-                    <p>&lt;p&gt;array An array of deserialized objects&lt;/p&gt;</p>
+                    <p>array An array of deserialized objects</p>
 
             </div>
         </div>
@@ -982,7 +1064,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -992,7 +1074,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1002,7 +1084,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1014,7 +1096,7 @@ alias for <a href="#method_extractSingle">extractSingle</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
@@ -1075,7 +1157,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1085,7 +1167,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1095,7 +1177,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1107,7 +1189,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Array</span>:
-                    <p>&lt;p&gt;array An array of deserialized objects&lt;/p&gt;</p>
+                    <p>array An array of deserialized objects</p>
 
             </div>
         </div>
@@ -1168,7 +1250,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1178,7 +1260,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1188,7 +1270,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1200,7 +1282,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Array</span>:
-                    <p>&lt;p&gt;array An array of deserialized objects&lt;/p&gt;</p>
+                    <p>array An array of deserialized objects</p>
 
             </div>
         </div>
@@ -1261,7 +1343,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1271,7 +1353,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1281,7 +1363,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1293,7 +1375,7 @@ alias for <a href="#method_extractArray">extractArray</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Array</span>:
-                    <p>&lt;p&gt;array An array of deserialized objects&lt;/p&gt;</p>
+                    <p>array An array of deserialized objects</p>
 
             </div>
         </div>
@@ -1361,7 +1443,7 @@ be located on the <code>meta</code> property of the payload object.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1371,7 +1453,7 @@ be located on the <code>meta</code> property of the payload object.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1381,7 +1463,7 @@ be located on the <code>meta</code> property of the payload object.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1445,7 +1527,7 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1455,7 +1537,7 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1465,7 +1547,7 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1477,7 +1559,7 @@ for <a href="#method_extractSingle">extractSingle</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
@@ -1547,7 +1629,7 @@ from the adapter.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1557,7 +1639,7 @@ from the adapter.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1567,7 +1649,7 @@ from the adapter.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1579,7 +1661,7 @@ from the adapter.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
@@ -1640,7 +1722,7 @@ for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1650,7 +1732,7 @@ for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1660,7 +1742,7 @@ for <a href="#method_extractSave">extractSave</a>.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1672,20 +1754,20 @@ for <a href="#method_extractSave">extractSave</a>.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json The deserialized payload&lt;/p&gt;</p>
+                    <p>json The deserialized payload</p>
 
             </div>
         </div>
 
 
 </div>
-<div id="method_keyForAttribute" class="method item inherited">
+<div id="method_keyForAttribute" class="method item">
     <h3 class="name"><code>keyForAttribute</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>key</code>
+                        <code>attr</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -1701,9 +1783,12 @@ for <a href="#method_extractSave">extractSave</a>.</p>
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="http://emberjs.com/api/data/classes/DS.JSONSerializer.html#method_keyForAttribute">DS.JSONSerializer</a>:
-        <a href="http://emberjs.com/api/data/files/.._packages_ember-data_lib_serializers_json_serializer.js.html#l673"><code>..&#x2F;packages&#x2F;ember-data&#x2F;lib&#x2F;serializers&#x2F;json_serializer.js:673</code></a>
+            <p>Inherited from
+            <a href="http://emberjs.com/api/data/classes/DS.JSONSerializer.html#method_keyForAttribute">
+                DS.JSONSerializer
+            </a>
+            but overwritten in
+        <a href="../files/addon_serializers_solr-dynamic.js.html#l76"><code>addon&#x2F;serializers&#x2F;solr-dynamic.js:76</code></a>
         </p>
 
 
@@ -1711,15 +1796,10 @@ for <a href="#method_extractSave">extractSave</a>.</p>
     </div>
 
     <div class="description">
-        <p><code>keyForAttribute</code> can be used to define rules for how to convert an
-attribute name in your model to a key in your JSON.</p>
-<p>Example</p>
-<pre class="code prettyprint"><code class="language-javascript">App.ApplicationSerializer = DS.RESTSerializer.extend({
-  keyForAttribute: function(attr) {
-    return Ember.String.underscore(attr).toUpperCase();
-  }
-});
-</code></pre>
+        <p>Converts attributes to underscore and uses
+SolrAdapter/dynamicKeyForAttribute:method.
+to produce a dynamic field key. For a string attribute like <code>relatedArticles</code>
+this method would return <code>related_articles_s</code>.</p>
 
     </div>
 
@@ -1728,12 +1808,12 @@ attribute name in your model to a key in your JSON.</p>
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">key</code>
+                        <code class="param-name">attr</code>
                         <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1745,7 +1825,7 @@ attribute name in your model to a key in your JSON.</p>
 
             <div class="returns-description">
                         <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
-                    <p>&lt;p&gt;normalized key&lt;/p&gt;</p>
+                    <p>key</p>
 
             </div>
         </div>
@@ -1810,7 +1890,7 @@ does not provide an implementation of this method.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1820,7 +1900,7 @@ does not provide an implementation of this method.</p>
 
 
                     <div class="param-description">
-                        <p>&lt;p&gt;type&lt;/p&gt;</p>
+                        <p>type</p>
 
                     </div>
 
@@ -1833,7 +1913,7 @@ does not provide an implementation of this method.</p>
 
             <div class="returns-description">
                         <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
-                    <p>&lt;p&gt;normalized key&lt;/p&gt;</p>
+                    <p>normalized key</p>
 
             </div>
         </div>
@@ -1911,7 +1991,7 @@ or other general-purpose normalizations.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -1921,7 +2001,7 @@ or other general-purpose normalizations.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2094,7 +2174,7 @@ JSON.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2104,7 +2184,7 @@ JSON.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2116,7 +2196,7 @@ JSON.</p>
 
             <div class="returns-description">
                         <span class="type">Object</span>:
-                    <p>&lt;p&gt;json&lt;/p&gt;</p>
+                    <p>json</p>
 
             </div>
         </div>
@@ -2186,7 +2266,7 @@ write:</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2196,7 +2276,7 @@ write:</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2206,7 +2286,7 @@ write:</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2216,7 +2296,7 @@ write:</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2289,7 +2369,7 @@ properties are serialized.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2299,7 +2379,7 @@ properties are serialized.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2309,7 +2389,7 @@ properties are serialized.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2381,7 +2461,7 @@ properties are serialized.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2391,7 +2471,7 @@ properties are serialized.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2401,7 +2481,7 @@ properties are serialized.</p>
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2473,7 +2553,7 @@ serialized. Objects are considered to be polymorphic if
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2483,7 +2563,7 @@ serialized. Objects are considered to be polymorphic if
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2493,7 +2573,7 @@ serialized. Objects are considered to be polymorphic if
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2552,7 +2632,7 @@ serialized. Objects are considered to be polymorphic if
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2562,7 +2642,7 @@ serialized. Objects are considered to be polymorphic if
 
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                 </li>
@@ -2574,7 +2654,7 @@ serialized. Objects are considered to be polymorphic if
 
             <div class="returns-description">
                         <span class="type"><a href="http://emberjs.com/api/data/classes/DS.Transform.html" class="crosslink external" target="_blank">DS.Transform</a></span>:
-                    <p>&lt;p&gt;transform&lt;/p&gt;</p>
+                    <p>transform</p>
 
             </div>
         </div>
@@ -2586,6 +2666,78 @@ serialized. Objects are considered to be polymorphic if
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
 
+                    <div id="property_dynamicFieldPrefixes" class="property item">
+                        <h3 class="name"><code>dynamicFieldPrefixes</code></h3>
+                        <span class="type">Object</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_serializers_solr-dynamic.js.html#l12"><code>addon&#x2F;serializers&#x2F;solr-dynamic.js:12</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Provides a mapping of types to dynamic field prefixes.</p>
+                    <p>The following example would cause all attributes of type <code>number</code>
+                    to be mapped by prepending <code>int_</code> to the attribute name:</p>
+                    <pre class="code prettyprint"><code class="language-javascript">App.ApplicationSerializer = SolrDynamicSerializer.extend({
+                      dynamicFieldPrefixes: {
+                        'number': 'int_'
+                      }
+                    });
+                    </code></pre>
+                    <p>This property is left null to follow the conventions in the
+                    Solr Schemaless example configuration.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> null</p>
+                    
+                    
+                    </div>
+                    <div id="property_dynamicFieldSuffixes" class="property item">
+                        <h3 class="name"><code>dynamicFieldSuffixes</code></h3>
+                        <span class="type">Object</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_serializers_solr-dynamic.js.html#l35"><code>addon&#x2F;serializers&#x2F;solr-dynamic.js:35</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Provides a mapping of types to dynamic field prefixes.</p>
+                    <p>The following example would cause all attributes of type <code>date</code>
+                    to be mapped by appending <code>_date</code> to the attribute name:</p>
+                    <pre class="code prettyprint"><code class="language-javascript">App.ApplicationSerializer = SolrdynamicSerializer.extend({
+                      dynamicFieldSuffixes: {
+                        'date': '_date'
+                      }
+                    });
+                    </code></pre>
+                    <p>See source code for default mappings that follow
+                    conventions in the Solr Dynamic example configuration.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> null</p>
+                    
+                    
+                    </div>
                     <div id="property_primaryKey" class="property item inherited">
                         <h3 class="name"><code>primaryKey</code></h3>
                         <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
