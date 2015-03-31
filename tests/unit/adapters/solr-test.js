@@ -12,7 +12,6 @@ import AjaxMock from '../../helpers/ajax-mock';
 
 moduleFor('adapter:solr', 'SolrAdapter', {
   // Specify the other units that are required for this test.
-  needs: ['store:main'],
   beforeEach: function() {
     this.subject().set('dataType', 'json');
     this.store = this.container.lookup('store:main');
