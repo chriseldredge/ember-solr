@@ -19,6 +19,29 @@ the default value with your Solr server.
 This will make a subclass of `SolrAdapter` for you to configure
 and register it as the application adapter.
 
+## Custom attribute types
+
+This adapter registers the following types that map to Solr field types
+
+Solr field type | `DS.attr` type
+--------------- | --------------
+text            | string
+doubles         | number
+float           | number
+int             | number
+long            | number
+strings         | array of string
+numbers         | array of number
+doubles         | array of number
+floats          | array of number
+ints            | array of number
+longs           | array of number
+booleans        | array of boolean
+dates           | array of date
+
+The plural array types are intended for use with Solr fields
+that are `multiValued="true"`.
+
 # Configuration
 
 `config/environment.js` sets the URL of the Solr server.
@@ -37,6 +60,8 @@ and register it as the application adapter.
 * `filterQueryForType` create an optional filter query to filter documents
 * `handlerForType` select a Solr request handler path and type for an operation
 * `uniqueKeyForType` override the canonical `id` field with something else
+
+## Dynamic Fields
 
 `SorlDynamicSerializer` provides a quick way to connect to a Solr server using
 [Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).
