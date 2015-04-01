@@ -1,4 +1,7 @@
-import Ember from 'ember';
+/**
+  @module solr
+*/
+
 import SolrSerializer from './solr';
 
 /**
@@ -85,7 +88,7 @@ export default SolrSerializer.extend({
   */
   keyForAttribute: function(attr) {
     attr = this.dynamicKeyForAttribute(attr);
-    return Ember.String.underscore(attr);
+    return this._super(attr);
   },
 
   /**

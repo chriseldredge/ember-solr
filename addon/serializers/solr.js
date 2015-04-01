@@ -2,6 +2,7 @@
   @module solr
 */
 
+import Ember from 'ember';
 import DS from 'ember-data';
 
 /**
@@ -11,6 +12,18 @@ import DS from 'ember-data';
   @extends DS.JSONSerializer
 */
 export default DS.JSONSerializer.extend({
+
+  /**
+    Converts attributes to underscore to use conventional
+    Solr field names
+
+    @method keyForAttribute
+    @param {string} attr
+    @return {string} key
+  */
+  keyForAttribute: function(attr) {
+    return Ember.String.underscore(attr);
+  },
 
   extractFind: function(store, type, payload, id, requestType) {
     var result = this._super(store, type, payload, id, requestType);
