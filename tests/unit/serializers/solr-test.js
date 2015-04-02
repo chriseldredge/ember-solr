@@ -51,6 +51,45 @@ test('extractMeta offset', function(assert) {
   assert.equal(meta.offset, 40, 'meta.offset');
 });
 
+test('extractMeta document versions', function(assert) {
+  var serializer = this.subject();
+  var payload = {
+    response: {
+      docs: [
+        {
+          id: 1,
+          _version_: 1234
+        },
+        {
+          id: 2,
+          _version_: 5678
+        }
+      ]
+    }
+  };
+
+  serializer.extractMeta(this.store, this.dummyType, payload);
+  var meta = this.store.metadataFor('dummy');
+
+  assert.equal(meta.versions[1], 1234, 'meta.versions[1]');
+  assert.equal(meta.versions[2], 5678, 'meta.versions[2]');
+});
+
+test('extractMeta single document version', function(assert) {
+  var serializer = this.subject();
+  var payload = {
+    doc: {
+      id: 1,
+      _version_: 1234
+    }
+  };
+
+  serializer.extractMeta(this.store, this.dummyType, payload);
+  var meta = this.store.metadataFor('dummy');
+
+  assert.equal(meta.versions[1], 1234, 'meta.versions[1]');
+});
+
 test('extractSingle doc', function(assert) {
   var serializer = this.subject();
   var payload = {doc: {id: '12' }};

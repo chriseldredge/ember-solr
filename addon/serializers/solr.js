@@ -5,6 +5,8 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 
+const forEach = Ember.EnumerableUtils.forEach;
+
 /**
   Ember Data Serializer for Apache Solr.
 
@@ -12,6 +14,15 @@ import DS from 'ember-data';
   @extends DS.JSONSerializer
 */
 export default DS.JSONSerializer.extend({
+  /**
+    Field name to use for Solr Optimistic Concurrency.
+    See [Updating Parts of Documents](https://cwiki.apache.org/confluence/display/solr/Updating+Parts+of+Documents).
+
+    @property versionFieldName
+    @type {string}
+    @default '_version_'
+  */
+  versionFieldName: '_version_',
 
   /**
     Converts attributes to underscore to use conventional
@@ -57,18 +68,24 @@ export default DS.JSONSerializer.extend({
   },
 
   extractMeta: function(store, type, payload) {
-    var response = payload.response;
+    var versionFieldName = this.get('versionFieldName');
+    var response = payload.response || {};
+    var docs = response.docs || [];
 
-    if (!response) {
-      return;
+    if (payload.doc) {
+      docs.pushObject(payload.doc);
     }
 
     var meta = payload.responseHeader || {};
 
     meta.offset = response.start;
     meta.total = response.numFound;
+    meta.versions = {};
+
+    forEach(docs, function(doc) {
+      meta.versions[doc.id] = doc[versionFieldName];
+    });
 
     store.setMetadataFor(type, meta);
-
   }
 });
