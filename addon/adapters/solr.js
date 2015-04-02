@@ -8,10 +8,10 @@ import {
   SolrHandlerType,
   SolrSearchHandler,
   SolrRealTimeGetHandler
-} from 'ember-solr/requests/handlers';
+} from 'ember-solr/lib/handlers';
 
-import SolrRequest from 'ember-solr/requests/request';
-import bigNumberStringify from 'ember-solr/utils/big-number-stringify';
+import SolrRequest from 'ember-solr/lib/request';
+import bigNumberStringify from 'ember-solr/lib/big-number-stringify';
 
 const forEach = Ember.ArrayPolyfills.forEach;
 

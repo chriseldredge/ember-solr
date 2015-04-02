@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import SolrRequest from 'ember-solr/requests/request';
+import SolrRequest from 'ember-solr/lib/request';
 import { module, test } from 'qunit';
 
 module('SolrRequest');

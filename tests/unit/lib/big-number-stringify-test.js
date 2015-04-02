@@ -1,4 +1,4 @@
-import stringify from 'ember-solr/utils/big-number-stringify';
+import stringify from 'ember-solr/lib/big-number-stringify';
 
 import {
   moduleFor,
