@@ -6,6 +6,14 @@ var path = require('path');
 module.exports = {
   name: 'ember-solr',
 
+  _appendPolicy: function(csp, key, value) {
+    var v = csp[key] || '';
+    if (v) {
+      v += ' ';
+    }
+    csp[key] = v + value;
+  },
+
   config: function(environment, appConfig) {
     if (!appConfig.solrBaseURL || appConfig.solrBaseURL.indexOf(':') === -1) {
       return;
@@ -17,11 +25,14 @@ module.exports = {
       solrSchemeAndHost = solrSchemeAndHost.substring(0, solrHostEnd);
     }
 
+    var csp = appConfig.contentSecurityPolicy || {};
+
+    this._appendPolicy(csp, 'connect-src', solrSchemeAndHost);
+    this._appendPolicy(csp, 'script-src', solrSchemeAndHost);
+
     var ENV = {
-      contentSecurityPolicy: {
-        'script-src': "'self' " + solrSchemeAndHost
-      }
-    }
+      contentSecurityPolicy: csp
+    };
 
     return ENV;
   },
