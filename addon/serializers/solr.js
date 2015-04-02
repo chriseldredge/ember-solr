@@ -91,7 +91,7 @@ export default DS.JSONSerializer.extend({
     store.setMetadataFor(type, meta);
   },
 
-  serialize: function(record, options) {
+  serialize: function(snapshot, options) {
     options = options || {};
     var updateMode = (options || {}).updateMode || SolrUpdateMode.None;
 
@@ -112,12 +112,12 @@ export default DS.JSONSerializer.extend({
     const NewDocumentVersionConstraint   = -1,
           LastWriteWinsVersionConstraint = 0;
 
-    if (get(record, 'isNew')) {
+    if (get(snapshot.record, 'isNew')) {
       version = NewDocumentVersionConstraint;
     } else if (updateMode === SolrUpdateMode.LastWriteWins) {
       version = LastWriteWinsVersionConstraint;
     } else {
-      version = this.getRecordVersion(record);
+      version = this.getRecordVersion(snapshot);
     }
 
     payload[versionFieldName] = version;
@@ -125,18 +125,18 @@ export default DS.JSONSerializer.extend({
     return payload;
   },
 
-  getRecordVersion: function(record) {
-    var store = get(record, 'store');
-    var meta = store.metadataFor(record.typeKey);
+  getRecordVersion: function(snapshot) {
+    var store = snapshot.record.store;
+    var meta = store.metadataFor(snapshot.typeKey);
 
     if (!meta || !meta.versions) {
-      throw new Error('Missing metadata for record type `' + record.typeKey + '`');
+      throw new Error('Missing metadata for record type `' + snapshot.typeKey + '`');
     }
 
-    var version = meta.versions[record.id];
+    var version = meta.versions[snapshot.id];
 
     if (!version) {
-      throw new Error('Missing document version for record id `' + record.id + '` of type `' + record.typeKey + '`');
+      throw new Error('Missing document version for record id `' + snapshot.id + '` of type `' + snapshot.typeKey + '`');
     }
 
     return version;

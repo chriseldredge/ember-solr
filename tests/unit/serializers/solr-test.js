@@ -20,7 +20,11 @@ moduleFor('serializer:solr', 'SolrSerializer', {
 
     this.createDummy = function(options) {
       return Ember.run(function() {
-        return container.lookup('store:main').createRecord('dummy', options);
+        var isNew = !!options.isNew;
+        delete options.isNew;
+        var record = container.lookup('store:main').createRecord('dummy', options);
+        set(record, 'currentState.parentState.isNew', isNew);
+        return record;
       });
     };
 
@@ -118,7 +122,7 @@ test('extractSingle response.docs', function(assert) {
 
 test('serialize optimistic: new record', function(assert) {
   var serializer = this.subject();
-  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37, isNew: true })._createSnapshot();
   var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
 
   var result = serializer.serialize(snapshot, options);
@@ -128,9 +132,10 @@ test('serialize optimistic: new record', function(assert) {
 
 test('serialize optimistic: update record', function(assert) {
   var serializer = this.subject();
-  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
-  set(snapshot, 'id', 'doc-id-1234');
-  set(snapshot, 'isNew', false);
+  var record = this.createDummy({ title: 'My Dummy', flags: 37, id: 'doc-id-1234', isNew: false });
+  var snapshot = record._createSnapshot();
+
+
   this.store.setMetadataFor(snapshot.type, { versions: { 'doc-id-1234': 1563456 }});
   var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
 
@@ -141,9 +146,7 @@ test('serialize optimistic: update record', function(assert) {
 
 test('serialize optimistic: update record throws on missing version', function(assert) {
   var serializer = this.subject();
-  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
-  set(snapshot, 'id', 'doc-id-1234');
-  set(snapshot, 'isNew', false);
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37, isNew: false })._createSnapshot();
   this.store.setMetadataFor(snapshot.type, {});
   var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
 
@@ -157,8 +160,7 @@ test('serialize optimistic: update record throws on missing version', function(a
 
 test('serialize last-write-wins', function(assert) {
   var serializer = this.subject();
-  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
-  set(snapshot, 'isNew', false);
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37, isNew: false })._createSnapshot();
   var options = { updateMode: SolrUpdateMode.LastWriteWins };
 
   var result = serializer.serialize(snapshot, options);
