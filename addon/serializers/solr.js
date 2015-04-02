@@ -25,17 +25,35 @@ export default DS.JSONSerializer.extend({
     return Ember.String.underscore(attr);
   },
 
-  extractFind: function(store, type, payload, id, requestType) {
-    var result = this._super(store, type, payload, id, requestType);
-    if (!Array.isArray(result)) {
-      return result;
+  extractSingle: function(store, type, payload, id, requestType) {
+    var response = payload.response;
+    var docLength = (response && response.docs) ?
+                        response.docs.length
+                      : undefined;
+
+    if (!payload.doc && docLength !== 1) {
+      throw new Error('Expected Solr response array with exactly one document but got `' + docLength + '`.');
     }
 
-    if (result.length !== 1) {
-      throw new Error('Expected Solr response array with exactly one document but got `' + result.length + '`.');
+    payload = payload.doc || response.docs[0];
+
+    if (!payload) {
+      throw new Error('Expected Solr response payload to contain property `doc` or `response.docs`.');
     }
 
-    return result[0];
+    return this._super(store, type, payload, id, requestType);
+  },
+
+  extractArray: function(store, type, arrayPayload, id, requestType) {
+    var response = arrayPayload.response;
+
+    if (!response || !Array.isArray(response.docs)) {
+      throw new Error('Expected Solr response payload to contain property `response.docs`.');
+    }
+
+    arrayPayload = response.docs;
+
+    return this._super(store, type, arrayPayload, id, requestType);
   },
 
   extractMeta: function(store, type, payload) {
@@ -51,15 +69,6 @@ export default DS.JSONSerializer.extend({
     meta.total = response.numFound;
 
     store.setMetadataFor(type, meta);
-  },
 
-  normalizePayload: function(payload) {
-    payload = payload.doc || payload.response.docs;
-
-    if (!payload) {
-      throw new Error('Expected Solr response payload to contain property `doc` or `response.docs`.');
-    }
-
-    return this._super(payload);
   }
 });
