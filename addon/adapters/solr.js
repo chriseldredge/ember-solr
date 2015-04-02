@@ -171,6 +171,12 @@ export default DS.Adapter.extend({
     throw new Error('not implemented');
   },
 
+  serialize: function(snapshot, options) {
+    var store = snapshot.record.store;
+    var serializer = store.serializerFor(snapshot.typeKey);
+    return serializer.serialize(snapshot, options);
+  },
+
   /**
     Builds a request to send to Solr.
 
@@ -409,7 +415,7 @@ export default DS.Adapter.extend({
     return s;
   },
 
-    /**
+  /**
     Takes a URL, an HTTP method and a hash of data, and makes an
     HTTP request.
     When the server responds with a payload, Ember Data will call into `extractSingle`
