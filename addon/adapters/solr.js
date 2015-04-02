@@ -15,7 +15,9 @@ import SolrRequest from 'ember-solr/lib/request';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 import bigNumberStringify from 'ember-solr/lib/big-number-stringify';
 
-const forEach = Ember.ArrayPolyfills.forEach;
+const forEach = Ember.ArrayPolyfills.forEach,
+      get = Ember.get,
+      set = Ember.set;
 
 /**
   Ember Data Adapter for Apache Solr.
@@ -148,14 +150,14 @@ export default DS.Adapter.extend({
     return this.executeRequest(request);
   },
 
-  createRecord: function(store, type, snapshot) {
+  createRecord: function() {
     throw new Error('not implemented');
   },
 
   updateRecord: function(store, type, snapshot) {
     var options = {
       includeId: true,
-      updateMode: this.get('updateMode')
+      updateMode: get(this, 'updateMode')
     };
 
     var data = this.serialize(snapshot, options);
@@ -183,11 +185,11 @@ export default DS.Adapter.extend({
     var handler = this.handlerForType(type, operation);
     var key = this.uniqueKeyForType(type);
 
-    if (handler.get('type') === SolrHandlerType.RealTimeGet) {
+    if (get(handler, 'type') === SolrHandlerType.RealTimeGet) {
       query = {};
       query[key] = data;
       data = query;
-    } else if (handler.get('type') === SolrHandlerType.Search) {
+    } else if (get(handler, 'type') === SolrHandlerType.Search) {
       data = data || {};
 
       if (Array.isArray(data)) {
@@ -288,7 +290,7 @@ export default DS.Adapter.extend({
     @protected
   */
   coreForType: function() {
-    return this.get('defaultCore');
+    return get(this, 'defaultCore');
   },
 
   /**
@@ -323,7 +325,7 @@ export default DS.Adapter.extend({
     @protected
   */
   handlerForType: function(type, operation) {
-    var enableRealTimeGet = this.get('enableRealTimeGet');
+    var enableRealTimeGet = get(this, 'enableRealTimeGet');
 
     if (enableRealTimeGet &&
         (operation === 'find' || operation === 'findMany')) {
@@ -369,11 +371,11 @@ export default DS.Adapter.extend({
   */
   executeRequest: function(request) {
     var URL = this.combinePath(
-      this.get('baseURL'),
-      request.get('core'),
-      request.get('handler.path'));
+      get(this, 'baseURL'),
+      get(request, 'core'),
+      get(request, 'handler.path'));
 
-    return this.ajax(URL, request.get('method'), request.get('options'));
+    return this.ajax(URL, get(request, 'method'), get(request, 'options'));
   },
 
   /**
@@ -470,7 +472,7 @@ export default DS.Adapter.extend({
     var hash = options || {};
     hash.url = url;
     hash.type = type;
-    hash.dataType = this.get('dataType') || 'json';
+    hash.dataType = get(this, 'dataType') || 'json';
     hash.context = this;
     hash.traditional = true;
 
@@ -480,10 +482,10 @@ export default DS.Adapter.extend({
 
     if (hash.data && type !== 'GET') {
       hash.contentType = 'application/json; charset=utf-8';
-      Ember.set(hash, 'data', bigNumberStringify(hash.data));
+      set(hash, 'data', bigNumberStringify(hash.data));
     }
 
-    var headers = this.get('headers');
+    var headers = get(this, 'headers');
     if (headers !== undefined) {
       hash.beforeSend = function (xhr) {
         forEach.call(Ember.keys(headers), function(key) {

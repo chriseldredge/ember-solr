@@ -1,11 +1,13 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 
+const get = Ember.get;
+
 export default DS.Transform.extend({
   elementType: 'string',
 
   elementTransform: Ember.computed('elementType', function() {
-    var elementType = this.get('elementType');
+    var elementType = get(this, 'elementType');
     var key = 'transform:' + elementType;
     var result = this.container.lookup(key);
     if (!result && elementType !== 'string') {
@@ -27,7 +29,7 @@ export default DS.Transform.extend({
       return array;
     }
 
-    var elementType = this.get('elementType');
+    var elementType = get(this, 'elementType');
     var func = null;
 
     return array.map(function(i) {
@@ -36,7 +38,7 @@ export default DS.Transform.extend({
       }
 
       if (!func) {
-        func = this.get('elementTransform')[funcName];
+        func = get(this, 'elementTransform')[funcName];
       }
 
       return func(i);

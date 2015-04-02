@@ -4,6 +4,9 @@
 
 import Ember from 'ember';
 
+const get = Ember.get,
+      set = Ember.set;
+
 /**
   Represents an HTTP Request to a Solr server,
   including URL path segments, data and options
@@ -79,9 +82,9 @@ export default Ember.Object.extend({
     @method _init
     @private
   */
-  _init: function() {
-    var data = this.get('data');
-    var options = this.get('options');
+  _init: Ember.on('init', function() {
+    var data = get(this, 'data');
+    var options = get(this, 'options');
 
     if (options && options.data && data) {
       throw new Error('SolrRequest accepts `data` or `options.data` but not both.');
@@ -91,13 +94,13 @@ export default Ember.Object.extend({
       options = {
         data: data || {}
       };
-      this.set('options', options);
+      set(this, 'options', options);
     } else if (!options.data) {
       options.data = data || {};
     }
 
     var binding = Ember.Binding.from('options.data').to('data');
     binding.connect(this);
-  }.on('init')
+  })
 
 });

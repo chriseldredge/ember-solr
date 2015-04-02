@@ -2,6 +2,9 @@ import Ember from 'ember';
 import SolrRequest from 'ember-solr/lib/request';
 import { module, test } from 'qunit';
 
+const get = Ember.get,
+      set = Ember.set;
+
 module('SolrRequest');
 
 test('init binds method', function(assert) {
@@ -9,32 +12,32 @@ test('init binds method', function(assert) {
     var result = SolrRequest.create({
       handler: { method: 'POST' }
     });
-    assert.ok(result.get('method') === 'POST', 'Should bind property `method`');
+    assert.ok(get(result, 'method') === 'POST', 'Should bind property `method`');
   });
 });
 
 test('init creates data', function(assert) {
   Ember.run(function() {
     var result = SolrRequest.create();
-    assert.ok(result.get('data'), 'Should create truthy property `data`');
+    assert.ok(get(result, 'data'), 'Should create truthy property `data`');
   });
 });
 
 test('init creates options', function(assert) {
   Ember.run(function() {
     var result = SolrRequest.create();
-    assert.ok(result.get('options'), 'Should create truthy property `options`');
+    assert.ok(get(result, 'options'), 'Should create truthy property `options`');
   });
 });
 
 test('init creates new options', function(assert) {
   Ember.run(function() {
     var req1 = SolrRequest.create();
-    req1.get('options')['key'] = 'value';
+    get(req1, 'options')['key'] = 'value';
 
     var req2 = SolrRequest.create();
 
-    var req2HasKeyFromReq1 = req2.get('options').hasOwnProperty('key');
+    var req2HasKeyFromReq1 = get(req2, 'options').hasOwnProperty('key');
     assert.ok(req2HasKeyFromReq1 === false, 'Should create new options for each instance');
   });
 });
@@ -42,8 +45,8 @@ test('init creates new options', function(assert) {
 test('init with data binds to options', function(assert) {
   Ember.run(function() {
     var result = SolrRequest.create({ data: { key: 'value' }});
-    assert.ok(result.get('data'), 'Should create truthy property `data`');
-    assert.ok(result.get('options.data'), 'Should create truthy property `options`');
+    assert.ok(get(result, 'data'), 'Should create truthy property `data`');
+    assert.ok(get(result, 'options.data'), 'Should create truthy property `options`');
   });
 });
 
@@ -54,8 +57,8 @@ test('init with data and options binds', function(assert) {
       options: { async: true }
     });
 
-    assert.ok(result.get('data.key'), 'Should use provided `data`');
-    assert.ok(result.get('options.data.key'), 'Should initialize `options.data` from `data`');
+    assert.ok(get(result, 'data.key'), 'Should use provided `data`');
+    assert.ok(get(result, 'options.data.key'), 'Should initialize `options.data` from `data`');
   });
 });
 
@@ -68,10 +71,9 @@ test('init with options binds to data', function(assert) {
       }
     });
 
-    assert.ok(result.get('options.data').key, 'Should bind data to options.data');
-    assert.ok(result.get('options.async'), 'Should preserve options');
-    assert.ok(result.get('data.key'), 'Should use supplied data');
-
+    assert.ok(get(result, 'options.data').key, 'Should bind data to options.data');
+    assert.ok(get(result, 'options.async'), 'Should preserve options');
+    assert.ok(get(result, 'data.key'), 'Should use supplied data');
   });
 });
 
@@ -95,8 +97,8 @@ test('init throws when providing data and options.data', function(assert) {
 test('set data key bound to options', function(assert) {
   Ember.run(function() {
     var request = SolrRequest.create();
-    request.set('data.key', 'value');
+    set(request, 'data.key', 'value');
 
-    assert.ok(request.get('options.data')['key'], 'data property should be bound to options.data');
+    assert.ok(get(request, 'options.data')['key'], 'data property should be bound to options.data');
   });
 });

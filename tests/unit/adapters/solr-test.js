@@ -10,10 +10,13 @@ import QUnit from 'qunit';
 
 import AjaxMock from '../../helpers/ajax-mock';
 
+const get = Ember.get,
+      set = Ember.set;
+
 moduleFor('adapter:solr', 'SolrAdapter', {
   // Specify the other units that are required for this test.
   beforeEach: function() {
-    this.subject().set('dataType', 'json');
+    set(this.subject(), 'dataType', 'json');
     this.store = this.container.lookup('store:main');
     this.DummyModel = { typeKey: 'dummy' };
 
@@ -74,7 +77,7 @@ test('find by id uses real time get handler', function(assert) {
   this.expectAjax('/solr/get', { id: 101 }, responseData);
 
   var adapter = this.subject();
-  adapter.set('enableRealTimeGet', true);
+  set(adapter, 'enableRealTimeGet', true);
 
   return adapter.find(this.store, this.DummyModel, 101)
   .then(function(data) {

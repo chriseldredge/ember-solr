@@ -72,7 +72,7 @@ export default DS.JSONSerializer.extend({
   extractMeta: function(store, type, payload) {
     var versionFieldName = get(this, 'versionFieldName');
     var response = payload.response || {};
-    var docs = response.docs || [];
+    var docs = Ember.A(response.docs || []);
 
     if (payload.doc) {
       docs.pushObject(payload.doc);

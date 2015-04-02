@@ -2,7 +2,10 @@
   @module solr
 */
 
+import Ember from 'ember';
 import SolrSerializer from './solr';
+
+const get = Ember.get;
 
 /**
   Ember Data Serializer for Apache Solr [Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).
@@ -104,8 +107,8 @@ export default SolrSerializer.extend({
     @return {string} key
   */
   dynamicKeyForAttribute: function(attr) {
-    var prefixes = this.get('dynamicFieldPrefixes'),
-        suffixes = this.get('dynamicFieldSuffixes');
+    var prefixes = get(this, 'dynamicFieldPrefixes'),
+        suffixes = get(this, 'dynamicFieldSuffixes');
 
     if (!prefixes && !suffixes) {
       return attr;

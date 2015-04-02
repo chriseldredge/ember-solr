@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import QUnit from 'qunit';
 
-const mockjax = Ember.$.mockjax;
-const assert = QUnit.assert;
+const get = Ember.get,
+      set = Ember.set,
+      mockjax = Ember.$.mockjax,
+      assert = QUnit.assert;
 
 export default Ember.Object.extend({
   install: function() {
-    var calls = this.get('calls');
-    var expectations = this.get('expectations');
+    var calls = get(this, 'calls');
+    var expectations = get(this, 'expectations');
 
     mockjax(function(settings) {
       calls.push(settings);
@@ -31,7 +33,7 @@ export default Ember.Object.extend({
   },
 
   expect: function(url, data, responseData) {
-    var expectations = this.get('expectations');
+    var expectations = get(this, 'expectations');
 
     expectations[url] = {
       data: data,
@@ -40,11 +42,11 @@ export default Ember.Object.extend({
   },
 
   verifySingleAjaxCall: function() {
-    assert.equal(this.get('calls').length, 1, 'number of ajax calls');
+    assert.equal(get(this, 'calls').length, 1, 'number of ajax calls');
   },
 
-  _init: function() {
-    this.set('calls', []);
-    this.set('expectations', []);
-  }.on('init')
+  _init: Ember.on('init', function() {
+    set(this, 'calls', []);
+    set(this, 'expectations', []);
+  })
 });

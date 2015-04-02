@@ -8,6 +8,9 @@ import DS from 'ember-data';
 
 import SolrDynamicSerializer from 'ember-solr/serializers/solr-dynamic';
 
+const get = Ember.get,
+      set = Ember.set;
+
 moduleFor('serializer:solr-dynamic', 'SolrDynamicSerializer', {
   needs: ['model:dummy'],
   beforeEach: function() {
@@ -40,8 +43,8 @@ test('normalize int', function(assert) {
 
 test('normalize int with prefix', function(assert) {
   var serializer = this.subject();
-  serializer.set('dynamicFieldPrefixes', { 'number': 'int_'} );
-  serializer.set('dynamicFieldSuffixes', null);
+  set(serializer, 'dynamicFieldPrefixes', { 'number': 'int_'} );
+  set(serializer, 'dynamicFieldSuffixes', null);
 
   var result = serializer.normalize(this.dummyType, { int_flags: 42});
   assert.deepEqual(result, { flags: 42 });
@@ -49,7 +52,7 @@ test('normalize int with prefix', function(assert) {
 
 test('normalize with attr mapping', function(assert) {
   var serializer = this.subject();
-  serializer.set('attrs', { isWeird: 'weird_n' });
+  set(serializer, 'attrs', { isWeird: 'weird_n' });
 
   var result = serializer.normalize(this.dummyType, { weird_n: true});
   assert.deepEqual(result, { isWeird: true });

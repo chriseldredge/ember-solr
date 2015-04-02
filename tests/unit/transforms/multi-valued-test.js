@@ -3,15 +3,19 @@ import {
   test
 } from 'ember-qunit';
 
-import MultiValuedTransform from 'ember-solr/transforms/multi-valued';
+import Ember from 'ember';
 import DS from 'ember-data';
+import MultiValuedTransform from 'ember-solr/transforms/multi-valued';
+
+const get = Ember.get,
+      set = Ember.set;
 
 moduleFor('transform:multi-valued', 'MultiValuedTransform', {
 });
 
 test('deserialize does nothing on correct element type', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'number');
+  set(transform, 'elementType', 'number');
 
   var result = transform.deserialize([1, NaN, 3]);
 
@@ -20,8 +24,8 @@ test('deserialize does nothing on correct element type', function(assert) {
 
 test('deserialize preserves null', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'number');
-  transform.set('elementTransform', DS.NumberTransform.create());
+  set(transform, 'elementType', 'number');
+  set(transform, 'elementTransform', DS.NumberTransform.create());
 
   var result = transform.deserialize([null, undefined]);
 
@@ -30,8 +34,8 @@ test('deserialize preserves null', function(assert) {
 
 test('deserialize converts undefined to null', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'number');
-  transform.set('elementTransform', DS.NumberTransform.create());
+  set(transform, 'elementType', 'number');
+  set(transform, 'elementTransform', DS.NumberTransform.create());
 
   var result = transform.deserialize([undefined]);
 
@@ -40,8 +44,8 @@ test('deserialize converts undefined to null', function(assert) {
 
 test('deserialize converts strings to numbers', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'number');
-  transform.set('elementTransform', DS.NumberTransform.create());
+  set(transform, 'elementType', 'number');
+  set(transform, 'elementTransform', DS.NumberTransform.create());
 
   var result = transform.deserialize(['1', '3']);
 
@@ -50,7 +54,7 @@ test('deserialize converts strings to numbers', function(assert) {
 
 test('deserialize throws on missing element transform', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'fred');
+  set(transform, 'elementType', 'fred');
 
   try {
     transform.deserialize(['1', '3']);
@@ -62,7 +66,7 @@ test('deserialize throws on missing element transform', function(assert) {
 
 test('serialize does nothing on correct element type', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'number');
+  set(transform, 'elementType', 'number');
 
   var result = transform.serialize([1, NaN, 3]);
 
@@ -71,7 +75,7 @@ test('serialize does nothing on correct element type', function(assert) {
 
 test('serialize is null safe', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'number');
+  set(transform, 'elementType', 'number');
 
   var result = transform.serialize(null);
 
@@ -80,8 +84,8 @@ test('serialize is null safe', function(assert) {
 
 test('serialize converts strings to numbers', function(assert) {
   var transform = this.subject();
-  transform.set('elementType', 'number');
-  transform.set('elementTransform', DS.NumberTransform.create());
+  set(transform, 'elementType', 'number');
+  set(transform, 'elementTransform', DS.NumberTransform.create());
 
   var result = transform.serialize(['1', '3']);
 
