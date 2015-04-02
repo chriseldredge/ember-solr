@@ -13,6 +13,7 @@
     "ember-qunit": "0.3.0",
     "ember-qunit-notifications": "0.0.7",
     "qunit": "~1.17.1",
-    "blanket": "~1.1.5"
+    "blanket": "~1.1.5",
+    "json-bignum": "~0.0.1"
   }
 }

@@ -2,9 +2,11 @@
 /* global require, module */
 
 var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+var path = require('path');
 
 var app = new EmberAddon();
 
-app.import({ development: 'bower_components/jquery-mockjax/jquery.mockjax.js'});
+app.import(path.join(app.bowerDirectory, 'json-bignum', 'lib', 'json-bignum.js'));
+app.import(path.join(app.bowerDirectory, 'jquery-mockjax', 'jquery.mockjax.js'));
 
 module.exports = app.toTree();

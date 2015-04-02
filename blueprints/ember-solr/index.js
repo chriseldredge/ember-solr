@@ -22,7 +22,10 @@ module.exports = {
     var self = this,
         solrBaseURL = options.url || 'http://YOUR-SOLR-HOST-HERE/';
 
-    return self.addToConfig('solrBaseURL', '\'' + solrBaseURL + '\'')
+    return this.addBowerPackagesToProject([ {name: 'json-bignum', target: '^0.0.1'} ])
+    .then(function() {
+      return self.addToConfig('solrBaseURL', '\'' + solrBaseURL + '\'');
+    })
     .then(function (wasAdded) {
       if (wasAdded === false) {
         return;

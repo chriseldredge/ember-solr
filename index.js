@@ -1,6 +1,8 @@
 /* jshint node: true */
 'use strict';
 
+var path = require('path');
+
 module.exports = {
   name: 'ember-solr',
 
@@ -22,5 +24,11 @@ module.exports = {
     }
 
     return ENV;
+  },
+
+  included: function json_bignum_included(app) {
+    this._super.included(app);
+
+    app.import(path.join(app.bowerDirectory, 'json-bignum', 'lib', 'json-bignum.js'));
   }
 };
