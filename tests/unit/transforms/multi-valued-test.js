@@ -69,6 +69,15 @@ test('serialize does nothing on correct element type', function(assert) {
   assert.deepEqual(result, [1, NaN, 3], 'Should convert to numbers.');
 });
 
+test('serialize is null safe', function(assert) {
+  var transform = this.subject();
+  transform.set('elementType', 'number');
+
+  var result = transform.serialize(null);
+
+  assert.deepEqual(result, null, 'Should convert to numbers.');
+});
+
 test('serialize converts strings to numbers', function(assert) {
   var transform = this.subject();
   transform.set('elementType', 'number');

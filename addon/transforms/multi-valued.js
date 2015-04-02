@@ -23,6 +23,10 @@ export default DS.Transform.extend({
   },
 
   convert: function(array, funcName) {
+    if (!Array.isArray(array)) {
+      return array;
+    }
+
     var elementType = this.get('elementType');
     var func = null;
 
