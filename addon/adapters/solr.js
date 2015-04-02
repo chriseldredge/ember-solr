@@ -11,6 +11,7 @@ import {
 } from 'ember-solr/requests/handlers';
 
 import SolrRequest from 'ember-solr/requests/request';
+import bigNumberStringify from 'ember-solr/utils/big-number-stringify';
 
 const forEach = Ember.ArrayPolyfills.forEach;
 
@@ -395,6 +396,12 @@ export default DS.Adapter.extend({
     return new Ember.RSVP.Promise(function(resolve, reject) {
       var hash = adapter.ajaxOptions(url, type, options);
 
+      hash.converters = {
+        'text json': function(text) {
+          return BigNumberJSON.parse(text);
+        }
+      };
+
       hash.success = function(json, textStatus, jqXHR) {
         json = adapter.ajaxSuccess(jqXHR, json);
         if (json instanceof DS.InvalidError) {
@@ -435,7 +442,7 @@ export default DS.Adapter.extend({
 
     if (hash.data && type !== 'GET') {
       hash.contentType = 'application/json; charset=utf-8';
-      hash.data = JSON.stringify(hash.data);
+      Ember.set(hash, 'data', bigNumberStringify(hash.data));
     }
 
     var headers = this.get('headers');
