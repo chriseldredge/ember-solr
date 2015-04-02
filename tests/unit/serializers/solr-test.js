@@ -5,12 +5,18 @@ import {
 
 import Ember from 'ember';
 import DS from 'ember-data';
+import SolrUpdateMode from 'ember-solr/lib/update-mode';
+
+const set = Ember.set,
+      get = Ember.get;
 
 moduleFor('serializer:solr', 'SolrSerializer', {
   needs: ['model:dummy'],
   beforeEach: function() {
     var container = this.container;
     container.register('store:main', DS.Store);
+    container.register('transform:string', DS.StringTransform);
+    container.register('transform:number', DS.NumberTransform);
 
     this.createDummy = function(options) {
       return Ember.run(function() {
@@ -108,4 +114,63 @@ test('extractSingle response.docs', function(assert) {
 
   assert.deepEqual(result, {id: '12'});
 
+});
+
+test('serialize optimistic: new record', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
+  var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
+
+  var result = serializer.serialize(snapshot, options);
+
+  assert.deepEqual(result, {title: 'My Dummy', flags: 37, _version_: -1});
+});
+
+test('serialize optimistic: update record', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
+  set(snapshot, 'id', 'doc-id-1234');
+  set(snapshot, 'isNew', false);
+  this.store.setMetadataFor(snapshot.type, { versions: { 'doc-id-1234': 1563456 }});
+  var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
+
+  var result = serializer.serialize(snapshot, options);
+
+  assert.deepEqual(result, {title: 'My Dummy', flags: 37, _version_: 1563456});
+});
+
+test('serialize optimistic: update record throws on missing version', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
+  set(snapshot, 'id', 'doc-id-1234');
+  set(snapshot, 'isNew', false);
+  this.store.setMetadataFor(snapshot.type, {});
+  var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
+
+  try {
+    serializer.serialize(snapshot, options);
+    assert.ok(false, 'Expected error to be thrown.');
+  } catch (err) {
+    assert.equal(err.message, 'Missing metadata for record type `dummy`', 'err.message');
+  }
+});
+
+test('serialize last-write-wins', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
+  set(snapshot, 'isNew', false);
+  var options = { updateMode: SolrUpdateMode.LastWriteWins };
+
+  var result = serializer.serialize(snapshot, options);
+
+  assert.deepEqual(result, {title: 'My Dummy', flags: 37, _version_: 0});
+});
+
+test('serialize default omits _version_', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ title: 'My Dummy', flags: 37 })._createSnapshot();
+
+  var result = serializer.serialize(snapshot);
+
+  assert.deepEqual(result, {title: 'My Dummy', flags: 37});
 });

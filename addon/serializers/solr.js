@@ -4,8 +4,10 @@
 
 import Ember from 'ember';
 import DS from 'ember-data';
+import SolrUpdateMode from 'ember-solr/lib/update-mode';
 
 const forEach = Ember.EnumerableUtils.forEach;
+const get = Ember.get;
 
 /**
   Ember Data Serializer for Apache Solr.
@@ -68,7 +70,7 @@ export default DS.JSONSerializer.extend({
   },
 
   extractMeta: function(store, type, payload) {
-    var versionFieldName = this.get('versionFieldName');
+    var versionFieldName = get(this, 'versionFieldName');
     var response = payload.response || {};
     var docs = response.docs || [];
 
@@ -87,5 +89,56 @@ export default DS.JSONSerializer.extend({
     });
 
     store.setMetadataFor(type, meta);
+  },
+
+  serialize: function(record, options) {
+    options = options || {};
+    var updateMode = (options || {}).updateMode || SolrUpdateMode.None;
+
+    if (updateMode === SolrUpdateMode.Atomic) {
+      throw new Error('Atomic update is not yet implemented.');
+    }
+
+    var payload = this._super.apply(this, arguments);
+
+    if (updateMode === SolrUpdateMode.None) {
+      return payload;
+    }
+
+    var versionFieldName = get(this, 'versionFieldName');
+    var version;
+
+    // see https://cwiki.apache.org/confluence/display/solr/Updating+Parts+of+Documents
+    const NewDocumentVersionConstraint   = -1,
+          LastWriteWinsVersionConstraint = 0;
+
+    if (get(record, 'isNew')) {
+      version = NewDocumentVersionConstraint;
+    } else if (updateMode === SolrUpdateMode.LastWriteWins) {
+      version = LastWriteWinsVersionConstraint;
+    } else {
+      version = this.getRecordVersion(record);
+    }
+
+    payload[versionFieldName] = version;
+
+    return payload;
+  },
+
+  getRecordVersion: function(record) {
+    var store = get(record, 'store');
+    var meta = store.metadataFor(record.typeKey);
+
+    if (!meta || !meta.versions) {
+      throw new Error('Missing metadata for record type `' + record.typeKey + '`');
+    }
+
+    var version = meta.versions[record.id];
+
+    if (!version) {
+      throw new Error('Missing document version for record id `' + record.id + '` of type `' + record.typeKey + '`');
+    }
+
+    return version;
   }
 });

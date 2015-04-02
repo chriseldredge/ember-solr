@@ -42,7 +42,16 @@ const SolrHandlerType = {
     @final
     @type {string}
   */
-  RealTimeGet: 'SolrHandlerType.RealTimeGet'
+  RealTimeGet: 'SolrHandlerType.RealTimeGet',
+
+  /**
+    Represents a requst to [UpdateRequestProcessor](http://wiki.apache.org/solr/UpdateRequestProcessor)
+
+    @property RealTimeGet
+    @final
+    @type {string}
+  */
+  Update: 'SolrHandlerType.Update'
 };
 
 /**
@@ -120,9 +129,36 @@ const SolrRealTimeGetHandler = SolrRequestHandler.extend({
   path: 'get'
 });
 
+/**
+  Represents a default configuration of a request
+  to a Solr Update Request Processor.
+
+  @class SolrRealTimeGetHandler
+*/
+const SolrUpdateHandler = SolrRequestHandler.extend({
+  /**
+    @property type
+    @default `SolrHandlerType.RealTimeGet`
+  */
+  type: SolrHandlerType.Update,
+
+  /**
+    @property path
+    @default 'get'
+  */
+  path: 'update',
+
+  /**
+    @propery method
+    @default 'POST'
+  */
+  method: 'POST'
+});
+
 export {
   SolrHandlerType,
   SolrRequestHandler,
   SolrSearchHandler,
-  SolrRealTimeGetHandler
+  SolrRealTimeGetHandler,
+  SolrUpdateHandler
 };

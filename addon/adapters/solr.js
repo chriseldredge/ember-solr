@@ -7,10 +7,12 @@ import DS from 'ember-data';
 import {
   SolrHandlerType,
   SolrSearchHandler,
-  SolrRealTimeGetHandler
+  SolrRealTimeGetHandler,
+  SolrUpdateHandler
 } from 'ember-solr/lib/handlers';
 
 import SolrRequest from 'ember-solr/lib/request';
+import SolrUpdateMode from 'ember-solr/lib/update-mode';
 import bigNumberStringify from 'ember-solr/lib/big-number-stringify';
 
 const forEach = Ember.ArrayPolyfills.forEach;
@@ -83,6 +85,16 @@ export default DS.Adapter.extend({
   enableRealTimeGet: false,
 
   /**
+    Sets the mode for how updates are sent
+    to Solr.
+
+    @property updateMode
+    @type {SolrUpdateType}
+    @default SolrUpdateType.OptimisticConcurrency
+  */
+  updateMode: SolrUpdateMode.OptimisticConcurrency,
+
+  /**
     Find a record by its unique ID.
 
     @method find
@@ -98,7 +110,8 @@ export default DS.Adapter.extend({
 
     @method findAll
   */
-  findAll: function(store, type) {
+  findAll: function(store, type, sinceToken) {
+    console.log('findAll since', sinceToken);
     var request = this.buildRequest(type.typeKey, 'findAll');
 
     return this.executeRequest(request);
@@ -135,6 +148,27 @@ export default DS.Adapter.extend({
     return this.executeRequest(request);
   },
 
+  createRecord: function(store, type, snapshot) {
+    throw new Error('not implemented');
+  },
+
+  updateRecord: function(store, type, snapshot) {
+    var options = {
+      includeId: true,
+      updateMode: this.get('updateMode')
+    };
+
+    var data = this.serialize(snapshot, options);
+
+    var request = this.buildRequest(type.typeKey, 'updateRecord', [data]);
+
+    return this.executeRequest(request);
+  },
+
+  deleteRecord: function() {
+    throw new Error('not implemented');
+  },
+
   /**
     Builds a request to send to Solr.
 
@@ -153,7 +187,7 @@ export default DS.Adapter.extend({
       query = {};
       query[key] = data;
       data = query;
-    } else {
+    } else if (handler.get('type') === SolrHandlerType.Search) {
       data = data || {};
 
       if (Array.isArray(data)) {
@@ -296,6 +330,10 @@ export default DS.Adapter.extend({
       return SolrRealTimeGetHandler.create();
     }
 
+    if (operation === 'updateRecord') {
+      return SolrUpdateHandler.create();
+    }
+
     return SolrSearchHandler.create();
   },
 
@@ -436,7 +474,7 @@ export default DS.Adapter.extend({
     hash.context = this;
     hash.traditional = true;
 
-    if (hash.dataType === 'jsonp') {
+    if (hash.dataType.indexOf('jsonp') === 0) {
       hash.jsonp = 'json.wrf';
     }
 
