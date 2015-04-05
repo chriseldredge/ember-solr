@@ -14,6 +14,7 @@ import {
 import SolrRequest from 'ember-solr/lib/request';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 import bigNumberStringify from 'ember-solr/lib/big-number-stringify';
+import ConcurrentModificationError from 'ember-solr/concurrent-modification-error';
 
 const forEach = Ember.ArrayPolyfills.forEach,
       get = Ember.get,
@@ -164,7 +165,12 @@ export default DS.Adapter.extend({
 
     var request = this.buildRequest(type.typeKey, 'updateRecord', [data]);
 
-    return this.executeRequest(request);
+    var self = this;
+
+    return this.executeRequest(request)
+    .then(function() {
+      return self.find(store, type, snapshot.id);
+    });
   },
 
   deleteRecord: function() {
@@ -561,14 +567,24 @@ export default DS.Adapter.extend({
   ajaxError: function(jqXHR, responseText, errorThrown) {
     var isObject = jqXHR !== null && typeof jqXHR === 'object';
 
-    if (isObject) {
-      jqXHR.then = null;
-      if (!jqXHR.errorThrown) {
-        if (typeof errorThrown === 'string') {
-          jqXHR.errorThrown = new Error(errorThrown);
-        } else {
-          jqXHR.errorThrown = errorThrown;
-        }
+    if (!isObject) {
+      return jqXHR;
+    }
+
+    if (jqXHR.status === 409) {
+      var message = 'version conflict';
+      if (jqXHR.responseJSON && jqXHR.responseJSON.error && jqXHR.responseJSON.error.msg) {
+        message = jqXHR.responseJSON.error.msg;
+      }
+      return new ConcurrentModificationError(message);
+    }
+
+    jqXHR.then = null;
+    if (!jqXHR.errorThrown) {
+      if (typeof errorThrown === 'string') {
+        jqXHR.errorThrown = new Error(errorThrown);
+      } else {
+        jqXHR.errorThrown = errorThrown;
       }
     }
 

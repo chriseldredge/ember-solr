@@ -135,7 +135,6 @@ test('serialize optimistic: update record', function(assert) {
   var record = this.createDummy({ title: 'My Dummy', flags: 37, id: 'doc-id-1234', isNew: false });
   var snapshot = record._createSnapshot();
 
-
   this.store.setMetadataFor(snapshot.type, { versions: { 'doc-id-1234': 1563456 }});
   var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
 
