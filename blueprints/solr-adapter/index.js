@@ -8,7 +8,7 @@ module.exports = {
 
   locals: function(options) {
     var baseURL = 'config.solrBaseURL';
-    var baseClass = 'SolrAdapter';
+    var baseClass = 'EmberSolr.SolrAdapter';
 
     if (options.url) {
       baseURL = "'" + options.url + "'";

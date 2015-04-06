@@ -1,5 +1,5 @@
 import config from '../config/environment';
-import SolrAdapter from 'ember-solr/adapters/solr';
+import EmberSolr from 'ember-solr';
 
 export default <%= baseClass %>.extend({
   baseURL: <%= baseURL %>,
