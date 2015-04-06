@@ -6,6 +6,8 @@ import {
 import Ember from 'ember';
 import DS from 'ember-data';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
+import NotFoundError from 'ember-solr/not-found-error';
+import TooManyResultsError from 'ember-solr/too-many-results-error';
 
 const set = Ember.set,
       get = Ember.get;
@@ -20,6 +22,7 @@ moduleFor('serializer:solr', 'SolrSerializer', {
 
     this.createDummy = function(options) {
       return Ember.run(function() {
+        options = options || {};
         var isNew = !!options.isNew;
         delete options.isNew;
         var record = container.lookup('store:main').createRecord('dummy', options);
@@ -107,7 +110,22 @@ test('extractSingle doc', function(assert) {
   var result = serializer.extractSingle(this.store, this.dummyType, payload, payload.doc.id, 'find');
 
   assert.deepEqual(result, {id: '12'});
+});
 
+test('extractSingle doc not found', function(assert) {
+  var serializer = this.subject();
+  var type = this.createDummy().get('constructor');
+  var id = '13';
+  var payload = {doc: null};
+
+  try {
+    serializer.extractSingle(this.store, type, payload, id, 'find');
+    assert.ok(false, 'Expected error to be thrown');
+  } catch (err) {
+    assert.ok(err instanceof NotFoundError, 'Expected NotFoundError to be thrown');
+    assert.equal(err.id, id, 'err.id');
+    assert.equal(err.type, 'dummy', 'err.type');
+  }
 });
 
 test('extractSingle response.docs', function(assert) {
@@ -117,7 +135,39 @@ test('extractSingle response.docs', function(assert) {
   var result = serializer.extractSingle(this.store, this.dummyType, payload, '12', 'find');
 
   assert.deepEqual(result, {id: '12'});
+});
 
+test('extractSingle response.docs not found', function(assert) {
+  var serializer = this.subject();
+  var type = this.createDummy().get('constructor');
+  var id = '13';
+  var payload = {response: {docs: []}};
+
+  try {
+    serializer.extractSingle(this.store, type, payload, id, 'find');
+    assert.ok(false, 'Expected error to be thrown');
+  } catch (err) {
+    assert.ok(err instanceof NotFoundError, 'Expected NotFoundError to be thrown');
+    assert.equal(err.id, id, 'err.id');
+    assert.equal(err.type, 'dummy', 'err.type');
+  }
+});
+
+test('extractSingle response.docs not single', function(assert) {
+  var serializer = this.subject();
+  var type = this.createDummy().get('constructor');
+  var id = '13';
+  var payload = {response: {docs: [{}, {}, {}]}};
+
+  try {
+    serializer.extractSingle(this.store, type, payload, id, 'find');
+    assert.ok(false, 'Expected error to be thrown');
+  } catch (err) {
+    assert.ok(err instanceof TooManyResultsError, 'Expected TooManyResultsError to be thrown');
+    assert.equal(err.id, id, 'err.id');
+    assert.equal(err.type, 'dummy', 'err.type');
+    assert.equal(err.count, 3, 'err.count');
+  }
 });
 
 test('serialize optimistic: new record', function(assert) {

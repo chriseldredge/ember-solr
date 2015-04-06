@@ -379,7 +379,7 @@ export default DS.Adapter.extend({
     @method executeRequest
     @param {SolrRequest} request
     @return {Promise} promise
-    @protcted
+    @protected
   */
   executeRequest: function(request) {
     var URL = this.combinePath(

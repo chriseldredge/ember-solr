@@ -1,4 +1,6 @@
 import ConcurrentModificationError from './concurrent-modification-error';
+import NotFoundError from './not-found-error';
+import TooManyResultsError from './too-many-results-error';
 import SolrAdapter from './adapters/solr';
 import SolrSerializer from './serializers/solr';
 import SolrDynamicSerializer from './serializers/solr-dynamic';
@@ -17,6 +19,8 @@ import SolrUpdateMode from './lib/update-mode';
 
 export {
   ConcurrentModificationError,
+  NotFoundError,
+  TooManyResultsError,
 
   SolrAdapter,
 

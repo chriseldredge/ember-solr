@@ -4,6 +4,8 @@
 
 import Ember from 'ember';
 import DS from 'ember-data';
+import NotFoundError from 'ember-solr/not-found-error';
+import TooManyResultsError from 'ember-solr/too-many-results-error';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 
 const forEach = Ember.EnumerableUtils.forEach;
@@ -40,19 +42,19 @@ export default DS.JSONSerializer.extend({
 
   extractSingle: function(store, type, payload, id, requestType) {
     var response = payload.response;
-    var docLength = (response && response.docs) ?
+    var docLength = (response && Array.isArray(response.docs)) ?
                         response.docs.length
-                      : undefined;
+                      : NaN;
 
-    if (!payload.doc && docLength !== 1) {
-      throw new Error('Expected Solr response array with exactly one document but got `' + docLength + '`.');
+    if (payload.hasOwnProperty('doc') && payload.doc === null) {
+      throw new NotFoundError(type, id);
+    } else if (docLength === 0) {
+      throw new NotFoundError(type, id);
+    } else if (docLength > 1) {
+      throw new TooManyResultsError(type, id, docLength);
     }
 
     payload = payload.doc || response.docs[0];
-
-    if (!payload) {
-      throw new Error('Expected Solr response payload to contain property `doc` or `response.docs`.');
-    }
 
     return this._super(store, type, payload, id, requestType);
   },

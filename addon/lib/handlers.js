@@ -149,7 +149,7 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
   path: 'update',
 
   /**
-    @propery method
+    @property method
     @default 'POST'
   */
   method: 'POST'
