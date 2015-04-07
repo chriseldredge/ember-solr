@@ -85,7 +85,22 @@ const SolrRequestHandler = Ember.Object.extend({
     @type {string}
     @default 'GET'
   **/
-  method: 'GET'
+  method: 'GET',
+
+  /**
+    Builds the data to send to Solr as a querystring
+    or in an HTTP POST request body.
+
+    @method buildPayload
+    @param {SolrAdapter} adapter the adapter invoking this method
+    @param {subclass of DS.Model} type the type corresponding to the operation
+    @param {string} operation the operation e.g. 'find', 'updateRecord', etc.
+    @param {object} data the ID(s), query or snapshot payload to prepare.
+    @return {object} data object
+  */
+  buildPayload: function(/*adapter, type, operation, data*/) {
+    throw new Error('The method `buildPayload` must be overridden by a subclass.');
+  }
 });
 
 /**
@@ -106,7 +121,91 @@ const SolrSearchHandler = SolrRequestHandler.extend({
     @property path
     @default 'select'
   */
-  path: 'select'
+  path: 'select',
+
+  buildPayload: function(adapter, type, operation, data) {
+    data = data || {};
+    var key = adapter.uniqueKeyForType(type);
+
+    if (Array.isArray(data)) {
+      var query = data.map(function(id) {
+        return key + ':' + id;
+      }).join(' OR ');
+
+      data = {
+        q: query
+      };
+    } else if (typeof data !== 'object') {
+      data = {
+        q: key + ':' + data
+      };
+    }
+
+    return this.buildSolrQuery(adapter, type, operation, data);
+  },
+
+  /**
+    Builds a Solr query to send in a search request.
+    This method applies some defaults and converts
+    idiomatic Ember query parameters to their
+    Solr corollaries.
+
+    * Sets `wt=json`
+    * Converts `limit` to `rows`
+    * Converts `offset` to `start`
+    * Defaults to `q=*:*` when no query is specified
+    * Calls {{#crossLink "SolrAdapter/filterQueryForType:method"}}{{/crossLink}}
+    and sets `fq` when a non-blank filter query is returned
+
+    Overrides of this method can return an object that includes
+    other query options. Multipe `fq` parameters (and others)
+    can be defined by using an array for the values:
+    ```javascript
+    App.ApplicationAdapter = SolrAdapter.extend({
+      buildSolrQuery: function(type, query) {
+        return {
+          fq: [
+            'type:' + type,
+            'public:true'
+          ]
+        };
+      }
+    });
+    ```
+
+    See [QueryResponseWriter](https://wiki.apache.org/solr/QueryResponseWriter)
+    and [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters).
+
+    @method buildSolrQuery
+    @param {SolrAdapter} adapter the adapter invoking this method
+    @param {String} type
+    @param {String} operation
+    @param {Object} query
+    @return {Object} data hash for ajax request
+    @protected
+  */
+  buildSolrQuery: function(adapter, type, operation, query) {
+    var solrQuery = {
+      wt: 'json'
+    };
+
+    if (query.limit) {
+      solrQuery.rows = query.limit;
+    }
+
+    if (query.offset) {
+      solrQuery.start = query.offset;
+    }
+
+    var typeFilter = !!adapter.filterQueryForType ? adapter.filterQueryForType(type, operation) : null;
+    if (typeFilter) {
+      solrQuery.fq = typeFilter;
+    }
+
+    solrQuery.q = query.q || '*:*';
+
+    return solrQuery;
+  },
 });
 
 /**
@@ -126,7 +225,14 @@ const SolrRealTimeGetHandler = SolrRequestHandler.extend({
     @property path
     @default 'get'
   */
-  path: 'get'
+  path: 'get',
+
+  buildPayload: function(adapter, type, operation, data) {
+    var key = adapter.uniqueKeyForType(type);
+    var payload = {};
+    payload[key] = data;
+    return payload;
+  }
 });
 
 /**

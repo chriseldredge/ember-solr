@@ -89,6 +89,25 @@ test('find by id includes filter query', function(assert) {
   });
 });
 
+test('findQuery includes start and rows', function(assert) {
+  var self = this;
+  var expectedRequestData = {
+    q: '*:*',
+    wt: 'json',
+    rows: 12,
+    start: 24
+  };
+
+  this.expectAjax('/solr/select', expectedRequestData);
+
+  var adapter = this.subject();
+
+  return adapter.findQuery(this.store, this.dummyType, { limit: 12, offset: 24})
+  .then(function() {
+    self.verifySingleAjaxCall();
+  });
+});
+
 test('find by id uses real time get handler', function(assert) {
   var self = this;
   var responseData = { id: 101, title: 'Foo' };

@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 import {
-  SolrHandlerType,
   SolrSearchHandler,
   SolrRealTimeGetHandler,
   SolrUpdateHandler
@@ -195,99 +194,14 @@ export default DS.Adapter.extend({
   */
   buildRequest: function(type, operation, data) {
     var handler = this.handlerForType(type, operation);
-    var key = this.uniqueKeyForType(type);
 
-    if (get(handler, 'type') === SolrHandlerType.RealTimeGet) {
-      query = {};
-      query[key] = data;
-      data = query;
-    } else if (get(handler, 'type') === SolrHandlerType.Search) {
-      data = data || {};
-
-      if (Array.isArray(data)) {
-        var query = data.map(function(id) {
-          return key + ':' + id;
-        }).join(' OR ');
-
-        data = {
-          q: query
-        };
-      } else if (typeof data !== 'object') {
-        data = {
-          q: key + ':' + data
-        };
-      }
-
-      data = this.buildSolrQuery(type, operation, data);
-    }
+    data = handler.buildPayload(this, type, operation, data);
 
     return SolrRequest.create({
       core: this.coreForType(type, operation),
       handler: handler,
       data: data
     });
-  },
-
-  /**
-    Builds a Solr query to send in a search request.
-    This method applies some defaults and converts
-    idiomatic Ember query parameters to their
-    Solr corollaries.
-
-    * Sets `wt=json`
-    * Converts `limit` to `rows`
-    * Converts `offset` to `start`
-    * Defaults to `q=*:*` when no query is specified
-    * Calls {{#crossLink "SolrAdapter/filterQueryForType:method"}}{{/crossLink}}
-    and sets `fq` when a non-blank filter query is returned
-
-    Overrides of this method can return an object that includes
-    other query options. Multipe `fq` parameters (and others)
-    can be defined by using an array for the values:
-    ```javascript
-    App.ApplicationAdapter = SolrAdapter.extend({
-      buildSolrQuery: function(type, query) {
-        return {
-          fq: [
-            'type:' + type,
-            'public:true'
-          ]
-        };
-      }
-    });
-    ```
-
-    See [QueryResponseWriter](https://wiki.apache.org/solr/QueryResponseWriter)
-    and [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters).
-
-    @method buildSolrQuery
-    @param {String} type
-    @param {String} operation
-    @param {Object} query
-    @return {Object} data hash for ajax request
-    @protected
-  */
-  buildSolrQuery: function(type, operation, query) {
-    var solrQuery = {
-      wt: 'json'
-    };
-
-    if (query.limit) {
-      solrQuery.rows = query.limit;
-    }
-
-    if (query.offset) {
-      solrQuery.start = query.offset;
-    }
-
-    var typeFilter = !!this.filterQueryForType ? this.filterQueryForType(type, operation) : null;
-    if (typeFilter) {
-      solrQuery.fq = typeFilter;
-    }
-
-    solrQuery.q = query.q || '*:*';
-
-    return solrQuery;
   },
 
   /**
