@@ -103,6 +103,13 @@ export default DS.JSONSerializer.extend({
 
     var doc = this._super.apply(this, arguments);
 
+    for (var k in doc) {
+      var attrValue = doc[k];
+      if (Ember.isEmpty(attrValue)) {
+        delete doc[k];
+      }
+    }
+
     this.setVersionConstraint(snapshot, options, doc);
 
     return doc;

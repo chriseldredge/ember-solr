@@ -18,6 +18,7 @@ moduleFor('serializer:solr', 'SolrSerializer', {
     var container = this.container;
     container.register('store:main', DS.Store);
     container.register('transform:string', DS.StringTransform);
+    container.register('transform:boolean', DS.BooleanTransform);
     container.register('transform:number', DS.NumberTransform);
 
     this.createDummy = function(options) {
@@ -224,4 +225,31 @@ test('serialize default omits _version_', function(assert) {
   var result = serializer.serialize(snapshot);
 
   assert.deepEqual(result, {title: 'My Dummy', flags: 37});
+});
+
+test('serialize deletes null', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ title: 'My Dummy' })._createSnapshot();
+
+  var result = serializer.serialize(snapshot);
+
+  assert.deepEqual(result, {title: 'My Dummy'});
+});
+
+test('serialize deletes empty string', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ title: '', flags: 42 })._createSnapshot();
+
+  var result = serializer.serialize(snapshot);
+
+  assert.deepEqual(result, {flags: 42});
+});
+
+test('serialize preserves falsy', function(assert) {
+  var serializer = this.subject();
+  var snapshot = this.createDummy({ flags: 0 })._createSnapshot();
+
+  var result = serializer.serialize(snapshot);
+
+  assert.deepEqual(result, {flags: 0});
 });
