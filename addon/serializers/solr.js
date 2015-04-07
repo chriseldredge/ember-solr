@@ -101,10 +101,17 @@ export default DS.JSONSerializer.extend({
       throw new Error('Atomic update is not yet implemented.');
     }
 
-    var payload = this._super.apply(this, arguments);
+    var doc = this._super.apply(this, arguments);
 
+    this.setVersionConstraint(snapshot, options, doc);
+
+    return doc;
+  },
+
+  setVersionConstraint: function(snapshot, options, doc) {
+    var updateMode = (options || {}).updateMode || SolrUpdateMode.None;
     if (updateMode === SolrUpdateMode.None) {
-      return payload;
+      return doc;
     }
 
     var versionFieldName = get(this, 'versionFieldName');
@@ -122,9 +129,8 @@ export default DS.JSONSerializer.extend({
       version = this.getRecordVersion(snapshot);
     }
 
-    payload[versionFieldName] = version;
-
-    return payload;
+    doc[versionFieldName] = version;
+    return doc;
   },
 
   getRecordVersion: function(snapshot) {

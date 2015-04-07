@@ -37,6 +37,44 @@ export default DS.Adapter.extend({
   baseURL: '/solr',
 
   /**
+    When true, sends a `commit` command to Solr in update
+    requests to commit the index synchronously and
+    block the request until commit has completed.
+
+    There are many considerations when choosing to
+    enable this feature. Consult the Solr
+    [documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)
+    on autoCommit, and softAutoCommit.
+
+    See also {{#crossLink "SolrAdapter/commitWithinOnWrite:property"}}{{/crossLink}}.
+
+    @property commitOnWrite
+    @type {boolean}
+    @default undefined
+  */
+  commit: undefined,
+
+  /**
+    When set, sends a `commitWithin` command to Solr
+    in update requests to have the update committed
+    within a time limit (in milliseconds). Solr will
+    aggregate multiple pending writes into a single
+    commit to reduce overhead and improve performance.
+
+    There are many considerations when choosing to
+    enable this feature. Consult the Solr
+    [documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)
+    on autoCommit, and softAutoCommit.
+
+    See also {{#crossLink "SolrAdapter/commitOnWrite:property"}}{{/crossLink}}.
+
+    @property commitWithinOnWrite
+    @type {number} milliseconds
+    @default undefined
+  */
+  commitWithinMilliseconds: undefined,
+
+  /**
     Specifies a default Solr Core to send requests
     to. If no default core is configured, this adapter
     will not include a core in the request URI path
@@ -160,9 +198,9 @@ export default DS.Adapter.extend({
       updateMode: get(this, 'updateMode')
     };
 
-    var data = this.serialize(snapshot, options);
+    var doc = this.serialize(snapshot, options);
 
-    var request = this.buildRequest(type.typeKey, 'updateRecord', [data]);
+    var request = this.buildRequest(type.typeKey, 'updateRecord', doc);
 
     var self = this;
 

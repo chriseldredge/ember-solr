@@ -123,19 +123,43 @@ test('find by id uses real time get handler', function(assert) {
   });
 });
 
+test('buildRequest update includes commit command', function(assert) {
+  var adapter = this.subject();
+  set(adapter, 'commit', true);
+  adapter.serialize = function() {
+    return {id:'dummy-1'};
+  };
+
+  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+
+  assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}}, commit: {}}, 'request.data');
+});
+
+test('buildRequest update includes commitWithin', function(assert) {
+  var adapter = this.subject();
+  set(adapter, 'commitWithinMilliseconds', 1234);
+  adapter.serialize = function() {
+    return {id:'dummy-1'};
+  };
+
+  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+
+  assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}, commitWithin: 1234}}, 'request.data');
+});
+
 test('updateRecord', function(assert) {
   var self = this;
   var snapshot = this.createDummy({ isNew: false, id: 'dummy-1' })._createSnapshot();
   var updateResponseData = { responseHeader: { status: 0 } };
   var getResponseData = { id: 101, title: 'Foo' };
 
-  this.expectAjax('/solr/update', JSON.stringify([{ id: 'dummy-1' }]), updateResponseData);
+  this.expectAjax('/solr/update', '{"add":{"doc":{"id":"dummy-1"}}}', updateResponseData);
   this.expectAjax('/solr/get', { id: 'dummy-1' }, getResponseData);
 
   var adapter = this.subject();
   set(adapter, 'enableRealTimeGet', true);
   adapter.serialize = function() {
-    return { id: 'dummy-1' };
+    return {id:'dummy-1'};
   };
 
   return Ember.run(function() {
@@ -158,13 +182,13 @@ test('updateRecord handles 409 conflict', function(assert) {
     }
   };
 
-  this.expectAjax('/solr/update', JSON.stringify([{ id: 'dummy-1' }]), updateResponseData)
+  this.expectAjax('/solr/update', '{"add":{"doc":{"id":"dummy-1"}}}', updateResponseData)
     .withStatusCode(409);
 
   var adapter = this.subject();
   set(adapter, 'enableRealTimeGet', true);
   adapter.serialize = function() {
-    return { id: 'dummy-1' };
+    return {id:"dummy-1"};
   };
 
   return Ember.run(function() {

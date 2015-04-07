@@ -4,6 +4,8 @@
 
 import Ember from 'ember';
 
+const get = Ember.get;
+
 /**
   An enumeration of handler types that `ember-solr`
   knows how to interact with.
@@ -258,7 +260,25 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
     @property method
     @default 'POST'
   */
-  method: 'POST'
+  method: 'POST',
+
+  buildPayload: function(adapter, type, operation, data) {
+    data = {
+      add: {
+        doc: data
+      }
+    };
+
+    var commitWithin = get(adapter, 'commitWithinMilliseconds');
+
+    if (get(adapter, 'commit') === true) {
+      data.commit = {};
+    } else if (commitWithin > 0) {
+      data.add.commitWithin = commitWithin;
+    }
+
+    return data;
+  }
 });
 
 export {
