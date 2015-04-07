@@ -188,11 +188,15 @@ export default DS.Adapter.extend({
     return this.executeRequest(request);
   },
 
-  createRecord: function() {
-    throw new Error('not implemented');
+  createRecord: function(store, type, snapshot) {
+    return this.update(store, type, snapshot);
   },
 
   updateRecord: function(store, type, snapshot) {
+    return this.update(store, type, snapshot);
+  },
+
+  update: function(store, type, snapshot) {
     var options = {
       includeId: true,
       updateMode: get(this, 'updateMode')
