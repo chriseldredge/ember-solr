@@ -211,6 +211,31 @@ test('updateRecord', function(assert) {
   });
 });
 
+test('ajaxOptions jsonp sets stream.body', function(assert) {
+  var data = {id: 'foo'};
+  var options = {data: data};
+  var adapter = this.subject();
+  set(adapter, 'dataType', 'jsonp');
+
+  var result = adapter.ajaxOptions('/update', 'POST', options);
+
+  assert.equal(result.jsonp, 'json.wrf', 'result.jsonp');
+  assert.equal(result.type, 'GET', 'result.type');
+  assert.deepEqual(result.data, {'stream.body': JSON.stringify(data)}, 'result.data');
+});
+
+test('ajaxOptions POST stringifies data', function(assert) {
+  var data = {id: 'foo'};
+  var options = {data: data};
+  var adapter = this.subject();
+
+  var result = adapter.ajaxOptions('/update', 'POST', options);
+
+  assert.equal(result.type, 'POST', 'result.type');
+  assert.equal(result.contentType, 'application/json; charset=utf-8', 'result.type');
+  assert.deepEqual(result.data, JSON.stringify(data), 'result.data');
+});
+
 test('updateRecord handles 409 conflict', function(assert) {
   var self = this;
   var snapshot = this.createDummy({ isNew: false, id: 'dummy-1' })._createSnapshot();

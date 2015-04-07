@@ -13,7 +13,9 @@ export default Ember.Object.extend({
     var expectations = get(this, 'expectations');
 
     mockjax(function(settings) {
-      calls.pushObject(settings);
+      calls.pushObject({
+        url: settings.url,
+        data: settings.data});
 
       var match = expectations[settings.url];
       if (!match) {
@@ -35,7 +37,7 @@ export default Ember.Object.extend({
     var settings = {
       logging: false,
       data: data,
-      responseText: JSON.stringify(responseData || {})
+      responseText: responseData || {}
     };
 
     expectations[url] = settings;
@@ -43,6 +45,10 @@ export default Ember.Object.extend({
     var continuation = {
       withStatusCode: function(statusCode) {
         settings.status = statusCode;
+        return continuation;
+      },
+      withResponseText: function(responseText) {
+        settings.responseText = responseText;
         return continuation;
       }
     };
@@ -65,7 +71,7 @@ export default Ember.Object.extend({
       expected.pushObject({ url: k, data: expectations[k].data });
     }
 
-    assert.deepEqual(actual, expected);
+    assert.deepEqual(actual, expected, 'expected ajax calls vs actual');
   },
 
   _init: Ember.on('init', function() {

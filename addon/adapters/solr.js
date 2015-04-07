@@ -453,9 +453,13 @@ export default DS.Adapter.extend({
 
     if (hash.dataType.indexOf('jsonp') === 0) {
       hash.jsonp = 'json.wrf';
+      if (type !== 'GET') {
+        set(hash, 'data', {'stream.body': bigNumberStringify(hash.data)});
+        hash.type = 'GET'; // JSON-P can only use GET
+      }
     }
 
-    if (hash.data && type !== 'GET') {
+    if (hash.data && hash.type !== 'GET') {
       hash.contentType = 'application/json; charset=utf-8';
       set(hash, 'data', bigNumberStringify(hash.data));
     }
