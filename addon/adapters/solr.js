@@ -10,6 +10,7 @@ import {
   SolrUpdateHandler
 } from 'ember-solr/lib/handlers';
 
+import SolrCommitType from 'ember-solr/lib/commit-type';
 import SolrRequest from 'ember-solr/lib/request';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 import bigNumberStringify from 'ember-solr/lib/big-number-stringify';
@@ -37,7 +38,7 @@ export default DS.Adapter.extend({
   baseURL: '/solr',
 
   /**
-    When true, sends a `commit` command to Solr in update
+    When enabled, sends a `commit` command to Solr in update
     requests to commit the index synchronously and
     block the request until commit has completed.
 
@@ -46,13 +47,13 @@ export default DS.Adapter.extend({
     [documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)
     on autoCommit, and softAutoCommit.
 
-    See also {{#crossLink "SolrAdapter/commitWithinOnWrite:property"}}{{/crossLink}}.
+    See also {{#crossLink "SolrAdapter/commitWithinMilliseconds:property"}}{{/crossLink}}.
 
-    @property commitOnWrite
-    @type {boolean}
-    @default undefined
+    @property commit
+    @type {SolrCommitType}
+    @default SolrCommitType.None
   */
-  commit: undefined,
+  commit: SolrCommitType.None,
 
   /**
     When set, sends a `commitWithin` command to Solr
@@ -61,14 +62,20 @@ export default DS.Adapter.extend({
     aggregate multiple pending writes into a single
     commit to reduce overhead and improve performance.
 
+    This property, when set, takes precedence over
+    {{#crossLink "SolrAdapter/commit:property"}}{{/crossLink}}.
+
     There are many considerations when choosing to
     enable this feature. Consult the Solr
     [documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)
     on autoCommit, and softAutoCommit.
 
-    See also {{#crossLink "SolrAdapter/commitOnWrite:property"}}{{/crossLink}}.
+    In Solr 4 and later, commitWithin is handled by default
+    as a soft commit. See [UpdateHandlers in SolrConfig](https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig#UpdateHandlersinSolrConfig-commitWithin).
 
-    @property commitWithinOnWrite
+    See also {{#crossLink "SolrAdapter/commit:property"}}{{/crossLink}}.
+
+    @property commitWithinMilliseconds
     @type {number} milliseconds
     @default undefined
   */

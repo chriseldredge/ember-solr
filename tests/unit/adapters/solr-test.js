@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 import ConcurrentModificationError from 'ember-solr/concurrent-modification-error';
+import SolrCommitType from 'ember-solr/lib/commit-type';
 
 import {
   moduleFor,
@@ -125,7 +126,8 @@ test('find by id uses real time get handler', function(assert) {
 
 test('buildRequest update includes commit command', function(assert) {
   var adapter = this.subject();
-  set(adapter, 'commit', true);
+  set(adapter, 'commit', SolrCommitType.Hard);
+
   adapter.serialize = function() {
     return {id:'dummy-1'};
   };
@@ -135,8 +137,46 @@ test('buildRequest update includes commit command', function(assert) {
   assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}}, commit: {}}, 'request.data');
 });
 
+test('buildRequest update includes soft commit command', function(assert) {
+  var adapter = this.subject();
+  set(adapter, 'commit', SolrCommitType.Soft);
+
+  adapter.serialize = function() {
+    return {id:'dummy-1'};
+  };
+
+  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+
+  assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}}, commit: {softCommit: true}}, 'request.data');
+});
+
+test('buildRequest update omits commit command', function(assert) {
+  var adapter = this.subject();
+  set(adapter, 'commit', SolrCommitType.None);
+  adapter.serialize = function() {
+    return {id:'dummy-1'};
+  };
+
+  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+
+  assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}}}, 'request.data');
+});
+
 test('buildRequest update includes commitWithin', function(assert) {
   var adapter = this.subject();
+  set(adapter, 'commitWithinMilliseconds', 1234);
+  adapter.serialize = function() {
+    return {id:'dummy-1'};
+  };
+
+  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+
+  assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}, commitWithin: 1234}}, 'request.data');
+});
+
+test('buildRequest update commitWithin takes precedence over commit', function(assert) {
+  var adapter = this.subject();
+  set(adapter, 'commit', SolrCommitType.Hard);
   set(adapter, 'commitWithinMilliseconds', 1234);
   adapter.serialize = function() {
     return {id:'dummy-1'};

@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import SolrCommitType from './commit-type';
 
 const get = Ember.get;
 
@@ -270,11 +271,14 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
     };
 
     var commitWithin = get(adapter, 'commitWithinMilliseconds');
+    var commit = get(adapter, 'commit');
 
-    if (get(adapter, 'commit') === true) {
-      data.commit = {};
-    } else if (commitWithin > 0) {
+    if (commitWithin > 0) {
       data.add.commitWithin = commitWithin;
+    } else if (commit === SolrCommitType.Hard) {
+      data.commit = {};
+    } else if (commit === SolrCommitType.Soft) {
+      data.commit = {softCommit: true};
     }
 
     return data;

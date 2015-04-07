@@ -14,6 +14,7 @@ import {
   SolrUpdateHandler
 } from './lib/handlers';
 
+import CommitType from './lib/commit-type';
 import SolrRequest from './lib/request';
 import SolrUpdateMode from './lib/update-mode';
 
@@ -23,6 +24,8 @@ export {
   TooManyResultsError,
 
   SolrAdapter,
+
+  CommitType,
 
   SolrSerializer,
   SolrDynamicSerializer,
