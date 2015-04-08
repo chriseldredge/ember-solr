@@ -25,6 +25,9 @@ moduleFor('adapter:solr', 'SolrAdapter', {
   beforeEach: function() {
     var container = this.container;
     container.register('store:main', DS.Store);
+    container.register('serializer:dummy', DS.Serializer.extend({
+      versionFieldName: '_version_'
+    }));
 
     set(this.subject(), 'dataType', 'json');
 
@@ -204,6 +207,41 @@ test('buildRequest update commitWithin takes precedence over commit', function(a
   assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}, commitWithin: 1234}}, 'request.data');
 });
 
+test('buildRequest delete includes soft commit command', function(assert) {
+  var adapter = this.subject();
+  set(adapter, 'commit', SolrCommitType.Soft);
+
+  adapter.serialize = function() {
+    return {id:'dummy-1'};
+  };
+
+  var request = adapter.buildRequest(this.store, this.dummyType, 'deleteRecord', {id: 'dummy-1'});
+
+  assert.deepEqual(request.data, {delete: {id: 'dummy-1'}, commit: {softCommit: true}}, 'request.data');
+});
+
+test('buildRequest delete moves _version_ to query string', function(assert) {
+  var adapter = this.subject();
+
+  var data = {id: 'dummy-1', _version_: new BigNumber(12334234324)};
+
+  var request = adapter.buildRequest(this.store, this.dummyType, 'deleteRecord', data);
+
+  assert.equal(get(request, 'handler.path'), 'update?_version_=12334234324', 'request.path');
+  assert.deepEqual(request.data, {delete: {id: 'dummy-1'}}, 'request.data');
+});
+
+test('buildRequest delete moves _version_=0 to query string', function(assert) {
+  var adapter = this.subject();
+
+  var data = {id: 'dummy-1', _version_: 0};
+
+  var request = adapter.buildRequest(this.store, this.dummyType, 'deleteRecord', data);
+
+  assert.equal(get(request, 'handler.path'), 'update?_version_=0', 'request.path');
+  assert.deepEqual(request.data, {delete: {id: 'dummy-1'}}, 'request.data');
+});
+
 test('updateRecord', function(assert) {
   var self = this;
   var snapshot = this.createDummy({ isNew: false, id: 'dummy-1' })._createSnapshot();
@@ -224,6 +262,27 @@ test('updateRecord', function(assert) {
     .then(function(data) {
       self.verifyAjax();
       assert.deepEqual(getResponseData, data, 'response data');
+    });
+  });
+});
+
+test('deleteRecord', function(assert) {
+  var self = this;
+  var snapshot = this.createDummy({ isNew: false, id: 'dummy-1' })._createSnapshot();
+  var updateResponseData = { responseHeader: { status: 0 } };
+
+  this.expectAjax('/solr/update?_version_=1234', '{"delete":{"id":"dummy-1"}}', updateResponseData);
+
+  var adapter = this.subject();
+  adapter.serialize = function() {
+    return {id:'dummy-1', title: 'something', _version_: 1234};
+  };
+
+  return Ember.run(function() {
+    return adapter.deleteRecord(self.store, self.dummyType, snapshot)
+    .then(function(result) {
+      self.verifyAjax();
+      assert.deepEqual(result, updateResponseData, 'promise result should be null');
     });
   });
 });

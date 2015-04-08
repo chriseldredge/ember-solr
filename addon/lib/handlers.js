@@ -304,10 +304,46 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
   }
 });
 
+/**
+  Represents a default configuration of a request
+  to a Solr Update Request Processor for deleting
+  a document by ID.
+
+  @class SolrDeleteHandler
+*/
+const SolrDeleteHandler = SolrUpdateHandler.extend({
+  prepare: function(adapter, store, type, operation, data) {
+    var payload = {
+      'delete': {}
+    };
+
+    payload['delete'][adapter.uniqueKeyForType(type)] = data.id;
+
+    var versionFieldName = get(store.serializerFor(type), 'versionFieldName');
+    if (versionFieldName && typeof data[versionFieldName] !== 'undefined') {
+      var path = get(this, 'path');
+      path += (path.indexOf('?') > 0) ? '&' : '?';
+      path += versionFieldName + '=' + data[versionFieldName];
+      set(this, 'path', path);
+    }
+
+    var commit = get(adapter, 'commit');
+
+    if (commit === SolrCommitType.Hard) {
+      payload.commit = {};
+    } else if (commit === SolrCommitType.Soft) {
+      payload.commit = {softCommit: true};
+    }
+
+    set(this, 'data', payload);
+  }
+});
+
 export {
   SolrHandlerType,
   SolrRequestHandler,
   SolrSearchHandler,
   SolrRealTimeGetHandler,
-  SolrUpdateHandler
+  SolrUpdateHandler,
+  SolrDeleteHandler
 };

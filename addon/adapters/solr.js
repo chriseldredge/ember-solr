@@ -7,7 +7,8 @@ import DS from 'ember-data';
 import {
   SolrSearchHandler,
   SolrRealTimeGetHandler,
-  SolrUpdateHandler
+  SolrUpdateHandler,
+  SolrDeleteHandler
 } from 'ember-solr/lib/handlers';
 
 import SolrCommitType from 'ember-solr/lib/commit-type';
@@ -203,6 +204,10 @@ export default DS.Adapter.extend({
     return this.update(store, type, snapshot, 'updateRecord');
   },
 
+  deleteRecord: function(store, type, snapshot) {
+    return this.update(store, type, snapshot, 'deleteRecord');
+  },
+
   update: function(store, type, snapshot, operation) {
     var options = {
       includeId: true,
@@ -213,16 +218,17 @@ export default DS.Adapter.extend({
 
     var request = this.buildRequest(store, type, operation, doc);
 
+    var promise = this.executeRequest(request);
+
+    if (operation === 'deleteRecord') {
+      return promise;
+    }
+
     var self = this;
 
-    return this.executeRequest(request)
-    .then(function() {
+    return promise.then(function() {
       return self.find(store, type, snapshot.id);
     });
-  },
-
-  deleteRecord: function() {
-    throw new Error('not implemented');
   },
 
   serialize: function(snapshot, options) {
@@ -310,6 +316,10 @@ export default DS.Adapter.extend({
 
     if (operation === 'updateRecord' || operation === 'createRecord') {
       return SolrUpdateHandler.create();
+    }
+
+    if (operation === 'deleteRecord') {
+      return SolrDeleteHandler.create();
     }
 
     return SolrSearchHandler.create();

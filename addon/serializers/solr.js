@@ -71,6 +71,9 @@ export default DS.JSONSerializer.extend({
     return this._super(store, type, arrayPayload, id, requestType);
   },
 
+  extractDeleteRecord: function() {
+  },
+
   extractMeta: function(store, type, payload) {
     var versionFieldName = get(this, 'versionFieldName');
     var response = payload.response || {};

@@ -11,7 +11,8 @@ import {
   SolrRequestHandler,
   SolrSearchHandler,
   SolrRealTimeGetHandler,
-  SolrUpdateHandler
+  SolrUpdateHandler,
+  SolrDeleteHandler
 } from './lib/handlers';
 
 import CommitType from './lib/commit-type';
@@ -35,6 +36,7 @@ export {
   SolrSearchHandler,
   SolrRealTimeGetHandler,
   SolrUpdateHandler,
+  SolrDeleteHandler,
   SolrRequest,
   SolrUpdateMode,
 
