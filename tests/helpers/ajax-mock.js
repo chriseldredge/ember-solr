@@ -37,7 +37,8 @@ export default Ember.Object.extend({
     var settings = {
       logging: false,
       data: data,
-      responseText: responseData || {}
+      responseText: responseData || {},
+      responseTime: 1
     };
 
     expectations[url] = settings;
