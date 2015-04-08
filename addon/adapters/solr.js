@@ -147,7 +147,7 @@ export default DS.Adapter.extend({
     @method find
   */
   find: function(store, type, id) {
-    var request = this.buildRequest(type.typeKey, 'find', id);
+    var request = this.buildRequest(store, type, 'find', id);
 
     return this.executeRequest(request);
   },
@@ -159,7 +159,7 @@ export default DS.Adapter.extend({
   */
   findAll: function(store, type, sinceToken) {
     console.log('findAll since', sinceToken);
-    var request = this.buildRequest(type.typeKey, 'findAll');
+    var request = this.buildRequest(store, type, 'findAll');
 
     return this.executeRequest(request);
   },
@@ -170,7 +170,7 @@ export default DS.Adapter.extend({
     @method findMany
   */
   findMany: function(store, type, ids) {
-    var request = this.buildRequest(type.typeKey, 'findMany', ids);
+    var request = this.buildRequest(store, type, 'findMany', ids);
 
     return this.executeRequest(request);
   },
@@ -190,20 +190,20 @@ export default DS.Adapter.extend({
     @method findQuery
   */
   findQuery: function(store, type, query) {
-    var request = this.buildRequest(type.typeKey, 'findQuery', query);
+    var request = this.buildRequest(store, type, 'findQuery', query);
 
     return this.executeRequest(request);
   },
 
   createRecord: function(store, type, snapshot) {
-    return this.update(store, type, snapshot);
+    return this.update(store, type, snapshot, 'createRecord');
   },
 
   updateRecord: function(store, type, snapshot) {
-    return this.update(store, type, snapshot);
+    return this.update(store, type, snapshot, 'updateRecord');
   },
 
-  update: function(store, type, snapshot) {
+  update: function(store, type, snapshot, operation) {
     var options = {
       includeId: true,
       updateMode: get(this, 'updateMode')
@@ -211,7 +211,7 @@ export default DS.Adapter.extend({
 
     var doc = this.serialize(snapshot, options);
 
-    var request = this.buildRequest(type.typeKey, 'updateRecord', doc);
+    var request = this.buildRequest(store, type, operation, doc);
 
     var self = this;
 
@@ -235,21 +235,22 @@ export default DS.Adapter.extend({
     Builds a request to send to Solr.
 
     @method buildRequest
-    @param {string} type the model type
+    @param {instance of DS.Store} store
+    @param {subclass of DS.Model} type the model type
     @param {string} operation one of `find`, `findQuery`, etc.
     @param {data} data to be sent in the request
     @return {SolrRequest} request
     @protected
   */
-  buildRequest: function(type, operation, data) {
+  buildRequest: function(store, type, operation, data) {
     var handler = this.handlerForType(type, operation);
 
-    data = handler.buildPayload(this, type, operation, data);
+    handler.prepare(this, store, type, operation, data);
 
     return SolrRequest.create({
       core: this.coreForType(type, operation),
       handler: handler,
-      data: data
+      data: get(handler, 'data')
     });
   },
 
@@ -259,7 +260,7 @@ export default DS.Adapter.extend({
     {{#crossLink "SolrAdapter/defaultCore:property"}}{{/crossLink}}
     is used.
     @method coreForType
-    @param {String} type
+    @param {subclass of DS.Model} type
     @param {String} operation
     @return {String} core name
     @protected
@@ -273,7 +274,7 @@ export default DS.Adapter.extend({
     for a given type. Default Solr schemas use the canonical field `id`
     and this method defaults to the same field.
     @method uniqueKeyForType
-    @param {String} type
+    @param {subclass of DS.Model} type
     @return {String}
     @protected
   */
@@ -294,7 +295,7 @@ export default DS.Adapter.extend({
     of handler that should be used for given operations.
 
     @method handlerForType
-    @param {String} type
+    @param {subclass of DS.Model} type
     @param {String} operation
     @return {SolrRequestHandler} handler instance
     @protected
@@ -307,7 +308,7 @@ export default DS.Adapter.extend({
       return SolrRealTimeGetHandler.create();
     }
 
-    if (operation === 'updateRecord') {
+    if (operation === 'updateRecord' || operation === 'createRecord') {
       return SolrUpdateHandler.create();
     }
 

@@ -5,7 +5,8 @@
 import Ember from 'ember';
 import SolrCommitType from './commit-type';
 
-const get = Ember.get;
+const get = Ember.get,
+      set = Ember.set;
 
 /**
   An enumeration of handler types that `ember-solr`
@@ -91,17 +92,34 @@ const SolrRequestHandler = Ember.Object.extend({
   method: 'GET',
 
   /**
-    Builds the data to send to Solr as a querystring
+    The data payload to send in the request, as
+    a query string or as a JSON request body.
+
+    @property data
+    @type {object}
+    @default null
+  */
+  data: null,
+
+  /**
+    Prepares the
+    {{#crossLink "SolrRequestHandler/data:property"}}{{/crossLink}}
+    and optinally adjusts the
+    {{#crossLink "SolrRequestHandler/path:property"}}{{/crossLink}}
+    properties to send to Solr as a querystring
     or in an HTTP POST request body.
+
+    This method mutates the state of the instance it is invoked
+    on and has no return value.
 
     @method buildPayload
     @param {SolrAdapter} adapter the adapter invoking this method
+    @param {DS.Store} the store related to the type and data
     @param {subclass of DS.Model} type the type corresponding to the operation
     @param {string} operation the operation e.g. 'find', 'updateRecord', etc.
     @param {object} data the ID(s), query or snapshot payload to prepare.
-    @return {object} data object
   */
-  buildPayload: function(/*adapter, type, operation, data*/) {
+  prepare: function(/*adapter, store, type, operation, data*/) {
     throw new Error('The method `buildPayload` must be overridden by a subclass.');
   }
 });
@@ -126,7 +144,7 @@ const SolrSearchHandler = SolrRequestHandler.extend({
   */
   path: 'select',
 
-  buildPayload: function(adapter, type, operation, data) {
+  prepare: function(adapter, store, type, operation, data) {
     data = data || {};
     var key = adapter.uniqueKeyForType(type);
 
@@ -144,7 +162,8 @@ const SolrSearchHandler = SolrRequestHandler.extend({
       };
     }
 
-    return this.buildSolrQuery(adapter, type, operation, data);
+    data = this.buildSolrQuery(adapter, store, type, operation, data);
+    set(this, 'data', data);
   },
 
   /**
@@ -187,7 +206,7 @@ const SolrSearchHandler = SolrRequestHandler.extend({
     @return {Object} data hash for ajax request
     @protected
   */
-  buildSolrQuery: function(adapter, type, operation, query) {
+  buildSolrQuery: function(adapter, store, type, operation, query) {
     var solrQuery = {
       wt: 'json'
     };
@@ -230,11 +249,11 @@ const SolrRealTimeGetHandler = SolrRequestHandler.extend({
   */
   path: 'get',
 
-  buildPayload: function(adapter, type, operation, data) {
+  prepare: function(adapter, store, type, operation, data) {
     var key = adapter.uniqueKeyForType(type);
     var payload = {};
     payload[key] = data;
-    return payload;
+    set(this, 'data', payload);
   }
 });
 
@@ -242,7 +261,7 @@ const SolrRealTimeGetHandler = SolrRequestHandler.extend({
   Represents a default configuration of a request
   to a Solr Update Request Processor.
 
-  @class SolrRealTimeGetHandler
+  @class SolrUpdateHandler
 */
 const SolrUpdateHandler = SolrRequestHandler.extend({
   /**
@@ -263,7 +282,7 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
   */
   method: 'POST',
 
-  buildPayload: function(adapter, type, operation, data) {
+  prepare: function(adapter, store, type, operation, data) {
     data = {
       add: {
         doc: data
@@ -281,7 +300,7 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
       data.commit = {softCommit: true};
     }
 
-    return data;
+    set(this, 'data', data);
   }
 });
 

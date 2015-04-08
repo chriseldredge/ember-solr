@@ -2,6 +2,11 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import ConcurrentModificationError from 'ember-solr/concurrent-modification-error';
 import SolrCommitType from 'ember-solr/lib/commit-type';
+import {
+  SolrSearchHandler,
+  SolrRealTimeGetHandler,
+  SolrUpdateHandler
+} from 'ember-solr/lib/handlers';
 
 import {
   moduleFor,
@@ -81,7 +86,7 @@ test('find by id includes filter query', function(assert) {
 
   var adapter = this.subject();
   adapter.filterQueryForType = function(type) {
-    return 'type:' + type;
+    return 'type:' + type.typeKey;
   };
 
   return adapter.find(this.store, this.dummyType, 101)
@@ -124,6 +129,18 @@ test('find by id uses real time get handler', function(assert) {
   });
 });
 
+test('buildRequest create uses update handler', function(assert) {
+  var adapter = this.subject();
+  set(adapter, 'commit', SolrCommitType.None);
+  adapter.serialize = function() {
+    return {id:'dummy-1'};
+  };
+
+  var request = adapter.buildRequest(this.store, this.dummyType, 'createRecord', {id: 'dummy-1'});
+
+  assert.ok(request.handler instanceof SolrUpdateHandler);
+});
+
 test('buildRequest update includes commit command', function(assert) {
   var adapter = this.subject();
   set(adapter, 'commit', SolrCommitType.Hard);
@@ -132,7 +149,7 @@ test('buildRequest update includes commit command', function(assert) {
     return {id:'dummy-1'};
   };
 
-  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+  var request = adapter.buildRequest(this.store, this.dummyType, 'updateRecord', {id: 'dummy-1'});
 
   assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}}, commit: {}}, 'request.data');
 });
@@ -145,7 +162,7 @@ test('buildRequest update includes soft commit command', function(assert) {
     return {id:'dummy-1'};
   };
 
-  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+  var request = adapter.buildRequest(this.store, this.dummyType, 'updateRecord', {id: 'dummy-1'});
 
   assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}}, commit: {softCommit: true}}, 'request.data');
 });
@@ -157,7 +174,7 @@ test('buildRequest update omits commit command', function(assert) {
     return {id:'dummy-1'};
   };
 
-  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+  var request = adapter.buildRequest(this.store, this.dummyType, 'updateRecord', {id: 'dummy-1'});
 
   assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}}}, 'request.data');
 });
@@ -169,7 +186,7 @@ test('buildRequest update includes commitWithin', function(assert) {
     return {id:'dummy-1'};
   };
 
-  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+  var request = adapter.buildRequest(this.store, this.dummyType, 'updateRecord', {id: 'dummy-1'});
 
   assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}, commitWithin: 1234}}, 'request.data');
 });
@@ -182,7 +199,7 @@ test('buildRequest update commitWithin takes precedence over commit', function(a
     return {id:'dummy-1'};
   };
 
-  var request = adapter.buildRequest(this.dummyType, 'updateRecord', {id: 'dummy-1'});
+  var request = adapter.buildRequest(this.store, this.dummyType, 'updateRecord', {id: 'dummy-1'});
 
   assert.deepEqual(request.data, {add: {doc: {id: 'dummy-1'}, commitWithin: 1234}}, 'request.data');
 });
