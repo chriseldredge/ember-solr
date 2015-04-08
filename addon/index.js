@@ -5,6 +5,7 @@ import SolrAdapter from './adapters/solr';
 import SolrSerializer from './serializers/solr';
 import SolrDynamicSerializer from './serializers/solr-dynamic';
 import MultiValuedTransform from './transforms/multi-valued';
+import IdentityTransform from './transforms/identity';
 
 import {
   SolrHandlerType,
@@ -40,5 +41,6 @@ export {
   SolrRequest,
   SolrUpdateMode,
 
-  MultiValuedTransform
+  MultiValuedTransform,
+  IdentityTransform
 };

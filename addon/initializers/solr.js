@@ -3,6 +3,7 @@ import SolrAdapter from '../adapters/solr';
 import SolrSerializer from '../serializers/solr';
 import SolrDynamicSerializer from '../serializers/solr-dynamic';
 import MultiValuedTransform from '../transforms/multi-valued';
+import IdentityTransform from '../transforms/identity';
 
 export default {
   name: 'solr',
@@ -12,10 +13,10 @@ export default {
     app.register('serializer:-solr', SolrSerializer);
     app.register('serializer:-solr-dynamic', SolrDynamicSerializer);
 
-    app.register('transform:double', DS.NumberTransform);
     app.register('transform:float', DS.NumberTransform);
     app.register('transform:int', DS.NumberTransform);
-    app.register('transform:long', DS.NumberTransform);
+    app.register('transform:long', IdentityTransform);
+    app.register('transform:double', IdentityTransform);
 
     app.register('transform:text', DS.StringTransform);
 
