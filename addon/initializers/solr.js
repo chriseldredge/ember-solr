@@ -1,7 +1,6 @@
 import DS from 'ember-data';
 import SolrAdapter from '../adapters/solr';
 import SolrSerializer from '../serializers/solr';
-import SolrDynamicSerializer from '../serializers/solr-dynamic';
 import MultiValuedTransform from '../transforms/multi-valued';
 import IdentityTransform from '../transforms/identity';
 
@@ -11,7 +10,6 @@ export default {
   initialize: function (container, app) {
     app.register('adapter:-solr', SolrAdapter);
     app.register('serializer:-solr', SolrSerializer);
-    app.register('serializer:-solr-dynamic', SolrDynamicSerializer);
 
     app.register('transform:float', DS.NumberTransform);
     app.register('transform:int', DS.NumberTransform);
@@ -33,6 +31,5 @@ export default {
 
     DS.SolrAdapter = SolrAdapter;
     DS.SolrSerializer = SolrSerializer;
-    DS.SolrDynamicSerializer = SolrDynamicSerializer;
   }
 };

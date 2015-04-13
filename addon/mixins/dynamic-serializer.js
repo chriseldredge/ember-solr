@@ -3,7 +3,6 @@
 */
 
 import Ember from 'ember';
-import SolrSerializer from './solr';
 
 const get = Ember.get;
 
@@ -14,7 +13,7 @@ const get = Ember.get;
   @class SolrDynamicSerializer
   @extends SolrSerializer
 */
-export default SolrSerializer.extend({
+export default Ember.Mixin.create({
   /**
     Provides a mapping of types to dynamic field prefixes.
 

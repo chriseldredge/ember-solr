@@ -6,12 +6,12 @@ import {
 import Ember from 'ember';
 import DS from 'ember-data';
 
-import SolrDynamicSerializer from 'ember-solr/serializers/solr-dynamic';
+import SolrDynamicSerializer from 'dummy/serializers/dynamic';
 
 const get = Ember.get,
       set = Ember.set;
 
-moduleFor('serializer:solr-dynamic', 'SolrDynamicSerializer', {
+moduleFor('serializer:dynamic', 'SolrDynamicSerializer', {
   needs: ['model:dummy'],
   beforeEach: function() {
     var container = this.container;

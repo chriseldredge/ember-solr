@@ -3,7 +3,7 @@ import NotFoundError from './not-found-error';
 import TooManyResultsError from './too-many-results-error';
 import SolrAdapter from './adapters/solr';
 import SolrSerializer from './serializers/solr';
-import SolrDynamicSerializer from './serializers/solr-dynamic';
+import DynamicSerializerMixin from './mixins/dynamic-serializer';
 import MultiValuedTransform from './transforms/multi-valued';
 import IdentityTransform from './transforms/identity';
 
@@ -30,7 +30,7 @@ export {
   CommitType,
 
   SolrSerializer,
-  SolrDynamicSerializer,
+  DynamicSerializerMixin,
 
   SolrHandlerType,
   SolrRequestHandler,
