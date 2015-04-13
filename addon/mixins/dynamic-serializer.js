@@ -9,8 +9,7 @@ const get = Ember.get;
 /**
   Ember Data Serializer for Apache Solr [Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).
 
-
-  @class SolrDynamicSerializer
+  @class DynamicSerializerMixin
   @extends SolrSerializer
 */
 export default Ember.Mixin.create({
@@ -80,7 +79,7 @@ export default Ember.Mixin.create({
 
   /**
     Converts attributes to underscore and uses
-    {{#crossLink "SolrAdapter/dynamicKeyForAttribute:method"}}{{/crossLink}}.
+    {{#crossLink "DynamicSerializerMixin/dynamicKeyForAttribute:method"}}{{/crossLink}}.
     to produce a dynamic field key. For a string attribute like `relatedArticles`
     this method would return `related_articles_s`.
 
@@ -95,9 +94,9 @@ export default Ember.Mixin.create({
 
   /**
     Uses
-    {{#crossLink "SolrAdapter/dynamicFieldPrefixes:property"}}{{/crossLink}}
+    {{#crossLink "DynamicSerializerMixin/dynamicFieldPrefixes:property"}}{{/crossLink}}
     and
-    {{#crossLink "SolrAdapter/dynamicFieldSuffixes:property"}}{{/crossLink}}
+    {{#crossLink "DynamicSerializerMixin/dynamicFieldSuffixes:property"}}{{/crossLink}}
     to produce a dynamic field key. For a string attribute like `related_articles`
     this method would return `related_articles_s`.
 

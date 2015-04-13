@@ -1,4 +1,4 @@
 import EmberSolr from 'ember-solr';
 
-export default <%= baseClass %>.extend({
+export default <%= baseClass %>.extend(<%= mixins %>{
 });

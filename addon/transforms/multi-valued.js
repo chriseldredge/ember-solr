@@ -10,7 +10,7 @@ export default DS.Transform.extend({
     var elementType = get(this, 'elementType');
     var key = 'transform:' + elementType;
     var result = this.container.lookup(key);
-    if (!result && elementType !== 'string') {
+    if (!result) {
       throw new Error("Unable to find transform for '" + elementType + "'");
     }
     return result;

@@ -98,24 +98,18 @@ export default DS.JSONSerializer.extend({
 
   serialize: function(snapshot, options) {
     options = options || {};
-    var updateMode = (options || {}).updateMode || SolrUpdateMode.None;
+    var json = this._super.apply(this, arguments);
 
-    if (updateMode === SolrUpdateMode.Atomic) {
-      throw new Error('Atomic update is not yet implemented.');
-    }
-
-    var doc = this._super.apply(this, arguments);
-
-    for (var k in doc) {
-      var attrValue = doc[k];
+    for (var k in json) {
+      var attrValue = json[k];
       if (Ember.isEmpty(attrValue)) {
-        delete doc[k];
+        delete json[k];
       }
     }
 
-    this.setVersionConstraint(snapshot, options, doc);
+    this.setVersionConstraint(snapshot, options, json);
 
-    return doc;
+    return json;
   },
 
   setVersionConstraint: function(snapshot, options, doc) {

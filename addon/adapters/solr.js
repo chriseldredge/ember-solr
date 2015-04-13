@@ -133,11 +133,11 @@ export default DS.Adapter.extend({
   enableRealTimeGet: false,
 
   /**
-    Sets the mode for how updates are sent
+    Sets the concurrency mode for how updates are sent
     to Solr.
 
     @property updateMode
-    @type {SolrUpdateType}
+    @type {SolrUpdateMode}
     @default SolrUpdateType.OptimisticConcurrency
   */
   updateMode: SolrUpdateMode.OptimisticConcurrency,

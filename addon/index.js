@@ -1,9 +1,12 @@
 import ConcurrentModificationError from './concurrent-modification-error';
+import NotDirtyError from './not-dirty-error';
 import NotFoundError from './not-found-error';
 import TooManyResultsError from './too-many-results-error';
 import SolrAdapter from './adapters/solr';
 import SolrSerializer from './serializers/solr';
 import DynamicSerializerMixin from './mixins/dynamic-serializer';
+import AtomicSerializerMixin from './mixins/atomic-serializer';
+import AtomicMultiValuedSerializerMixin from './mixins/atomic-multi-valued-serializer';
 import MultiValuedTransform from './transforms/multi-valued';
 import IdentityTransform from './transforms/identity';
 
@@ -22,6 +25,7 @@ import SolrUpdateMode from './lib/update-mode';
 
 export {
   ConcurrentModificationError,
+  NotDirtyError,
   NotFoundError,
   TooManyResultsError,
 
@@ -31,6 +35,8 @@ export {
 
   SolrSerializer,
   DynamicSerializerMixin,
+  AtomicSerializerMixin,
+  AtomicMultiValuedSerializerMixin,
 
   SolrHandlerType,
   SolrRequestHandler,
