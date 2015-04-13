@@ -14,10 +14,49 @@ the default value with your Solr server.
 
 ## Using `SolrAdapter`
 
-    $ ember generate solr-adapter application
+    $ ember generate solr-adapter application [--enableRealTimeGet] [--url=http://example.com/solr/]
 
 This will make a subclass of `SolrAdapter` for you to configure
 and register it as the application adapter.
+
+See [SolrAdapter](http://chris.eldredge.io/ember-solr/latest/classes/SolrAdapter.html) for properties and methods you can override.
+
+## `long`, `double` and `BigNumber`
+
+ember-solr uses a custom JSON parsing library to handle Solr
+`long` and `double` fields without losing precision on values
+that exceed `Number.MAX_SAFE_INTEGER` (`2^53 - 1`).
+
+These values will be automatically detected and represented
+as instances of `BigNumber` using a string to represent the
+complete value.
+
+No support is provided for performing arithmetic computations
+on BigNumber, such as addition, subtraction or multiplication.
+
+## JSON-P Limitations
+
+By default, `SolrAdapter.dataType` is set to `'jsonp'` to work with
+Solr servers that do not have CORS headers enabled. If you want to
+use Optimistic Concurrency or use `long` or `double` fields in
+your schema, JSON-P will not be able to handle values that exceed
+JavaScript's `Number.MAX_SAFE_INTEGER` (`2^53 - 1`).
+
+In particular, this limitation means that using Solr's built-in
+`_version_` field for optimistic concurrency is not possible with
+JSON-P.
+
+## Customizing Serialization
+
+    $ ember generate solr-serializer <name> [--dynamic] [--atomic] [--multiValued]
+
+This will generate a serializer for a given model with some options.
+
+Flag        | Description
+----------- | -----------
+dynamic     | Includes DynamicSerializerMixin
+atomic      | Includes AtomicSerializerMixin
+multiValued | Includes AtomicMultiValuedSerializerMixin
 
 ## Custom attribute types
 
@@ -26,16 +65,16 @@ This adapter registers the following types that map to Solr field types
 Solr field type | `DS.attr` type
 --------------- | --------------
 text            | string
-doubles         | number
+double          | BigNumber
 float           | number
 int             | number
-long            | number
+long            | BigNumber
 strings         | array of string
 numbers         | array of number
-doubles         | array of number
+doubles         | array of BigNumber
 floats          | array of number
 ints            | array of number
-longs           | array of number
+longs           | array of BigNumber
 booleans        | array of boolean
 dates           | array of date
 
@@ -63,22 +102,8 @@ that are `multiValued="true"`.
 
 ## Dynamic Fields
 
-`SorlDynamicSerializer` provides a quick way to connect to a Solr server using
+`DynamicSerializerMixin` provides a quick way to connect to a Solr server using
 [Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).
-
-To connect to the Solr Schemaless example, use these example in your `app/adapters/application.js`:
-
-```javascript
-import config from '../config/environment';
-import SolrAdapter from 'ember-solr/adapters/solr';
-
-export default SolrAdapter.extend({
-  baseURL: config.solrBaseURL,
-  defaultCore: 'gettingstarted',
-  defaultSerializer: '-solr-dynamic',
-  enableRealTimeGet: true
-});
-```
 
 Declare a model such as:
 
@@ -94,6 +119,10 @@ export default DS.Model.extend({
 });
 ```
 
+Then generate a serializer for your model:
+
+    ember g solr-serializer post --dynamic
+
 The attributes on this model would be mapped, by default, to:
 
 * title => title_s
@@ -101,6 +130,8 @@ The attributes on this model would be mapped, by default, to:
 * body => body_txt
 * popularity: popularity_f
 * isPublic: is_public_b
+
+See [DynamicSerializerMixin](http://chris.eldredge.io/ember-solr/latest/classes/DynamicSerializerMixin.html) for more on how to customize dynamic field names.
 
 # Contributing to ember-solr
 

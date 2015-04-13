@@ -1,6 +1,6 @@
 {
   "name": "ember-solr",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Solr adapter for Ember Data",
   "directories": {
     "doc": "doc",
