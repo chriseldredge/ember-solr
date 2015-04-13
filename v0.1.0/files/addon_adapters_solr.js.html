@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -94,14 +104,21 @@
 import Ember from &#x27;ember&#x27;;
 import DS from &#x27;ember-data&#x27;;
 import {
-  SolrHandlerType,
   SolrSearchHandler,
-  SolrRealTimeGetHandler
-} from &#x27;ember-solr/requests/handlers&#x27;;
+  SolrRealTimeGetHandler,
+  SolrUpdateHandler,
+  SolrDeleteHandler
+} from &#x27;ember-solr/lib/handlers&#x27;;
 
-import SolrRequest from &#x27;ember-solr/requests/request&#x27;;
+import SolrCommitType from &#x27;ember-solr/lib/commit-type&#x27;;
+import SolrRequest from &#x27;ember-solr/lib/request&#x27;;
+import SolrUpdateMode from &#x27;ember-solr/lib/update-mode&#x27;;
+import bigNumberStringify from &#x27;ember-solr/lib/big-number-stringify&#x27;;
+import ConcurrentModificationError from &#x27;ember-solr/concurrent-modification-error&#x27;;
 
-const forEach = Ember.ArrayPolyfills.forEach;
+const forEach = Ember.ArrayPolyfills.forEach,
+      get = Ember.get,
+      set = Ember.set;
 
 /**
   Ember Data Adapter for Apache Solr.
@@ -119,6 +136,50 @@ export default DS.Adapter.extend({
     @default &#x27;/solr&#x27;
   */
   baseURL: &#x27;/solr&#x27;,
+
+  /**
+    When enabled, sends a &#x60;commit&#x60; command to Solr in update
+    requests to commit the index synchronously and
+    block the request until commit has completed.
+
+    There are many considerations when choosing to
+    enable this feature. Consult the Solr
+    [documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)
+    on autoCommit, and softAutoCommit.
+
+    See also {{#crossLink &quot;SolrAdapter/commitWithinMilliseconds:property&quot;}}{{/crossLink}}.
+
+    @property commit
+    @type {SolrCommitType}
+    @default SolrCommitType.None
+  */
+  commit: SolrCommitType.None,
+
+  /**
+    When set, sends a &#x60;commitWithin&#x60; command to Solr
+    in update requests to have the update committed
+    within a time limit (in milliseconds). Solr will
+    aggregate multiple pending writes into a single
+    commit to reduce overhead and improve performance.
+
+    This property, when set, takes precedence over
+    {{#crossLink &quot;SolrAdapter/commit:property&quot;}}{{/crossLink}}.
+
+    There are many considerations when choosing to
+    enable this feature. Consult the Solr
+    [documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)
+    on autoCommit, and softAutoCommit.
+
+    In Solr 4 and later, commitWithin is handled by default
+    as a soft commit. See [UpdateHandlers in SolrConfig](https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig#UpdateHandlersinSolrConfig-commitWithin).
+
+    See also {{#crossLink &quot;SolrAdapter/commit:property&quot;}}{{/crossLink}}.
+
+    @property commitWithinMilliseconds
+    @type {number} milliseconds
+    @default undefined
+  */
+  commitWithinMilliseconds: undefined,
 
   /**
     Specifies a default Solr Core to send requests
@@ -171,12 +232,22 @@ export default DS.Adapter.extend({
   enableRealTimeGet: false,
 
   /**
+    Sets the concurrency mode for how updates are sent
+    to Solr.
+
+    @property updateMode
+    @type {SolrUpdateMode}
+    @default SolrUpdateType.None
+  */
+  updateMode: SolrUpdateMode.None,
+
+  /**
     Find a record by its unique ID.
 
     @method find
   */
   find: function(store, type, id) {
-    var request = this.buildRequest(type.typeKey, &#x27;find&#x27;, id);
+    var request = this.buildRequest(store, type, &#x27;find&#x27;, id);
 
     return this.executeRequest(request);
   },
@@ -188,7 +259,7 @@ export default DS.Adapter.extend({
   */
   findAll: function(store, type, sinceToken) {
     console.log(&#x27;findAll since&#x27;, sinceToken);
-    var request = this.buildRequest(type.typeKey, &#x27;findAll&#x27;);
+    var request = this.buildRequest(store, type, &#x27;findAll&#x27;);
 
     return this.executeRequest(request);
   },
@@ -199,7 +270,7 @@ export default DS.Adapter.extend({
     @method findMany
   */
   findMany: function(store, type, ids) {
-    var request = this.buildRequest(type.typeKey, &#x27;findMany&#x27;, ids);
+    var request = this.buildRequest(store, type, &#x27;findMany&#x27;, ids);
 
     return this.executeRequest(request);
   },
@@ -219,134 +290,73 @@ export default DS.Adapter.extend({
     @method findQuery
   */
   findQuery: function(store, type, query) {
-    var request = this.buildRequest(type.typeKey, &#x27;findQuery&#x27;, query);
+    var request = this.buildRequest(store, type, &#x27;findQuery&#x27;, query);
 
     return this.executeRequest(request);
   },
 
   createRecord: function(store, type, snapshot) {
-    var data = this.serialize(snapshot, { includeId: true});
-
-    console.log(&#x27;create&#x27;, data);
-    throw new Error(&#x27;not implemented&#x27;);
+    return this.update(store, type, snapshot, &#x27;createRecord&#x27;);
   },
 
   updateRecord: function(store, type, snapshot) {
-    var data = this.serialize(snapshot, { includeId: true});
-
-    console.log(&#x27;update&#x27;, data);
-    throw new Error(&#x27;not implemented&#x27;);
+    return this.update(store, type, snapshot, &#x27;updateRecord&#x27;);
   },
 
-  deleteRecord: function() {
-    throw new Error(&#x27;not implemented&#x27;);
+  deleteRecord: function(store, type, snapshot) {
+    return this.update(store, type, snapshot, &#x27;deleteRecord&#x27;);
+  },
+
+  update: function(store, type, snapshot, operation) {
+    var options = {
+      includeId: true,
+      updateMode: get(this, &#x27;updateMode&#x27;)
+    };
+
+    var doc = this.serialize(snapshot, options);
+
+    var request = this.buildRequest(store, type, operation, doc);
+
+    var promise = this.executeRequest(request);
+
+    if (operation === &#x27;deleteRecord&#x27;) {
+      return promise;
+    }
+
+    var self = this;
+
+    return promise.then(function() {
+      return self.find(store, type, snapshot.id);
+    });
+  },
+
+  serialize: function(snapshot, options) {
+    var store = snapshot.record.store;
+    var serializer = store.serializerFor(snapshot.typeKey);
+    return serializer.serialize(snapshot, options);
   },
 
   /**
     Builds a request to send to Solr.
 
     @method buildRequest
-    @param {string} type the model type
+    @param {instance of DS.Store} store
+    @param {subclass of DS.Model} type the model type
     @param {string} operation one of &#x60;find&#x60;, &#x60;findQuery&#x60;, etc.
     @param {data} data to be sent in the request
     @return {SolrRequest} request
     @protected
   */
-  buildRequest: function(type, operation, data) {
+  buildRequest: function(store, type, operation, data) {
     var handler = this.handlerForType(type, operation);
-    var key = this.uniqueKeyForType(type);
 
-    if (handler.get(&#x27;type&#x27;) === SolrHandlerType.RealTimeGet) {
-      query = {};
-      query[key] = data;
-      data = query;
-    } else {
-      data = data || {};
-
-      if (Array.isArray(data)) {
-        var query = data.map(function(id) {
-          return key + &#x27;:&#x27; + id;
-        }).join(&#x27; OR &#x27;);
-
-        data = {
-          q: query
-        };
-      } else if (typeof data !== &#x27;object&#x27;) {
-        data = {
-          q: key + &#x27;:&#x27; + data
-        };
-      }
-
-      data = this.buildSolrQuery(type, operation, data);
-    }
+    handler.prepare(this, store, type, operation, data);
 
     return SolrRequest.create({
       core: this.coreForType(type, operation),
       handler: handler,
-      data: data
+      data: get(handler, &#x27;data&#x27;)
     });
-  },
-
-  /**
-    Builds a Solr query to send in a search request.
-    This method applies some defaults and converts
-    idiomatic Ember query parameters to their
-    Solr corollaries.
-
-    * Sets &#x60;wt=json&#x60;
-    * Converts &#x60;limit&#x60; to &#x60;rows&#x60;
-    * Converts &#x60;offset&#x60; to &#x60;start&#x60;
-    * Defaults to &#x60;q=*:*&#x60; when no query is specified
-    * Calls {{#crossLink &quot;SolrAdapter/filterQueryForType:method&quot;}}{{/crossLink}}
-    and sets &#x60;fq&#x60; when a non-blank filter query is returned
-
-    Overrides of this method can return an object that includes
-    other query options. Multipe &#x60;fq&#x60; parameters (and others)
-    can be defined by using an array for the values:
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationAdapter = SolrAdapter.extend({
-      buildSolrQuery: function(type, query) {
-        return {
-          fq: [
-            &#x27;type:&#x27; + type,
-            &#x27;public:true&#x27;
-          ]
-        };
-      }
-    });
-    &#x60;&#x60;&#x60;
-
-    See [QueryResponseWriter](https://wiki.apache.org/solr/QueryResponseWriter)
-    and [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters).
-
-    @method buildSolrQuery
-    @param {String} type
-    @param {String} operation
-    @param {Object} query
-    @return {Object} data hash for ajax request
-    @protected
-  */
-  buildSolrQuery: function(type, operation, query) {
-    var solrQuery = {
-      wt: &#x27;json&#x27;
-    };
-
-    if (query.limit) {
-      solrQuery.rows = query.limit;
-    }
-
-    if (query.offset) {
-      solrQuery.start = query.offset;
-    }
-
-    var typeFilter = !!this.filterQueryForType ? this.filterQueryForType(type, operation) : null;
-    if (typeFilter) {
-      solrQuery.fq = typeFilter;
-    }
-
-    solrQuery.q = query.q || &#x27;*:*&#x27;;
-
-    return solrQuery;
   },
 
   /**
@@ -355,13 +365,13 @@ export default DS.Adapter.extend({
     {{#crossLink &quot;SolrAdapter/defaultCore:property&quot;}}{{/crossLink}}
     is used.
     @method coreForType
-    @param {String} type
+    @param {subclass of DS.Model} type
     @param {String} operation
     @return {String} core name
     @protected
   */
   coreForType: function() {
-    return this.get(&#x27;defaultCore&#x27;);
+    return get(this, &#x27;defaultCore&#x27;);
   },
 
   /**
@@ -369,7 +379,7 @@ export default DS.Adapter.extend({
     for a given type. Default Solr schemas use the canonical field &#x60;id&#x60;
     and this method defaults to the same field.
     @method uniqueKeyForType
-    @param {String} type
+    @param {subclass of DS.Model} type
     @return {String}
     @protected
   */
@@ -390,17 +400,25 @@ export default DS.Adapter.extend({
     of handler that should be used for given operations.
 
     @method handlerForType
-    @param {String} type
+    @param {subclass of DS.Model} type
     @param {String} operation
     @return {SolrRequestHandler} handler instance
     @protected
   */
   handlerForType: function(type, operation) {
-    var enableRealTimeGet = this.get(&#x27;enableRealTimeGet&#x27;);
+    var enableRealTimeGet = get(this, &#x27;enableRealTimeGet&#x27;);
 
     if (enableRealTimeGet &amp;&amp;
         (operation === &#x27;find&#x27; || operation === &#x27;findMany&#x27;)) {
       return SolrRealTimeGetHandler.create();
+    }
+
+    if (operation === &#x27;updateRecord&#x27; || operation === &#x27;createRecord&#x27;) {
+      return SolrUpdateHandler.create();
+    }
+
+    if (operation === &#x27;deleteRecord&#x27;) {
+      return SolrDeleteHandler.create();
     }
 
     return SolrSearchHandler.create();
@@ -434,15 +452,15 @@ export default DS.Adapter.extend({
     @method executeRequest
     @param {SolrRequest} request
     @return {Promise} promise
-    @protcted
+    @protected
   */
   executeRequest: function(request) {
     var URL = this.combinePath(
-      this.get(&#x27;baseURL&#x27;),
-      request.get(&#x27;core&#x27;),
-      request.get(&#x27;handler.path&#x27;));
+      get(this, &#x27;baseURL&#x27;),
+      get(request, &#x27;core&#x27;),
+      get(request, &#x27;handler.path&#x27;));
 
-    return this.ajax(URL, request.get(&#x27;method&#x27;), request.get(&#x27;options&#x27;));
+    return this.ajax(URL, get(request, &#x27;method&#x27;), get(request, &#x27;options&#x27;));
   },
 
   /**
@@ -476,7 +494,7 @@ export default DS.Adapter.extend({
     return s;
   },
 
-    /**
+  /**
     Takes a URL, an HTTP method and a hash of data, and makes an
     HTTP request.
     When the server responds with a payload, Ember Data will call into &#x60;extractSingle&#x60;
@@ -502,6 +520,12 @@ export default DS.Adapter.extend({
 
     return new Ember.RSVP.Promise(function(resolve, reject) {
       var hash = adapter.ajaxOptions(url, type, options);
+
+      hash.converters = {
+        &#x27;text json&#x27;: function(text) {
+          return BigNumberJSON.parse(text);
+        }
+      };
 
       hash.success = function(json, textStatus, jqXHR) {
         json = adapter.ajaxSuccess(jqXHR, json);
@@ -533,20 +557,24 @@ export default DS.Adapter.extend({
     var hash = options || {};
     hash.url = url;
     hash.type = type;
-    hash.dataType = this.get(&#x27;dataType&#x27;) || &#x27;json&#x27;;
+    hash.dataType = get(this, &#x27;dataType&#x27;) || &#x27;json&#x27;;
     hash.context = this;
     hash.traditional = true;
 
-    if (hash.dataType === &#x27;jsonp&#x27;) {
+    if (hash.dataType.indexOf(&#x27;jsonp&#x27;) === 0) {
       hash.jsonp = &#x27;json.wrf&#x27;;
+      if (type !== &#x27;GET&#x27;) {
+        set(hash, &#x27;data&#x27;, {&#x27;stream.body&#x27;: bigNumberStringify(hash.data)});
+        hash.type = &#x27;GET&#x27;; // JSON-P can only use GET
+      }
     }
 
-    if (hash.data &amp;&amp; type !== &#x27;GET&#x27;) {
+    if (hash.data &amp;&amp; hash.type !== &#x27;GET&#x27;) {
       hash.contentType = &#x27;application/json; charset=utf-8&#x27;;
-      hash.data = JSON.stringify(hash.data);
+      set(hash, &#x27;data&#x27;, bigNumberStringify(hash.data));
     }
 
-    var headers = this.get(&#x27;headers&#x27;);
+    var headers = get(this, &#x27;headers&#x27;);
     if (headers !== undefined) {
       hash.beforeSend = function (xhr) {
         forEach.call(Ember.keys(headers), function(key) {
@@ -616,14 +644,24 @@ export default DS.Adapter.extend({
   ajaxError: function(jqXHR, responseText, errorThrown) {
     var isObject = jqXHR !== null &amp;&amp; typeof jqXHR === &#x27;object&#x27;;
 
-    if (isObject) {
-      jqXHR.then = null;
-      if (!jqXHR.errorThrown) {
-        if (typeof errorThrown === &#x27;string&#x27;) {
-          jqXHR.errorThrown = new Error(errorThrown);
-        } else {
-          jqXHR.errorThrown = errorThrown;
-        }
+    if (!isObject) {
+      return jqXHR;
+    }
+
+    if (jqXHR.status === 409) {
+      var message = &#x27;version conflict&#x27;;
+      if (jqXHR.responseJSON &amp;&amp; jqXHR.responseJSON.error &amp;&amp; jqXHR.responseJSON.error.msg) {
+        message = jqXHR.responseJSON.error.msg;
+      }
+      return new ConcurrentModificationError(message);
+    }
+
+    jqXHR.then = null;
+    if (!jqXHR.errorThrown) {
+      if (typeof errorThrown === &#x27;string&#x27;) {
+        jqXHR.errorThrown = new Error(errorThrown);
+      } else {
+        jqXHR.errorThrown = errorThrown;
       }
     }
 

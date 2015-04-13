@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -91,7 +101,7 @@
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/addon_adapters_solr.js.html#l17"><code>addon&#x2F;adapters&#x2F;solr.js:17</code></a>
+            Defined in: <a href="../files/addon_adapters_solr.js.html#l24"><code>addon&#x2F;adapters&#x2F;solr.js:24</code></a>
         </div>
 
             Module: <a href="../modules/solr.html">solr</a>
@@ -161,10 +171,6 @@
                                 <a href="#method_buildRequest">buildRequest</a>
 
                             </li>
-                            <li class="index-item method protected">
-                                <a href="#method_buildSolrQuery">buildSolrQuery</a>
-
-                            </li>
                             <li class="index-item method inherited">
                                 <a href="#method_cacheFor">cacheFor</a>
 
@@ -197,7 +203,7 @@
                                 <a href="#method_endPropertyChanges">endPropertyChanges</a>
 
                             </li>
-                            <li class="index-item method">
+                            <li class="index-item method protected">
                                 <a href="#method_executeRequest">executeRequest</a>
 
                             </li>
@@ -320,6 +326,14 @@
                                 <a href="#property_baseURL">baseURL</a>
 
                             </li>
+                            <li class="index-item property">
+                                <a href="#property_commit">commit</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_commitWithinMilliseconds">commitWithinMilliseconds</a>
+
+                            </li>
                             <li class="index-item property inherited">
                                 <a href="#property_concatenatedProperties">concatenatedProperties</a>
 
@@ -346,6 +360,10 @@
                             </li>
                             <li class="index-item property inherited">
                                 <a href="#property_isDestroying">isDestroying</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#property_updateMode">updateMode</a>
 
                             </li>
                     </ul>
@@ -538,7 +556,7 @@ any of these values, to write an observer that has no parameters at all.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">key</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -560,7 +578,7 @@ any of these values, to write an observer that has no parameters at all.</p>
                 </li>
                 <li class="param">
                         <code class="param-name">method</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a> | <a href="http://emberjs.com/api/classes/Function.html" class="crosslink external" target="_blank">Function</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a> | <a href="http://emberjs.com/api/classes/Function.html" class="crosslink external" target="_blank">Function</a></span>
 
 
                     <div class="param-description">
@@ -606,7 +624,7 @@ any of these values, to write an observer that has no parameters at all.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l390"><code>addon&#x2F;adapters&#x2F;solr.js:390</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l398"><code>addon&#x2F;adapters&#x2F;solr.js:398</code></a>
         </p>
 
 
@@ -637,7 +655,7 @@ data is the serialized record in the case of a save.</li>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">url</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -647,7 +665,7 @@ data is the serialized record in the case of a save.</li>
                 </li>
                 <li class="param">
                         <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -709,7 +727,7 @@ data is the serialized record in the case of a save.</li>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l493"><code>addon&#x2F;adapters&#x2F;solr.js:493</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l511"><code>addon&#x2F;adapters&#x2F;solr.js:511</code></a>
         </p>
 
 
@@ -816,7 +834,7 @@ promise libraries.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l434"><code>addon&#x2F;adapters&#x2F;solr.js:434</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l448"><code>addon&#x2F;adapters&#x2F;solr.js:448</code></a>
         </p>
 
 
@@ -833,7 +851,7 @@ promise libraries.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">url</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -843,7 +861,7 @@ promise libraries.</p>
                 </li>
                 <li class="param">
                         <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -903,7 +921,7 @@ promise libraries.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l472"><code>addon&#x2F;adapters&#x2F;solr.js:472</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l490"><code>addon&#x2F;adapters&#x2F;solr.js:490</code></a>
         </p>
 
 
@@ -1019,6 +1037,9 @@ deferring.</p>
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
+                        <code>store</code>
+                </li>
+                <li class="arg">
                         <code>type</code>
                 </li>
                 <li class="arg">
@@ -1044,7 +1065,7 @@ deferring.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l156"><code>addon&#x2F;adapters&#x2F;solr.js:156</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l240"><code>addon&#x2F;adapters&#x2F;solr.js:240</code></a>
         </p>
 
 
@@ -1061,8 +1082,18 @@ deferring.</p>
 
             <ul class="params-list">
                 <li class="param">
+                        <code class="param-name">store</code>
+                        <span class="type">instance of DS.Store</span>
+
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                </li>
+                <li class="param">
                         <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type">subclass of DS.Model</span>
 
 
                     <div class="param-description">
@@ -1073,7 +1104,7 @@ deferring.</p>
                 </li>
                 <li class="param">
                         <code class="param-name">operation</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -1102,125 +1133,6 @@ deferring.</p>
             <div class="returns-description">
                         <span class="type"><a href="../classes/SolrRequest.html" class="crosslink">SolrRequest</a></span>:
                     <p>request</p>
-
-            </div>
-        </div>
-
-
-</div>
-<div id="method_buildSolrQuery" class="method item protected">
-    <h3 class="name"><code>buildSolrQuery</code></h3>
-
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-                <li class="arg">
-                        <code>type</code>
-                </li>
-                <li class="arg">
-                        <code>operation</code>
-                </li>
-                <li class="arg">
-                        <code>query</code>
-                </li>
-            </ul><span class="paren">)</span>
-        </div>
-
-        <span class="returns-inline">
-            <span class="type">Object</span>
-        </span>
-
-
-        <span class="flag protected">protected</span>
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/addon_adapters_solr.js.html#l201"><code>addon&#x2F;adapters&#x2F;solr.js:201</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Builds a Solr query to send in a search request.
-This method applies some defaults and converts
-idiomatic Ember query parameters to their
-Solr corollaries.</p>
-<ul>
-<li>Sets <code>wt=json</code></li>
-<li>Converts <code>limit</code> to <code>rows</code></li>
-<li>Converts <code>offset</code> to <code>start</code></li>
-<li>Defaults to <code>q=*:*</code> when no query is specified</li>
-<li>Calls <a href="../classes/SolrAdapter.html#method_filterQueryForType" class="crosslink">filterQueryForType</a>
-and sets <code>fq</code> when a non-blank filter query is returned</li>
-</ul>
-<p>Overrides of this method can return an object that includes
-other query options. Multipe <code>fq</code> parameters (and others)
-can be defined by using an array for the values:</p>
-<pre class="code prettyprint"><code class="language-javascript">App.ApplicationAdapter = SolrAdapter.extend({
-  buildSolrQuery: function(type, query) {
-    return {
-      fq: [
-        'type:' + type,
-        'public:true'
-      ]
-    };
-  }
-});
-</code></pre>
-<p>See <a href="https://wiki.apache.org/solr/QueryResponseWriter">QueryResponseWriter</a>
-and <a href="https://wiki.apache.org/solr/CommonQueryParameters">CommonQueryParameters</a>.</p>
-
-    </div>
-
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-                <li class="param">
-                        <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">operation</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-                <li class="param">
-                        <code class="param-name">query</code>
-                        <span class="type">Object</span>
-
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                </li>
-            </ul>
-        </div>
-
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                        <span class="type">Object</span>:
-                    <p>data hash for ajax request</p>
 
             </div>
         </div>
@@ -1272,7 +1184,7 @@ generated lazily.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -1310,7 +1222,7 @@ generated lazily.</p>
         </div>
 
         <span class="returns-inline">
-            <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
         </span>
 
 
@@ -1323,7 +1235,7 @@ generated lazily.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l359"><code>addon&#x2F;adapters&#x2F;solr.js:359</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l367"><code>addon&#x2F;adapters&#x2F;solr.js:367</code></a>
         </p>
 
 
@@ -1343,7 +1255,7 @@ Any number of arguments can be passed into this method.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">path1</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -1353,7 +1265,7 @@ Any number of arguments can be passed into this method.</p>
                 </li>
                 <li class="param">
                         <code class="param-name">path2</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -1368,7 +1280,7 @@ Any number of arguments can be passed into this method.</p>
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
             </div>
         </div>
 
@@ -1389,7 +1301,7 @@ Any number of arguments can be passed into this method.</p>
         </div>
 
         <span class="returns-inline">
-            <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
         </span>
 
 
@@ -1423,7 +1335,7 @@ is used.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type">subclass of DS.Model</span>
 
 
                     <div class="param-description">
@@ -1433,7 +1345,7 @@ is used.</p>
                 </li>
                 <li class="param">
                         <code class="param-name">operation</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -1448,7 +1360,7 @@ is used.</p>
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
                     <p>core name</p>
 
             </div>
@@ -1620,7 +1532,7 @@ orc.decrementProperty('health', 5);
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -1867,7 +1779,7 @@ deliver the deferred change notifications and end deferring.</p>
 
 
 </div>
-<div id="method_executeRequest" class="method item">
+<div id="method_executeRequest" class="method item protected">
     <h3 class="name"><code>executeRequest</code></h3>
 
         <div class="args">
@@ -1883,6 +1795,7 @@ deliver the deferred change notifications and end deferring.</p>
         </span>
 
 
+        <span class="flag protected">protected</span>
 
 
 
@@ -1891,7 +1804,7 @@ deliver the deferred change notifications and end deferring.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l341"><code>addon&#x2F;adapters&#x2F;solr.js:341</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l349"><code>addon&#x2F;adapters&#x2F;solr.js:349</code></a>
         </p>
 
 
@@ -1948,7 +1861,7 @@ an AJAX request to Solr.</p>
         </div>
 
         <span class="returns-inline">
-            <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
         </span>
 
 
@@ -1961,7 +1874,7 @@ an AJAX request to Solr.</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/addon_adapters_solr.js.html#l320"><code>addon&#x2F;adapters&#x2F;solr.js:320</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l328"><code>addon&#x2F;adapters&#x2F;solr.js:328</code></a>
         </p>
 
 
@@ -1990,7 +1903,7 @@ Example</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2000,7 +1913,7 @@ Example</p>
                 </li>
                 <li class="param">
                         <code class="param-name">operation</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2015,7 +1928,7 @@ Example</p>
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
                     <p>a filter query or <code>null</code></p>
 
             </div>
@@ -2041,7 +1954,7 @@ Example</p>
                 DS.Adapter
             </a>
             but overwritten in
-        <a href="../files/addon_adapters_solr.js.html#l84"><code>addon&#x2F;adapters&#x2F;solr.js:84</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l145"><code>addon&#x2F;adapters&#x2F;solr.js:145</code></a>
         </p>
 
 
@@ -2075,7 +1988,7 @@ Example</p>
                 DS.Adapter
             </a>
             but overwritten in
-        <a href="../files/addon_adapters_solr.js.html#l95"><code>addon&#x2F;adapters&#x2F;solr.js:95</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l156"><code>addon&#x2F;adapters&#x2F;solr.js:156</code></a>
         </p>
 
 
@@ -2109,7 +2022,7 @@ Example</p>
                 DS.Adapter
             </a>
             but overwritten in
-        <a href="../files/addon_adapters_solr.js.html#l107"><code>addon&#x2F;adapters&#x2F;solr.js:107</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l168"><code>addon&#x2F;adapters&#x2F;solr.js:168</code></a>
         </p>
 
 
@@ -2143,7 +2056,7 @@ Example</p>
                 DS.Adapter
             </a>
             but overwritten in
-        <a href="../files/addon_adapters_solr.js.html#l118"><code>addon&#x2F;adapters&#x2F;solr.js:118</code></a>
+        <a href="../files/addon_adapters_solr.js.html#l179"><code>addon&#x2F;adapters&#x2F;solr.js:179</code></a>
         </p>
 
 
@@ -2181,7 +2094,7 @@ page size and retrieve rows from a given offset.</p>
         </div>
 
         <span class="returns-inline">
-            <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a> | Number</span>
+            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a> | Number</span>
         </span>
 
 
@@ -2250,7 +2163,7 @@ the first parameter and the newly created record as the second parameter:</p>
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a> | Number</span>:
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a> | Number</span>:
                     <p>id</p>
 
             </div>
@@ -2322,7 +2235,7 @@ not defined upfront.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2466,7 +2379,7 @@ property returns <code>undefined</code>.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2554,7 +2467,7 @@ of handler that should be used for given operations.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type">subclass of DS.Model</span>
 
 
                     <div class="param-description">
@@ -2564,7 +2477,7 @@ of handler that should be used for given operations.</p>
                 </li>
                 <li class="param">
                         <code class="param-name">operation</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2632,7 +2545,7 @@ on the object.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">key</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2702,7 +2615,7 @@ team.incrementProperty('score', 2);
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2830,7 +2743,7 @@ succession.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2903,7 +2816,7 @@ like.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -2976,7 +2889,7 @@ like.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -3045,7 +2958,7 @@ target will no longer receive notifications.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">key</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -3067,7 +2980,7 @@ target will no longer receive notifications.</p>
                 </li>
                 <li class="param">
                         <code class="param-name">method</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a> | <a href="http://emberjs.com/api/classes/Function.html" class="crosslink external" target="_blank">Function</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a> | <a href="http://emberjs.com/api/classes/Function.html" class="crosslink external" target="_blank">Function</a></span>
 
 
                     <div class="param-description">
@@ -3370,7 +3283,7 @@ itself so you can do chaining like this:</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -3516,7 +3429,7 @@ current value.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">keyName</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
 
 
                     <div class="param-description">
@@ -3546,7 +3459,7 @@ current value.</p>
         <span class="paren">()</span>
 
         <span class="returns-inline">
-            <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
         </span>
 
 
@@ -3597,7 +3510,7 @@ teacher.toString(); //=&gt; &quot;&lt;App.Teacher:ember1026:Tom Dale&gt;&quot;
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
                     <p>string representation</p>
 
             </div>
@@ -3617,7 +3530,7 @@ teacher.toString(); //=&gt; &quot;&lt;App.Teacher:ember1026:Tom Dale&gt;&quot;
         </div>
 
         <span class="returns-inline">
-            <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
         </span>
 
 
@@ -3650,7 +3563,7 @@ and this method defaults to the same field.</p>
             <ul class="params-list">
                 <li class="param">
                         <code class="param-name">type</code>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type">subclass of DS.Model</span>
 
 
                     <div class="param-description">
@@ -3665,7 +3578,7 @@ and this method defaults to the same field.</p>
             <h4>Returns:</h4>
 
             <div class="returns-description">
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
             </div>
         </div>
 
@@ -3826,7 +3739,7 @@ a record.</p>
 
                     <div id="property_baseURL" class="property item">
                         <h3 class="name"><code>baseURL</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                     
@@ -3835,7 +3748,7 @@ a record.</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_adapters_solr.js.html#l23"><code>addon&#x2F;adapters&#x2F;solr.js:23</code></a>
+                            <a href="../files/addon_adapters_solr.js.html#l30"><code>addon&#x2F;adapters&#x2F;solr.js:30</code></a>
                             </p>
                     
                     
@@ -3850,6 +3763,78 @@ a record.</p>
                         </div>
                     
                             <p><strong>Default:</strong> &#x27;/solr&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_commit" class="property item">
+                        <h3 class="name"><code>commit</code></h3>
+                        <span class="type"><a href="../classes/SolrCommitType.html" class="crosslink">SolrCommitType</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_adapters_solr.js.html#l41"><code>addon&#x2F;adapters&#x2F;solr.js:41</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>When enabled, sends a <code>commit</code> command to Solr in update
+                    requests to commit the index synchronously and
+                    block the request until commit has completed.</p>
+                    <p>There are many considerations when choosing to
+                    enable this feature. Consult the Solr
+                    <a href="https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section">documentation</a>
+                    on autoCommit, and softAutoCommit.</p>
+                    <p>See also <a href="../classes/SolrAdapter.html#property_commitWithinMilliseconds" class="crosslink">commitWithinMilliseconds</a>.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> SolrCommitType.None</p>
+                    
+                    
+                    </div>
+                    <div id="property_commitWithinMilliseconds" class="property item">
+                        <h3 class="name"><code>commitWithinMilliseconds</code></h3>
+                        <span class="type">Number milliseconds</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_adapters_solr.js.html#l59"><code>addon&#x2F;adapters&#x2F;solr.js:59</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>When set, sends a <code>commitWithin</code> command to Solr
+                    in update requests to have the update committed
+                    within a time limit (in milliseconds). Solr will
+                    aggregate multiple pending writes into a single
+                    commit to reduce overhead and improve performance.</p>
+                    <p>This property, when set, takes precedence over
+                    <a href="../classes/SolrAdapter.html#property_commit" class="crosslink">commit</a>.</p>
+                    <p>There are many considerations when choosing to
+                    enable this feature. Consult the Solr
+                    <a href="https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section">documentation</a>
+                    on autoCommit, and softAutoCommit.</p>
+                    <p>In Solr 4 and later, commitWithin is handled by default
+                    as a soft commit. See <a href="https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig#UpdateHandlersinSolrConfig-commitWithin">UpdateHandlers in SolrConfig</a>.</p>
+                    <p>See also <a href="../classes/SolrAdapter.html#property_commit" class="crosslink">commit</a>.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> undefined</p>
                     
                     
                     </div>
@@ -3928,7 +3913,7 @@ a record.</p>
                     </div>
                     <div id="property_dataType" class="property item">
                         <h3 class="name"><code>dataType</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                     
@@ -3937,7 +3922,7 @@ a record.</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_adapters_solr.js.html#l54"><code>addon&#x2F;adapters&#x2F;solr.js:54</code></a>
+                            <a href="../files/addon_adapters_solr.js.html#l105"><code>addon&#x2F;adapters&#x2F;solr.js:105</code></a>
                             </p>
                     
                     
@@ -3958,7 +3943,7 @@ a record.</p>
                     </div>
                     <div id="property_defaultCore" class="property item">
                         <h3 class="name"><code>defaultCore</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                     
@@ -3967,7 +3952,7 @@ a record.</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_adapters_solr.js.html#l34"><code>addon&#x2F;adapters&#x2F;solr.js:34</code></a>
+                            <a href="../files/addon_adapters_solr.js.html#l85"><code>addon&#x2F;adapters&#x2F;solr.js:85</code></a>
                             </p>
                     
                     
@@ -3987,7 +3972,7 @@ a record.</p>
                     </div>
                     <div id="property_defaultSerializer" class="property item">
                         <h3 class="name"><code>defaultSerializer</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                     
@@ -3999,7 +3984,7 @@ a record.</p>
                                     DS.Adapter
                                 </a>
                                 but overwritten in
-                            <a href="../files/addon_adapters_solr.js.html#l45"><code>addon&#x2F;adapters&#x2F;solr.js:45</code></a>
+                            <a href="../files/addon_adapters_solr.js.html#l96"><code>addon&#x2F;adapters&#x2F;solr.js:96</code></a>
                             </p>
                     
                     
@@ -4026,7 +4011,7 @@ a record.</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_adapters_solr.js.html#l66"><code>addon&#x2F;adapters&#x2F;solr.js:66</code></a>
+                            <a href="../files/addon_adapters_solr.js.html#l117"><code>addon&#x2F;adapters&#x2F;solr.js:117</code></a>
                             </p>
                     
                     
@@ -4101,6 +4086,33 @@ a record.</p>
                         </div>
                     
                             <p><strong>Default:</strong> false</p>
+                    
+                    
+                    </div>
+                    <div id="property_updateMode" class="property item">
+                        <h3 class="name"><code>updateMode</code></h3>
+                        <span class="type"><a href="../classes/SolrUpdateMode.html" class="crosslink">SolrUpdateMode</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_adapters_solr.js.html#l135"><code>addon&#x2F;adapters&#x2F;solr.js:135</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Sets the concurrency mode for how updates are sent
+                    to Solr.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> SolrUpdateType.None</p>
                     
                     
                     </div>

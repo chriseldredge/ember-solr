@@ -1,0 +1,1475 @@
+{
+    "project": {
+        "name": "ember-solr",
+        "description": "Solr adapter for Ember Data",
+        "external": {
+            "data": [
+                {
+                    "base": "http://emberjs.com/api/",
+                    "json": "http://builds.emberjs.com/tags/v1.10.0/ember-docs.json"
+                },
+                {
+                    "base": "http://emberjs.com/api/data/",
+                    "json": "http://builds.emberjs.com/tags/v1.0.0-beta.6/ember-data-docs.json"
+                }
+            ]
+        },
+        "version": "0.1.0.ee3e9e64"
+    },
+    "files": {
+        "addon/adapters/solr.js": {
+            "name": "addon/adapters/solr.js",
+            "modules": {
+                "solr": 1
+            },
+            "classes": {
+                "SolrAdapter": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/lib/commit-type.js": {
+            "name": "addon/lib/commit-type.js",
+            "modules": {},
+            "classes": {
+                "SolrCommitType": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/lib/handlers.js": {
+            "name": "addon/lib/handlers.js",
+            "modules": {},
+            "classes": {
+                "SolrHandlerType": 1,
+                "SolrRequestHandler": 1,
+                "SolrSearchHandler": 1,
+                "SolrRealTimeGetHandler": 1,
+                "SolrUpdateHandler": 1,
+                "SolrDeleteHandler": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/lib/request.js": {
+            "name": "addon/lib/request.js",
+            "modules": {},
+            "classes": {
+                "SolrRequest": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/lib/update-mode.js": {
+            "name": "addon/lib/update-mode.js",
+            "modules": {},
+            "classes": {
+                "SolrUpdateMode": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/mixins/atomic-multi-valued-serializer.js": {
+            "name": "addon/mixins/atomic-multi-valued-serializer.js",
+            "modules": {},
+            "classes": {
+                "AtomicMultiValuedSerializerMixin": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/mixins/atomic-serializer.js": {
+            "name": "addon/mixins/atomic-serializer.js",
+            "modules": {},
+            "classes": {
+                "AtomicSerializerMixin": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/mixins/dynamic-serializer.js": {
+            "name": "addon/mixins/dynamic-serializer.js",
+            "modules": {},
+            "classes": {
+                "DynamicSerializerMixin": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/serializers/solr.js": {
+            "name": "addon/serializers/solr.js",
+            "modules": {},
+            "classes": {
+                "SolrSerializer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/concurrent-modification-error.js": {
+            "name": "addon/concurrent-modification-error.js",
+            "modules": {},
+            "classes": {
+                "ConcurrentModificationError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/not-dirty-error.js": {
+            "name": "addon/not-dirty-error.js",
+            "modules": {},
+            "classes": {
+                "NotDirtyError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/not-found-error.js": {
+            "name": "addon/not-found-error.js",
+            "modules": {},
+            "classes": {
+                "NotFoundError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/too-many-results-error.js": {
+            "name": "addon/too-many-results-error.js",
+            "modules": {},
+            "classes": {
+                "TooManyResultsError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "solr": {
+            "name": "solr",
+            "submodules": {},
+            "classes": {
+                "SolrAdapter": 1,
+                "SolrCommitType": 1,
+                "SolrHandlerType": 1,
+                "SolrRequestHandler": 1,
+                "SolrSearchHandler": 1,
+                "SolrRealTimeGetHandler": 1,
+                "SolrUpdateHandler": 1,
+                "SolrDeleteHandler": 1,
+                "SolrRequest": 1,
+                "SolrUpdateMode": 1,
+                "AtomicMultiValuedSerializerMixin": 1,
+                "AtomicSerializerMixin": 1,
+                "DynamicSerializerMixin": 1,
+                "SolrSerializer": 1,
+                "ConcurrentModificationError": 1,
+                "NotDirtyError": 1,
+                "NotFoundError": 1,
+                "TooManyResultsError": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "addon/too-many-results-error.js",
+            "line": 9
+        }
+    },
+    "classes": {
+        "SolrAdapter": {
+            "name": "SolrAdapter",
+            "shortname": "SolrAdapter",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/adapters/solr.js",
+            "line": 24,
+            "description": "Ember Data Adapter for Apache Solr.",
+            "extends": "DS.Adapter"
+        },
+        "SolrCommitType": {
+            "name": "SolrCommitType",
+            "shortname": "SolrCommitType",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/commit-type.js",
+            "line": 5,
+            "description": "An enumeration of types of commit commands (hard or soft)\n\nSee [NearRealtimeSearch](https://wiki.apache.org/solr/NearRealtimeSearch)\non the Solr wiki.",
+            "static": 1
+        },
+        "SolrHandlerType": {
+            "name": "SolrHandlerType",
+            "shortname": "SolrHandlerType",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/handlers.js",
+            "line": 11,
+            "description": "An enumeration of handler types that `ember-solr`\nknows how to interact with.",
+            "static": 1
+        },
+        "SolrRequestHandler": {
+            "name": "SolrRequestHandler",
+            "shortname": "SolrRequestHandler",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/handlers.js",
+            "line": 61,
+            "description": "An abstract representation of a Solr request\nhandler, including its type, path and HTTP method."
+        },
+        "SolrSearchHandler": {
+            "name": "SolrSearchHandler",
+            "shortname": "SolrSearchHandler",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/handlers.js",
+            "line": 127,
+            "description": "Represents a default configuration of a request\nto a Solr search handler.",
+            "extends": "SolrRequestHandler"
+        },
+        "SolrRealTimeGetHandler": {
+            "name": "SolrRealTimeGetHandler",
+            "shortname": "SolrRealTimeGetHandler",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/handlers.js",
+            "line": 233,
+            "description": "Represents a default configuration of a request\nto a Solr Real Time Get handler."
+        },
+        "SolrUpdateHandler": {
+            "name": "SolrUpdateHandler",
+            "shortname": "SolrUpdateHandler",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/handlers.js",
+            "line": 260,
+            "description": "Represents a default configuration of a request\nto a Solr Update Request Processor."
+        },
+        "SolrDeleteHandler": {
+            "name": "SolrDeleteHandler",
+            "shortname": "SolrDeleteHandler",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/handlers.js",
+            "line": 307,
+            "description": "Represents a default configuration of a request\nto a Solr Update Request Processor for deleting\na document by ID."
+        },
+        "SolrRequest": {
+            "name": "SolrRequest",
+            "shortname": "SolrRequest",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/request.js",
+            "line": 10,
+            "description": "Represents an HTTP Request to a Solr server,\nincluding URL path segments, data and options\nthat control how the request will be executed.\n\nAllows easy setting of data parameters (serialized\nas a query string for `GET` requests or a JSON string\nfor other types).\n\nConstruction of this class should either provide\nthe `data` property or the `options` property,\nbut not both.",
+            "extends": "Ember.Object"
+        },
+        "SolrUpdateMode": {
+            "name": "SolrUpdateMode",
+            "shortname": "SolrUpdateMode",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/lib/update-mode.js",
+            "line": 5,
+            "description": "An enumeration of update modes that control\nhow updates are persisted to Solr.\n\nSee [Updating Parts of Documents](https://cwiki.apache.org/confluence/display/solr/Updating+Parts+of+Documents)\non the Solr wiki.",
+            "static": 1
+        },
+        "AtomicMultiValuedSerializerMixin": {
+            "name": "AtomicMultiValuedSerializerMixin",
+            "shortname": "AtomicMultiValuedSerializerMixin",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/mixins/atomic-multi-valued-serializer.js",
+            "line": 8,
+            "description": "Mixin that extends AtomicSerializerMixin to use [Atomic Updates](https://wiki.apache.org/solr/Atomic_Updates)\nwith `add` and `remove` operations for array changes.\n\nThis implementation treats arrays as unordered and distinct.\nA multiValued field will be updated any items are added or\nremoved. Only values that have been added or removed are\nsent, using the `add` or `remove` operations respectively.\n\nNote that the `remove` operation requires Solr 5 or later.",
+            "extends": "AtomicSerializerMixin"
+        },
+        "AtomicSerializerMixin": {
+            "name": "AtomicSerializerMixin",
+            "shortname": "AtomicSerializerMixin",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/mixins/atomic-serializer.js",
+            "line": 10,
+            "description": "Mixin that serializes uses [Atomic Updates](https://wiki.apache.org/solr/Atomic_Updates)\nto only update fields that have been modified.\n\nAtomic Updates can optionally include Optimistic Concurrency\nto ensure updates are not conflicting with other clients.\nSee {{#crossLink \"SolrAdapter/updateMode:property\"}}SolrAdapter.updateMode{{/crossLink}}.\n\nThis implementation treats arrays as ordered and non-distinct.\nA multiValued field will be updated if the order of items\nchanges or if any items are added or removed. The entire\narray will be sent using a `set` operation to preserve order\nand allow for duplicate values.\n\nTo treat multiValued fields as distinct sets, use\n{{#crossLink \"AtomicMultiValuedSerializerMixin\"}}{{/crossLink}}\nwhich will use `add` and `remove` operations.",
+            "extends": "SolrSerializer"
+        },
+        "DynamicSerializerMixin": {
+            "name": "DynamicSerializerMixin",
+            "shortname": "DynamicSerializerMixin",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/mixins/dynamic-serializer.js",
+            "line": 9,
+            "description": "Ember Data Serializer for Apache Solr [Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).",
+            "extends": "SolrSerializer"
+        },
+        "SolrSerializer": {
+            "name": "SolrSerializer",
+            "shortname": "SolrSerializer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/serializers/solr.js",
+            "line": 14,
+            "description": "Ember Data Serializer for Apache Solr.",
+            "extends": "DS.JSONSerializer"
+        },
+        "ConcurrentModificationError": {
+            "name": "ConcurrentModificationError",
+            "shortname": "ConcurrentModificationError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/concurrent-modification-error.js",
+            "line": 9,
+            "description": "Thrown when an update is rejected by Solr because\nthe `_version_` contraint was not met by the server.\n\nThis error can be thrown when attempting to create\na record with an ID that is already in use, or when\nattempting to update a document with a version that\nis not the newest version."
+        },
+        "NotDirtyError": {
+            "name": "NotDirtyError",
+            "shortname": "NotDirtyError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/not-dirty-error.js",
+            "line": 9,
+            "description": "Thrown by {{#crossLink \"AtomicSerializerMixin/serialize:method\"}}AtomicSerializerMixin.serialize{{/crossLink}}\nwhen the snapshot\nis not different from the loaded record."
+        },
+        "NotFoundError": {
+            "name": "NotFoundError",
+            "shortname": "NotFoundError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/not-found-error.js",
+            "line": 9,
+            "description": "Thrown by SolrSerializer.extractSingle when the query\nreturns zero documents."
+        },
+        "TooManyResultsError": {
+            "name": "TooManyResultsError",
+            "shortname": "TooManyResultsError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "solr",
+            "namespace": "",
+            "file": "addon/too-many-results-error.js",
+            "line": 9,
+            "description": "Thrown by SolrSerializer.extractSingle when more\nthan one document matches a query and exactly one\nrecord is expected."
+        }
+    },
+    "classitems": [
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 30,
+            "description": "The base URL where the Solr instance is hosted.\nThis property is typically configured by setting\n`ENV.solrBaseURL` in your `config/environment.js`\nfile.",
+            "itemtype": "property",
+            "name": "baseURL",
+            "type": "{string}",
+            "default": "'/solr'",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 41,
+            "description": "When enabled, sends a `commit` command to Solr in update\nrequests to commit the index synchronously and\nblock the request until commit has completed.\n\nThere are many considerations when choosing to\nenable this feature. Consult the Solr\n[documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)\non autoCommit, and softAutoCommit.\n\nSee also {{#crossLink \"SolrAdapter/commitWithinMilliseconds:property\"}}{{/crossLink}}.",
+            "itemtype": "property",
+            "name": "commit",
+            "type": "{SolrCommitType}",
+            "default": "SolrCommitType.None",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 59,
+            "description": "When set, sends a `commitWithin` command to Solr\nin update requests to have the update committed\nwithin a time limit (in milliseconds). Solr will\naggregate multiple pending writes into a single\ncommit to reduce overhead and improve performance.\n\nThis property, when set, takes precedence over\n{{#crossLink \"SolrAdapter/commit:property\"}}{{/crossLink}}.\n\nThere are many considerations when choosing to\nenable this feature. Consult the Solr\n[documentation](https://wiki.apache.org/solr/SolrConfigXml#Update_Handler_Section)\non autoCommit, and softAutoCommit.\n\nIn Solr 4 and later, commitWithin is handled by default\nas a soft commit. See [UpdateHandlers in SolrConfig](https://cwiki.apache.org/confluence/display/solr/UpdateHandlers+in+SolrConfig#UpdateHandlersinSolrConfig-commitWithin).\n\nSee also {{#crossLink \"SolrAdapter/commit:property\"}}{{/crossLink}}.",
+            "itemtype": "property",
+            "name": "commitWithinMilliseconds",
+            "type": "{number} milliseconds",
+            "default": "undefined",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 85,
+            "description": "Specifies a default Solr Core to send requests\nto. If no default core is configured, this adapter\nwill not include a core in the request URI path\nand the Solr server will use its own default.",
+            "itemtype": "property",
+            "name": "defaultCore",
+            "type": "{string}",
+            "default": "null",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 96,
+            "description": "Sets the default serializer for this adapter.\nUses {{#crossLink \"SolrSerializer\"}}{{/crossLink}} by default.",
+            "itemtype": "property",
+            "name": "defaultSerializer",
+            "type": "{string}",
+            "default": "'-solr'",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 105,
+            "description": "Sets the data type for jQuery ajax requests.\nEither `json` or `jsonp` are supported.\n`jsonp` is provided as the default to allow cross-origin\nrequests to succeed without needing special customization\nof the Solr server.",
+            "itemtype": "property",
+            "name": "dataType",
+            "type": "{string}",
+            "default": "'jsonp'",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 117,
+            "description": "Enables or disables sending requests to Solr's\nReal Time Get handler. Note that this handler is\ndisabled by default on many Solr servers.\n\nReal Time Get allows retrieval of documents that\nhave not yet been committed by retrieving them from\nthe update log.\n\nIf you are using SolrCloud, it is generally safe to\nenable this feature.",
+            "itemtype": "property",
+            "name": "enableRealTimeGet",
+            "type": "{boolean}",
+            "default": "false",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 135,
+            "description": "Sets the concurrency mode for how updates are sent\nto Solr.",
+            "itemtype": "property",
+            "name": "updateMode",
+            "type": "{SolrUpdateMode}",
+            "default": "SolrUpdateType.None",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 145,
+            "description": "Find a record by its unique ID.",
+            "itemtype": "method",
+            "name": "find",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 156,
+            "description": "Find all documents of a type.",
+            "itemtype": "method",
+            "name": "findAll",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 168,
+            "description": "Find multiple documents in a single request.",
+            "itemtype": "method",
+            "name": "findMany",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 179,
+            "description": "Find one or more records by arbitrary query\n\nThe query hash should include the key `q` with\nan appropriate Solr query to execute. If this key\nis not specified, `*:*` will be used to match all\ndocuments.\n\nThe query hash may include the keys `limit` and/or\n`offset` to override the Solr request handler's\npage size and retrieve rows from a given offset.",
+            "itemtype": "method",
+            "name": "findQuery",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 240,
+            "description": "Builds a request to send to Solr.",
+            "itemtype": "method",
+            "name": "buildRequest",
+            "params": [
+                {
+                    "name": "store",
+                    "description": "",
+                    "type": "instance of DS.Store"
+                },
+                {
+                    "name": "type",
+                    "description": "the model type",
+                    "type": "subclass of DS.Model"
+                },
+                {
+                    "name": "operation",
+                    "description": "one of `find`, `findQuery`, etc.",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "to be sent in the request",
+                    "type": "Data"
+                }
+            ],
+            "return": {
+                "description": "request",
+                "type": "SolrRequest"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 263,
+            "description": "Determines which Solr Core should handle queries for\na given type and oepration. By default,\n{{#crossLink \"SolrAdapter/defaultCore:property\"}}{{/crossLink}}\nis used.",
+            "itemtype": "method",
+            "name": "coreForType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "subclass of DS.Model"
+                },
+                {
+                    "name": "operation",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "core name",
+                "type": "String"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 278,
+            "description": "Determines the [unique key](https://wiki.apache.org/solr/UniqueKey)\nfor a given type. Default Solr schemas use the canonical field `id`\nand this method defaults to the same field.",
+            "itemtype": "method",
+            "name": "uniqueKeyForType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "subclass of DS.Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 291,
+            "description": "Determines which Solr Core should handle queries for\na given type and operation.\n\nWhen\n{{#crossLink \"SolrAdapter/enableRealTimeGet:property\"}}{{/crossLink}}\nis set to `true`, this method will choose RealTimeGet\nfor `find` and `findMany` operations.\n\nOverride this method to customize the path and type\nof handler that should be used for given operations.",
+            "itemtype": "method",
+            "name": "handlerForType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "subclass of DS.Model"
+                },
+                {
+                    "name": "operation",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "handler instance",
+                "type": "SolrRequestHandler"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 328,
+            "description": "Builds an optional filter query (`fq`) to include in search requests.\nIf multiple models are stored in the same Solr Core, applying\nan appropriate filter query will ensure only the documents of\nthe appropriate type are included.\nExample\n```javascript\nApp.ApplicationAdapter = SolrAdapter.extend({\n  filterQueryForType: function(type) {\n    return 'doc_type:' + type;\n  }\n});\n```\nSee [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters#fq).",
+            "itemtype": "method",
+            "name": "filterQueryForType",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "operation",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "a filter query or `null`",
+                "type": "String"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 349,
+            "description": "Builds a complete URL and initiates\nan AJAX request to Solr.",
+            "itemtype": "method",
+            "name": "executeRequest",
+            "params": [
+                {
+                    "name": "request",
+                    "description": "",
+                    "type": "SolrRequest"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Promise"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 367,
+            "description": "Joins two or more strings into a path delimited\nby forward slashes without adding redundant slashes.\nAny number of arguments can be passed into this method.",
+            "itemtype": "method",
+            "name": "combinePath",
+            "params": [
+                {
+                    "name": "path1",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "path2",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 398,
+            "description": "Takes a URL, an HTTP method and a hash of data, and makes an\nHTTP request.\nWhen the server responds with a payload, Ember Data will call into `extractSingle`\nor `extractArray` (depending on whether the original query was for one record or\nmany records).\nBy default, `ajax` method has the following behavior:\n* It sets the response `dataType` to `\"json\"`\n* If the HTTP method is not `\"GET\"`, it sets the `Content-Type` to be\n  `application/json; charset=utf-8`\n* If the HTTP method is not `\"GET\"`, it stringifies the data passed in. The\n  data is the serialized record in the case of a save.\n* Registers success and failure handlers.",
+            "itemtype": "method",
+            "name": "ajax",
+            "access": "protected",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "type",
+                    "description": "The request type GET, POST, PUT, DELETE etc.",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "promise",
+                "type": "Promise"
+            },
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 448,
+            "itemtype": "method",
+            "name": "ajaxOptions",
+            "access": "protected",
+            "tagname": "",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "type",
+                    "description": "The request type GET, POST, PUT, DELETE etc.",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 490,
+            "description": "Takes an ajax response, and returns the json payload.\nBy default this hook just returns the jsonPayload passed to it.\nYou might want to override it in two cases:\n1. Your API might return useful results in the request headers.\nIf you need to access these, you can override this hook to copy them\nfrom jqXHR to the payload object so they can be processed in you serializer.\n2. Your API might return errors as successful responses with status code\n200 and an Errors text or object. You can return a DS.InvalidError from\nthis hook and it will automatically reject the promise and put your record\ninto the invalid state.",
+            "itemtype": "method",
+            "name": "ajaxSuccess",
+            "params": [
+                {
+                    "name": "jqXHR",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "jsonPayload",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "jsonPayload",
+                "type": "Object"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/adapters/solr.js",
+            "line": 511,
+            "description": "Takes an ajax response, and returns an error payload.\nReturning a `DS.InvalidError` from this method will cause the\nrecord to transition into the `invalid` state and make the\n`errors` object available on the record.\nThis function should return the entire payload as received from the\nserver.  Error object extraction and normalization of model errors\nshould be performed by `extractErrors` on the serializer.\nExample\n```javascript\nApp.ApplicationAdapter = DS.RESTAdapter.extend({\n  ajaxError: function(jqXHR) {\n    var error = this._super(jqXHR);\n    if (jqXHR && jqXHR.status === 422) {\n      var jsonErrors = Ember.$.parseJSON(jqXHR.responseText);\n      return new DS.InvalidError(jsonErrors);\n    } else {\n      return error;\n    }\n  }\n});\n```\nNote: As a correctness optimization, the default implementation of\nthe `ajaxError` method strips out the `then` method from jquery's\najax response (jqXHR). This is important because the jqXHR's\n`then` method fulfills the promise with itself resulting in a\ncircular \"thenable\" chain which may cause problems for some\npromise libraries.",
+            "itemtype": "method",
+            "name": "ajaxError",
+            "params": [
+                {
+                    "name": "jqXHR",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "responseText",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "jqXHR",
+                "type": "Object"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrAdapter",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/commit-type.js",
+            "line": 15,
+            "description": "A standard \"hard\" commit that causes all pending changes to be\nflushed to disk and for searcher to be reloaded.\n\nThis commit type provides the highest level of durability by\nflushing changes to disk but causes a large amount of I/O on\nthe server.",
+            "itemtype": "property",
+            "name": "Hard",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrCommitType",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/commit-type.js",
+            "line": 29,
+            "description": "A \"soft\" commit that causes searchers to reload with pending\nchanges so they become visible outside of the Real-Time Get handler.\n\nThis commit type provides less durability in the event of a Solr server\ncrash but still allows Solr searches to stay up to date.",
+            "itemtype": "property",
+            "name": "Soft",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrCommitType",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/commit-type.js",
+            "line": 42,
+            "description": "Tells EmberSolr not to send any commit command to Solr.\nUpdates will be visible by Near Real Time handlers but\nwon't become visible to standard query handlers until\nan autoCommit, autoSoftCommit or another request commits.",
+            "itemtype": "property",
+            "name": "None",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrCommitType",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 19,
+            "description": "Represents a requst to `select`, `search` and\nother standard request handlers.\n\nThis is the handler type that will be used in\n`findQuery`, and when real-time get is not enabled\nit will also be used in all `find*` operations.\n\nSee [SearchHandler](http://wiki.apache.org/solr/SearchHandler).",
+            "itemtype": "property",
+            "name": "Search",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrHandlerType",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 35,
+            "description": "Represents a requst to `get` and\nother real time get handlers.\n\nThis is the handler type that will be used when\n{{#crossLink \"SolrAdapter/enableRealTimeGet:property\"}}{{/crossLink}}\nis set to `true` for `find`, and `findMany`.\n\nSee [RealTimeGet](http://wiki.apache.org/solr/RealTimeGet).",
+            "itemtype": "property",
+            "name": "RealTimeGet",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrHandlerType",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 51,
+            "description": "Represents a requst to [UpdateRequestProcessor](http://wiki.apache.org/solr/UpdateRequestProcessor)",
+            "itemtype": "property",
+            "name": "RealTimeGet",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrHandlerType",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 67,
+            "description": "The type of request.",
+            "itemtype": "property",
+            "name": "type",
+            "type": "{SolrHandlerType}",
+            "class": "SolrRequestHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 75,
+            "description": "The path to route the request to. Typical\nexamples include handler paths like `/search`,\n`/select`, `/get`, and `/update`.",
+            "itemtype": "property",
+            "name": "path",
+            "type": "{string}",
+            "class": "SolrRequestHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 85,
+            "description": "The HTTP method (verb) to use in the request.",
+            "itemtype": "property",
+            "name": "method",
+            "type": "{string}",
+            "default": "'GET'",
+            "class": "SolrRequestHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 94,
+            "description": "The data payload to send in the request, as\na query string or as a JSON request body.",
+            "itemtype": "property",
+            "name": "data",
+            "type": "{object}",
+            "default": "null",
+            "class": "SolrRequestHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 104,
+            "description": "Prepares the\n{{#crossLink \"SolrRequestHandler/data:property\"}}{{/crossLink}}\nand optinally adjusts the\n{{#crossLink \"SolrRequestHandler/path:property\"}}{{/crossLink}}\nproperties to send to Solr as a querystring\nor in an HTTP POST request body.\n\nThis method mutates the state of the instance it is invoked\non and has no return value.",
+            "itemtype": "method",
+            "name": "buildPayload",
+            "params": [
+                {
+                    "name": "adapter",
+                    "description": "the adapter invoking this method",
+                    "type": "SolrAdapter"
+                },
+                {
+                    "name": "the",
+                    "description": "store related to the type and data",
+                    "type": "DS.Store"
+                },
+                {
+                    "name": "type",
+                    "description": "the type corresponding to the operation",
+                    "type": "subclass of DS.Model"
+                },
+                {
+                    "name": "operation",
+                    "description": "the operation e.g. 'find', 'updateRecord', etc.",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "the ID(s), query or snapshot payload to prepare.",
+                    "type": "Object"
+                }
+            ],
+            "class": "SolrRequestHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 135,
+            "itemtype": "property",
+            "name": "type",
+            "default": "`SolrHandlerType.Search`",
+            "class": "SolrSearchHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 141,
+            "itemtype": "property",
+            "name": "path",
+            "default": "'select'",
+            "class": "SolrSearchHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 169,
+            "description": "Builds a Solr query to send in a search request.\nThis method applies some defaults and converts\nidiomatic Ember query parameters to their\nSolr corollaries.\n\n* Sets `wt=json`\n* Converts `limit` to `rows`\n* Converts `offset` to `start`\n* Defaults to `q=*:*` when no query is specified\n* Calls {{#crossLink \"SolrAdapter/filterQueryForType:method\"}}{{/crossLink}}\nand sets `fq` when a non-blank filter query is returned\n\nOverrides of this method can return an object that includes\nother query options. Multipe `fq` parameters (and others)\ncan be defined by using an array for the values:\n```javascript\nApp.ApplicationAdapter = SolrAdapter.extend({\n  buildSolrQuery: function(type, query) {\n    return {\n      fq: [\n        'type:' + type,\n        'public:true'\n      ]\n    };\n  }\n});\n```\n\nSee [QueryResponseWriter](https://wiki.apache.org/solr/QueryResponseWriter)\nand [CommonQueryParameters](https://wiki.apache.org/solr/CommonQueryParameters).",
+            "itemtype": "method",
+            "name": "buildSolrQuery",
+            "params": [
+                {
+                    "name": "adapter",
+                    "description": "the adapter invoking this method",
+                    "type": "SolrAdapter"
+                },
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "operation",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "query",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "data hash for ajax request",
+                "type": "Object"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "SolrSearchHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 240,
+            "itemtype": "property",
+            "name": "type",
+            "default": "`SolrHandlerType.RealTimeGet`",
+            "class": "SolrRealTimeGetHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 246,
+            "itemtype": "property",
+            "name": "path",
+            "default": "'get'",
+            "class": "SolrRealTimeGetHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 267,
+            "itemtype": "property",
+            "name": "type",
+            "default": "`SolrHandlerType.RealTimeGet`",
+            "class": "SolrUpdateHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 273,
+            "itemtype": "property",
+            "name": "path",
+            "default": "'get'",
+            "class": "SolrUpdateHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/handlers.js",
+            "line": 279,
+            "itemtype": "property",
+            "name": "method",
+            "default": "'POST'",
+            "class": "SolrUpdateHandler",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/request.js",
+            "line": 27,
+            "description": "The Solr Core to route the request to.\nWhen not specified, no core will be included\nin the path and the request will be routed\nto the default core on the server.",
+            "itemtype": "property",
+            "name": "core",
+            "type": "{string}",
+            "class": "SolrRequest",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/request.js",
+            "line": 38,
+            "description": "The handler to route the request to.",
+            "itemtype": "property",
+            "name": "handler",
+            "type": "{SolrRequestHandler}",
+            "class": "SolrRequest",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/request.js",
+            "line": 46,
+            "description": "Data to send in the request.\nThis property is bound to `options.data`.",
+            "itemtype": "property",
+            "name": "data",
+            "type": "{object}",
+            "class": "SolrRequest",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/request.js",
+            "line": 55,
+            "description": "Options hash that specifies how the request\nwill be executed.\n`options.data` is bound to `data`.",
+            "itemtype": "property",
+            "name": "options",
+            "type": "{object}",
+            "class": "SolrRequest",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/request.js",
+            "line": 65,
+            "description": "Binds `handler.method` to `method` for convenience.\nRepresents an HTTP method or verb, e.g. `GET`, `POST`,\netc.",
+            "itemtype": "property",
+            "name": "method",
+            "type": "{string}",
+            "readonly": "",
+            "class": "SolrRequest",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/request.js",
+            "line": 76,
+            "description": "Initialization observer. Checks whether `options`,\nor `data` were provided, creates empty hash objects\nwhere they were not, and establishes a binding\nbetween `options.data` and `data`.",
+            "itemtype": "method",
+            "name": "_init",
+            "access": "private",
+            "tagname": "",
+            "class": "SolrRequest",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/update-mode.js",
+            "line": 16,
+            "description": "Uses the `_version_` field (or other user configurable field)\nas a token to ensure that the document being replaced/updated\nhas not been concurrently modified by another client.\n\nThis is the safest mode to ensure writes from multiple clients\ndo not collide which can manifest in updates appearing temporarily\nand then appearing to revert to an older value.",
+            "itemtype": "property",
+            "name": "OptimisticConcurrency",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrUpdateMode",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/update-mode.js",
+            "line": 31,
+            "description": "Sets the `_version_` field (or other user configurable field)\nvalue to `0` (zero) to cause the document to be added if it\ndoes not exist or overwrite any previous version if it does\nexist.",
+            "itemtype": "property",
+            "name": "LastWriteWins",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrUpdateMode",
+            "module": "solr"
+        },
+        {
+            "file": "addon/lib/update-mode.js",
+            "line": 43,
+            "description": "Sends documents to Solr without includng any\n`_version_` field at all. Depending on the Solr\nserver config, this may result in similar behavior to\n`LastWriteWins`, or it may result in updates being discarded\nentirely.",
+            "itemtype": "property",
+            "name": "None",
+            "final": 1,
+            "type": "{string}",
+            "class": "SolrUpdateMode",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/atomic-multi-valued-serializer.js",
+            "line": 23,
+            "description": "Uses \"set arithmetic\" to detect modifications\nfor arrays or delegates to base implementation for non-arrays.",
+            "itemtype": "method",
+            "name": "isAttributeModified",
+            "class": "AtomicMultiValuedSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/atomic-multi-valued-serializer.js",
+            "line": 44,
+            "description": "Uses \"set arithmetic\" to calculate `add` and `remove`\noperations for arrays.",
+            "itemtype": "method",
+            "name": "serializeArrayAttribute",
+            "class": "AtomicMultiValuedSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/atomic-serializer.js",
+            "line": 33,
+            "description": "Serialize only modified attributes for a snapshot\nusing atomic update operations.",
+            "itemtype": "method",
+            "name": "serialize",
+            "params": [
+                {
+                    "name": "snapshot",
+                    "description": "",
+                    "type": "DS.Snapshot"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "AtomicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/atomic-serializer.js",
+            "line": 62,
+            "description": "Determines if an attribute can be serialized and if the\nvalue is dirty.",
+            "itemtype": "method",
+            "name": "serializeAttribute",
+            "params": [
+                {
+                    "name": "snapshot",
+                    "description": "",
+                    "type": "DS.Snapshot"
+                },
+                {
+                    "name": "json",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "key",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "attribute",
+                    "description": "",
+                    "type": "DS.Attribute"
+                }
+            ],
+            "class": "AtomicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/atomic-serializer.js",
+            "line": 112,
+            "description": "Determine if a value is modified from a previous value.",
+            "itemtype": "method",
+            "name": "isAttributeModified",
+            "params": [
+                {
+                    "name": "snapshot",
+                    "description": "",
+                    "type": "DS.Snapshot"
+                },
+                {
+                    "name": "key",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "attribtue",
+                    "description": "",
+                    "type": "DS.Attribute"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Anything"
+                },
+                {
+                    "name": "previousValue",
+                    "description": "",
+                    "type": "Anything"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "AtomicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/atomic-serializer.js",
+            "line": 144,
+            "description": "Serialize an update to a multiValued field.",
+            "itemtype": "method",
+            "name": "serializeArrayAttribute",
+            "params": [
+                {
+                    "name": "snapshot",
+                    "description": "",
+                    "type": "DS.Snapshot"
+                },
+                {
+                    "name": "key",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "attribute",
+                    "description": "",
+                    "type": "DS.Attribute"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Anything"
+                },
+                {
+                    "name": "previousValue",
+                    "description": "",
+                    "type": "Anything"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "class": "AtomicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/dynamic-serializer.js",
+            "line": 16,
+            "description": "Provides a mapping of types to dynamic field prefixes.\n\nThe following example would cause all attributes of type `number`\nto be mapped by prepending `int_` to the attribute name:\n\n```javascript\nApp.ApplicationSerializer = SolrDynamicSerializer.extend({\n  dynamicFieldPrefixes: {\n    'number': 'int_'\n  }\n});\n```\n\nThis property is left null to follow the conventions in the\nSolr Schemaless example configuration.",
+            "itemtype": "property",
+            "name": "dynamicFieldPrefixes",
+            "type": "{object}",
+            "default": "null",
+            "class": "DynamicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/dynamic-serializer.js",
+            "line": 39,
+            "description": "Provides a mapping of types to dynamic field prefixes.\n\nThe following example would cause all attributes of type `date`\nto be mapped by appending `_date` to the attribute name:\n\n```javascript\nApp.ApplicationSerializer = SolrdynamicSerializer.extend({\n  dynamicFieldSuffixes: {\n    'date': '_date'\n  }\n});\n```\n\nSee source code for default mappings that follow\nconventions in the Solr Dynamic example configuration.",
+            "itemtype": "property",
+            "name": "dynamicFieldSuffixes",
+            "type": "{object}",
+            "default": "null",
+            "class": "DynamicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/dynamic-serializer.js",
+            "line": 80,
+            "description": "Converts attributes to underscore and uses\n{{#crossLink \"DynamicSerializerMixin/dynamicKeyForAttribute:method\"}}{{/crossLink}}.\nto produce a dynamic field key. For a string attribute like `relatedArticles`\nthis method would return `related_articles_s`.",
+            "itemtype": "method",
+            "name": "keyForAttribute",
+            "params": [
+                {
+                    "name": "attr",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "key",
+                "type": "String"
+            },
+            "class": "DynamicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/mixins/dynamic-serializer.js",
+            "line": 95,
+            "description": "Uses\n{{#crossLink \"DynamicSerializerMixin/dynamicFieldPrefixes:property\"}}{{/crossLink}}\nand\n{{#crossLink \"DynamicSerializerMixin/dynamicFieldSuffixes:property\"}}{{/crossLink}}\nto produce a dynamic field key. For a string attribute like `related_articles`\nthis method would return `related_articles_s`.",
+            "itemtype": "method",
+            "name": "dynamicKeyForAttribute",
+            "params": [
+                {
+                    "name": "attr",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "key",
+                "type": "String"
+            },
+            "class": "DynamicSerializerMixin",
+            "module": "solr"
+        },
+        {
+            "file": "addon/serializers/solr.js",
+            "line": 21,
+            "description": "Field name to use for Solr Optimistic Concurrency.\nSee [Updating Parts of Documents](https://cwiki.apache.org/confluence/display/solr/Updating+Parts+of+Documents).",
+            "itemtype": "property",
+            "name": "versionFieldName",
+            "type": "{string}",
+            "default": "'_version_'",
+            "class": "SolrSerializer",
+            "module": "solr"
+        },
+        {
+            "file": "addon/serializers/solr.js",
+            "line": 31,
+            "description": "Converts attributes to underscore to use conventional\nSolr field names",
+            "itemtype": "method",
+            "name": "keyForAttribute",
+            "params": [
+                {
+                    "name": "attr",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "key",
+                "type": "String"
+            },
+            "class": "SolrSerializer",
+            "module": "solr"
+        },
+        {
+            "file": "addon/concurrent-modification-error.js",
+            "line": 27,
+            "description": "Message from the server indicating why the\nupdate was rejected.",
+            "itemtype": "property",
+            "name": "message",
+            "type": "{string}",
+            "class": "ConcurrentModificationError",
+            "module": "solr"
+        },
+        {
+            "file": "addon/too-many-results-error.js",
+            "line": 25,
+            "description": "The actual number of documents that were returned.",
+            "itemtype": "property",
+            "name": "count",
+            "type": "{number}",
+            "class": "TooManyResultsError",
+            "module": "solr"
+        }
+    ],
+    "warnings": []
+}

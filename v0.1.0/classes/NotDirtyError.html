@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>SolrHandlerType - ember-solr</title>
+    <title>NotDirtyError - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -83,12 +93,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>SolrHandlerType Class</h1>
+<h1>NotDirtyError Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/addon_requests_handlers.js.html#l7"><code>addon&#x2F;requests&#x2F;handlers.js:7</code></a>
+            Defined in: <a href="../files/addon_not-dirty-error.js.html#l9"><code>addon&#x2F;not-dirty-error.js:9</code></a>
         </div>
 
             Module: <a href="../modules/solr.html">solr</a>
@@ -97,8 +107,9 @@
 
 
 <div class="box intro">
-    <p>An enumeration of handler types that <code>ember-solr</code>
-knows how to interact with.</p>
+    <p>Thrown by <a href="../classes/AtomicSerializerMixin.html#method_serialize" class="crosslink">AtomicSerializerMixin.serialize</a>
+when the snapshot
+is not different from the loaded record.</p>
 
 </div>
 
@@ -107,7 +118,6 @@ knows how to interact with.</p>
     <ul class="api-class-tabs">
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
     </ul>
 
     <div>
@@ -115,91 +125,11 @@ knows how to interact with.</p>
             <h2 class="off-left">Item Index</h2>
 
 
-                <div class="index-section properties">
-                    <h3>Properties</h3>
-
-                    <ul class="index-list properties">
-                            <li class="index-item property">
-                                <a href="#property_RealTimeGet">RealTimeGet</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#property_Search">Search</a>
-
-                            </li>
-                    </ul>
-                </div>
 
 
         </div>
 
 
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
-
-                    <div id="property_RealTimeGet" class="property item">
-                        <h3 class="name"><code>RealTimeGet</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                            <span class="flag final">final</span>
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_requests_handlers.js.html#l31"><code>addon&#x2F;requests&#x2F;handlers.js:31</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Represents a requst to <code>get</code> and
-                    other real time get handlers.</p>
-                    <p>This is the handler type that will be used when
-                    <a href="../classes/SolrAdapter.html#property_enableRealTimeGet" class="crosslink">enableRealTimeGet</a>
-                    is set to <code>true</code> for <code>find</code>, and <code>findMany</code>.</p>
-                    <p>See <a href="http://wiki.apache.org/solr/RealTimeGet">RealTimeGet</a>.</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="property_Search" class="property item">
-                        <h3 class="name"><code>Search</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                            <span class="flag final">final</span>
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_requests_handlers.js.html#l15"><code>addon&#x2F;requests&#x2F;handlers.js:15</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Represents a requst to <code>select</code>, <code>search</code> and
-                    other standard request handlers.</p>
-                    <p>This is the handler type that will be used in
-                    <code>findQuery</code>, and when real-time get is not enabled
-                    it will also be used in all <code>find*</code> operations.</p>
-                    <p>See <a href="http://wiki.apache.org/solr/SearchHandler">SearchHandler</a>.</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-            </div>
 
 
     </div>

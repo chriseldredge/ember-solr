@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>addon/mixins/atomic-serializer.js - ember-solr</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
+                                <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
+                                <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
+                                <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
+                                <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
+                                <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
+                                <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
+                                <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/solr.html">solr</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: addon/mixins/atomic-serializer.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+  @module solr
+*/
+
+import Ember from &#x27;ember&#x27;;
+import NotDirtyError from &#x27;ember-solr/not-dirty-error&#x27;;
+
+const get = Ember.get;
+
+/**
+  Mixin that serializes uses [Atomic Updates](https://wiki.apache.org/solr/Atomic_Updates)
+  to only update fields that have been modified.
+
+  Atomic Updates can optionally include Optimistic Concurrency
+  to ensure updates are not conflicting with other clients.
+  See {{#crossLink &quot;SolrAdapter/updateMode:property&quot;}}SolrAdapter.updateMode{{/crossLink}}.
+
+  This implementation treats arrays as ordered and non-distinct.
+  A multiValued field will be updated if the order of items
+  changes or if any items are added or removed. The entire
+  array will be sent using a &#x60;set&#x60; operation to preserve order
+  and allow for duplicate values.
+
+  To treat multiValued fields as distinct sets, use
+  {{#crossLink &quot;AtomicMultiValuedSerializerMixin&quot;}}{{/crossLink}}
+  which will use &#x60;add&#x60; and &#x60;remove&#x60; operations.
+
+  @class AtomicSerializerMixin
+  @extends SolrSerializer
+*/
+export default Ember.Mixin.create({
+
+  /**
+    Serialize only modified attributes for a snapshot
+    using atomic update operations.
+
+    @method serialize
+    @param {DS.Snapshot} snapshot
+    @param {object} options
+  */
+  serialize: function(snapshot, options) {
+    // don&#x27;t pass options with includeId = true; handled later.
+    var json = this._super(snapshot);
+
+    if (Ember.isEmpty(Object.keys(json))) {
+      throw new NotDirtyError(snapshot.type, snapshot.id);
+    }
+
+    var id = snapshot.id;
+    if (id) {
+      var primaryKey = get(this, &#x27;primaryKey&#x27;) || &#x27;id&#x27;;
+      json[primaryKey] = id;
+    }
+
+    if (typeof this.setVersionConstraint === &#x27;function&#x27;) {
+      this.setVersionConstraint(snapshot, options, json);
+    }
+
+    return json;
+  },
+
+  /**
+    Determines if an attribute can be serialized and if the
+    value is dirty.
+
+    @method serializeAttribute
+    @param {DS.Snapshot} snapshot
+    @param {object} json
+    @param {string} key
+    @param {DS.Attribute} attribute
+  */
+  serializeAttribute: function(snapshot, json, key, attribute) {
+    if (typeof this._canSerialize === &#x27;function&#x27; &amp;&amp; !this._canSerialize(key)) {
+      return;
+    }
+
+    var value = snapshot.attr(key);
+    var previousValue = get(snapshot.record, &#x27;data&#x27;)[key];
+
+    var type = attribute.type;
+    if (type) {
+      var transform = this.transformFor(type);
+      value = transform.serialize(value);
+      previousValue = transform.serialize(previousValue);
+    }
+
+    if (!this.isAttributeModified(snapshot, key, attribute, value, previousValue)) {
+      return;
+    }
+
+    var payloadKey = key;
+
+    // this is bad and you should feel bad:
+    if (typeof this._getMappedKey === &#x27;function&#x27;) {
+      payloadKey = this._getMappedKey(key);
+    }
+
+    if (payloadKey === key &amp;&amp; typeof this.keyForAttribute === &#x27;function&#x27;) {
+      payloadKey = this.keyForAttribute(key);
+    }
+
+    if (Array.isArray(value) || Array.isArray(previousValue)) {
+      var diff = this.serializeArrayAttribute(snapshot, key, attribute, value, previousValue);
+      if (!Ember.isEmpty(Object.keys(diff))) {
+        json[payloadKey] = diff;
+      }
+    } else {
+      json[payloadKey] = {set: value};
+    }
+  },
+
+  /**
+    Determine if a value is modified from a previous value.
+
+    @method isAttributeModified
+    @param {DS.Snapshot} snapshot
+    @param {string} key
+    @param {DS.Attribute} attribtue
+    @param {anything} value
+    @param {anything} previousValue
+    @return {boolean}
+  */
+  isAttributeModified: function(snapshot, key, attribute, value, previousValue) {
+    if (!Array.isArray(value) &amp;&amp; !Array.isArray(previousValue)) {
+      return value !== previousValue;
+    }
+
+    value = value || [];
+    previousValue = previousValue || [];
+
+    if (value.length !== previousValue.length) {
+      return true;
+    }
+
+    for (var i=0; i&lt;value.length; i++) {
+      if (value[i] !== previousValue[i]) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+
+  /**
+    Serialize an update to a multiValued field.
+
+    @method serializeArrayAttribute
+    @param {DS.Snapshot} snapshot
+    @param {string} key
+    @param {DS.Attribute} attribute
+    @param {anything} value
+    @param {anything} previousValue
+    @return {object}
+  */
+  serializeArrayAttribute: function(snapshot, key, attribute, value /*, previousValue */) {
+    return {set: value};
+  }
+});
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/serializers/solr-dynamic.js - ember-solr</title>
+    <title>addon/mixins/atomic-multi-valued-serializer.js - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -83,145 +93,80 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: addon/serializers/solr-dynamic.js</h1>
+<h1 class="file-heading">File: addon/mixins/atomic-multi-valued-serializer.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+/**
+  @module solr
+*/
+
 import Ember from &#x27;ember&#x27;;
-import SolrSerializer from &#x27;./solr&#x27;;
+import AtomicSerializer from &#x27;./atomic-serializer&#x27;;
 
 /**
-  Ember Data Serializer for Apache Solr [Dynamic Fields](https://cwiki.apache.org/confluence/display/solr/Dynamic+Fields).
+  Mixin that extends AtomicSerializerMixin to use [Atomic Updates](https://wiki.apache.org/solr/Atomic_Updates)
+  with &#x60;add&#x60; and &#x60;remove&#x60; operations for array changes.
 
+  This implementation treats arrays as unordered and distinct.
+  A multiValued field will be updated any items are added or
+  removed. Only values that have been added or removed are
+  sent, using the &#x60;add&#x60; or &#x60;remove&#x60; operations respectively.
 
-  @class SolrDynamicSerializer
-  @extends SolrSerializer
+  Note that the &#x60;remove&#x60; operation requires Solr 5 or later.
+
+  @class AtomicMultiValuedSerializerMixin
+  @extends AtomicSerializerMixin
 */
-export default SolrSerializer.extend({
+export default Ember.Mixin.create(AtomicSerializer, {
   /**
-    Provides a mapping of types to dynamic field prefixes.
+    Uses &quot;set arithmetic&quot; to detect modifications
+    for arrays or delegates to base implementation for non-arrays.
 
-    The following example would cause all attributes of type &#x60;number&#x60;
-    to be mapped by prepending &#x60;int_&#x60; to the attribute name:
+    @method isAttributeModified
+  */
+  isAttributeModified: function(snapshot, key, attribute, value, previousValue) {
+    if (!Array.isArray(value) &amp;&amp; !Array.isArray(previousValue)) {
+      return value !== previousValue;
+    }
 
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationSerializer = SolrDynamicSerializer.extend({
-      dynamicFieldPrefixes: {
-        &#x27;number&#x27;: &#x27;int_&#x27;
+    value = Ember.A(value).uniq();
+    previousValue = Ember.A(previousValue).uniq();
+
+    if (value.length !== previousValue.length) {
+      return true;
+    }
+
+    return !value.every(i =&gt; previousValue.contains(i));
+  },
+
+  /**
+    Uses &quot;set arithmetic&quot; to calculate &#x60;add&#x60; and &#x60;remove&#x60;
+    operations for arrays.
+
+    @method serializeArrayAttribute
+  */
+  serializeArrayAttribute: function(snapshot, key, attribute, value, previousValue) {
+    var json = {};
+    value = Ember.A(value).uniq();
+    previousValue = Ember.A(previousValue).uniq();
+
+    var normalize = function(key, values, withoutValues) {
+      values = values.reject(i =&gt; withoutValues.contains(i));
+
+      if (values.length === 0) {
+        return;
       }
-    });
-    &#x60;&#x60;&#x60;
-
-    This property is left null to follow the conventions in the
-    Solr Schemaless example configuration.
-
-    @property dynamicFieldPrefixes
-    @type {object}
-    @default null
-  */
-  dynamicFieldPrefixes: null,
-
-  /**
-    Provides a mapping of types to dynamic field prefixes.
-
-    The following example would cause all attributes of type &#x60;date&#x60;
-    to be mapped by appending &#x60;_date&#x60; to the attribute name:
-
-    &#x60;&#x60;&#x60;javascript
-    App.ApplicationSerializer = SolrdynamicSerializer.extend({
-      dynamicFieldSuffixes: {
-        &#x27;date&#x27;: &#x27;_date&#x27;
+      else if (values.length === 1) {
+        values = values[0];
       }
-    });
-    &#x60;&#x60;&#x60;
+      json[key] = values;
+    };
 
-    See source code for default mappings that follow
-    conventions in the Solr Dynamic example configuration.
+    normalize(&#x27;add&#x27;, value, previousValue);
+    normalize(&#x27;remove&#x27;, previousValue, value);
 
-    @property dynamicFieldSuffixes
-    @type {object}
-    @default null
-  */
-  dynamicFieldSuffixes: {
-    &#x27;boolean&#x27;: &#x27;_b&#x27;,
-    &#x27;booleans&#x27;: &#x27;_bs&#x27;,
-    &#x27;date&#x27;: &#x27;_dt&#x27;,
-    &#x27;dates&#x27;: &#x27;_dts&#x27;,
-    &#x27;double&#x27;: &#x27;_d&#x27;,
-    &#x27;doubles&#x27;: &#x27;_ds&#x27;,
-    &#x27;float&#x27;: &#x27;_f&#x27;,
-    &#x27;floats&#x27;: &#x27;_fs&#x27;,
-    &#x27;int&#x27;: &#x27;_i&#x27;,
-    &#x27;ints&#x27;: &#x27;_is&#x27;,
-    &#x27;long&#x27;: &#x27;_l&#x27;,
-    &#x27;longs&#x27;: &#x27;_ls&#x27;,
-    &#x27;number&#x27;: &#x27;_i&#x27;,
-    &#x27;numbers&#x27;: &#x27;_is&#x27;,
-    &#x27;string&#x27;: &#x27;_s&#x27;,
-    &#x27;strings&#x27;: &#x27;_ss&#x27;,
-    &#x27;text&#x27;: &#x27;_txt&#x27;
-  },
-
-  /**
-    Converts attributes to underscore and uses
-    {{#crossLink &quot;SolrAdapter/dynamicKeyForAttribute:method&quot;}}{{/crossLink}}.
-    to produce a dynamic field key. For a string attribute like &#x60;relatedArticles&#x60;
-    this method would return &#x60;related_articles_s&#x60;.
-
-    @method keyForAttribute
-    @param {string} attr
-    @return {string} key
-  */
-  keyForAttribute: function(attr) {
-    attr = this.dynamicKeyForAttribute(attr);
-    return Ember.String.underscore(attr);
-  },
-
-  /**
-    Uses
-    {{#crossLink &quot;SolrAdapter/dynamicFieldPrefixes:property&quot;}}{{/crossLink}}
-    and
-    {{#crossLink &quot;SolrAdapter/dynamicFieldSuffixes:property&quot;}}{{/crossLink}}
-    to produce a dynamic field key. For a string attribute like &#x60;related_articles&#x60;
-    this method would return &#x60;related_articles_s&#x60;.
-
-    @method dynamicKeyForAttribute
-    @param {string} attr
-    @return {string} key
-  */
-  dynamicKeyForAttribute: function(attr) {
-    var prefixes = this.get(&#x27;dynamicFieldPrefixes&#x27;),
-        suffixes = this.get(&#x27;dynamicFieldSuffixes&#x27;);
-
-    if (!prefixes &amp;&amp; !suffixes) {
-      return attr;
-    }
-
-    if (!this.currentType) {
-      throw new Error(&#x27;Cannot determine dynamic field without type metadata&#x27;);
-    }
-
-    var meta = this.currentType.metaForProperty(attr);
-    var attrType = meta.type || &#x27;string&#x27;;
-
-    if (prefixes &amp;&amp; prefixes[attrType]) {
-      attr = prefixes[attrType] + attr;
-    }
-    if (suffixes &amp;&amp; suffixes[attrType]) {
-      attr += suffixes[attrType];
-    }
-
-    return attr;
-  },
-
-  normalize: function(type) {
-    this.currentType = type;
-    return this._super.apply(this, arguments);
-  },
-
-  serialize: function(snapshot) {
-    this.currentType = snapshot.type;
-    return this._super.apply(this, arguments);
+    return json;
   }
 });
 

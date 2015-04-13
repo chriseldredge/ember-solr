@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>SolrRequestHandler - ember-solr</title>
+    <title>SolrUpdateHandler - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -83,12 +93,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>SolrRequestHandler Class</h1>
+<h1>SolrUpdateHandler Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/addon_requests_handlers.js.html#l48"><code>addon&#x2F;requests&#x2F;handlers.js:48</code></a>
+            Defined in: <a href="../files/addon_lib_handlers.js.html#l260"><code>addon&#x2F;lib&#x2F;handlers.js:260</code></a>
         </div>
 
             Module: <a href="../modules/solr.html">solr</a>
@@ -97,8 +107,8 @@
 
 
 <div class="box intro">
-    <p>An abstract representation of a Solr request
-handler, including its type, path and HTTP method.</p>
+    <p>Represents a default configuration of a request
+to a Solr Update Request Processor.</p>
 
 </div>
 
@@ -143,7 +153,7 @@ handler, including its type, path and HTTP method.</p>
 
                     <div id="property_method" class="property item">
                         <h3 class="name"><code>method</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type">Unknown</span>
                     
                     
                     
@@ -152,24 +162,23 @@ handler, including its type, path and HTTP method.</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_requests_handlers.js.html#l72"><code>addon&#x2F;requests&#x2F;handlers.js:72</code></a>
+                            <a href="../files/addon_lib_handlers.js.html#l279"><code>addon&#x2F;lib&#x2F;handlers.js:279</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>The HTTP method (verb) to use in the request.</p>
-                    
+                            
                         </div>
                     
-                            <p><strong>Default:</strong> &#x27;GET&#x27;</p>
+                            <p><strong>Default:</strong> &#x27;POST&#x27;</p>
                     
                     
                     </div>
                     <div id="property_path" class="property item">
                         <h3 class="name"><code>path</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/data/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                        <span class="type">Unknown</span>
                     
                     
                     
@@ -178,25 +187,23 @@ handler, including its type, path and HTTP method.</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_requests_handlers.js.html#l62"><code>addon&#x2F;requests&#x2F;handlers.js:62</code></a>
+                            <a href="../files/addon_lib_handlers.js.html#l273"><code>addon&#x2F;lib&#x2F;handlers.js:273</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>The path to route the request to. Typical
-                    examples include handler paths like <code>/search</code>,
-                    <code>/select</code>, <code>/get</code>, and <code>/update</code>.</p>
-                    
+                            
                         </div>
                     
+                            <p><strong>Default:</strong> &#x27;get&#x27;</p>
                     
                     
                     </div>
                     <div id="property_type" class="property item">
                         <h3 class="name"><code>type</code></h3>
-                        <span class="type"><a href="../classes/SolrHandlerType.html" class="crosslink">SolrHandlerType</a></span>
+                        <span class="type">Unknown</span>
                     
                     
                     
@@ -205,17 +212,17 @@ handler, including its type, path and HTTP method.</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_requests_handlers.js.html#l54"><code>addon&#x2F;requests&#x2F;handlers.js:54</code></a>
+                            <a href="../files/addon_lib_handlers.js.html#l267"><code>addon&#x2F;lib&#x2F;handlers.js:267</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>The type of request.</p>
-                    
+                            
                         </div>
                     
+                            <p><strong>Default:</strong> &#x60;SolrHandlerType.RealTimeGet&#x60;</p>
                     
                     
                     </div>

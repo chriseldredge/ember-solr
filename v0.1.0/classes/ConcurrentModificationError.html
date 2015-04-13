@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/serializers/solr.js - ember-solr</title>
+    <title>ConcurrentModificationError - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -83,64 +93,90 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: addon/serializers/solr.js</h1>
+<h1>ConcurrentModificationError Class</h1>
+<div class="box meta">
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-/**
-  @module solr
-*/
 
-import DS from &#x27;ember-data&#x27;;
+        <div class="foundat">
+            Defined in: <a href="../files/addon_concurrent-modification-error.js.html#l9"><code>addon&#x2F;concurrent-modification-error.js:9</code></a>
+        </div>
 
-/**
-  Ember Data Serializer for Apache Solr.
+            Module: <a href="../modules/solr.html">solr</a>
 
-  @class SolrSerializer
-  @extends DS.JSONSerializer
-*/
-export default DS.JSONSerializer.extend({
+</div>
 
-  extractFind: function(store, type, payload, id, requestType) {
-    var result = this._super(store, type, payload, id, requestType);
-    if (!Array.isArray(result)) {
-      return result;
-    }
 
-    if (result.length !== 1) {
-      throw new Error(&#x27;Expected Solr response array with exactly one document but got &#x60;&#x27; + result.length + &#x27;&#x60;.&#x27;);
-    }
+<div class="box intro">
+    <p>Thrown when an update is rejected by Solr because
+the <code>_version_</code> contraint was not met by the server.</p>
+<p>This error can be thrown when attempting to create
+a record with an ID that is already in use, or when
+attempting to update a document with a version that
+is not the newest version.</p>
 
-    return result[0];
-  },
+</div>
 
-  extractMeta: function(store, type, payload) {
-    var response = payload.response;
 
-    if (!response) {
-      return;
-    }
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-    var meta = payload.responseHeader || {};
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+    </ul>
 
-    meta.offset = response.start;
-    meta.total = response.numFound;
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
 
-    store.setMetadataFor(type, meta);
-  },
 
-  normalizePayload: function(payload) {
-    payload = payload.doc || payload.response.docs;
+                <div class="index-section properties">
+                    <h3>Properties</h3>
 
-    if (!payload) {
-      throw new Error(&#x27;Expected Solr response payload to contain property &#x60;doc&#x60; or &#x60;response.docs&#x60;.&#x27;);
-    }
+                    <ul class="index-list properties">
+                            <li class="index-item property">
+                                <a href="#property_message">message</a>
 
-    return this._super(payload);
-  }
-});
+                            </li>
+                    </ul>
+                </div>
 
-    </pre>
+
+        </div>
+
+
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                    <div id="property_message" class="property item">
+                        <h3 class="name"><code>message</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_concurrent-modification-error.js.html#l27"><code>addon&#x2F;concurrent-modification-error.js:27</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Message from the server indicating why the
+                    update was rejected.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+            </div>
+
+
+    </div>
 </div>
                     </div>
                 </div>

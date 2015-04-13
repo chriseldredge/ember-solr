@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>solr - ember-solr</title>
+    <title>SolrDeleteHandler - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -83,71 +93,45 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>solr Module</h1>
-<div class="box clearfix meta">
+<h1>SolrDeleteHandler Class</h1>
+<div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/addon_serializers_solr.js.html#l7"><code>addon&#x2F;serializers&#x2F;solr.js:7</code></a>
+            Defined in: <a href="../files/addon_lib_handlers.js.html#l307"><code>addon&#x2F;lib&#x2F;handlers.js:307</code></a>
         </div>
+
+            Module: <a href="../modules/solr.html">solr</a>
 
 </div>
 
 
 <div class="box intro">
-    
+    <p>Represents a default configuration of a request
+to a Solr Update Request Processor for deleting
+a document by ID.</p>
+
 </div>
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/SolrAdapter.html">
-                        SolrAdapter
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrDynamicSerializer.html">
-                        SolrDynamicSerializer
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrHandlerType.html">
-                        SolrHandlerType
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrRealTimeGetHandler.html">
-                        SolrRealTimeGetHandler
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrRequest.html">
-                        SolrRequest
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrRequestHandler.html">
-                        SolrRequestHandler
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrSearchHandler.html">
-                        SolrSearchHandler
-                    </a>
-                </li>
-                <li class="module-class">
-                    <a href="../classes/SolrSerializer.html">
-                        SolrSerializer
-                    </a>
-                </li>
-            </ul>
-    </div>
+    </ul>
 
-    <div class="yui3-u-1-2">
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+
+
+
+        </div>
+
+
+
+
     </div>
 </div>
                     </div>

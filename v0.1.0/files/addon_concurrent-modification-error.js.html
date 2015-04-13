@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/requests/request.js - ember-solr</title>
+    <title>addon/concurrent-modification-error.js - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -83,7 +93,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1 class="file-heading">File: addon/requests/request.js</h1>
+<h1 class="file-heading">File: addon/concurrent-modification-error.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -93,103 +103,39 @@
 
 import Ember from &#x27;ember&#x27;;
 
+var create = Ember.create;
+
 /**
-  Represents an HTTP Request to a Solr server,
-  including URL path segments, data and options
-  that control how the request will be executed.
+  Thrown when an update is rejected by Solr because
+  the &#x60;_version_&#x60; contraint was not met by the server.
 
-  Allows easy setting of data parameters (serialized
-  as a query string for &#x60;GET&#x60; requests or a JSON string
-  for other types).
+  This error can be thrown when attempting to create
+  a record with an ID that is already in use, or when
+  attempting to update a document with a version that
+  is not the newest version.
 
-  Construction of this class should either provide
-  the &#x60;data&#x60; property or the &#x60;options&#x60; property,
-  but not both.
-
-  @class SolrRequest
-  @extends Ember.Object
+  @class ConcurrentModificationError
 */
-export default Ember.Object.extend({
-  /**
-    The Solr Core to route the request to.
-    When not specified, no core will be included
-    in the path and the request will be routed
-    to the default core on the server.
+function ConcurrentModificationError(message) {
+  var errors = {
+    id: [message]
+  };
 
-    @property core
+  Ember.Error.call(this, errors);
+
+  /**
+    Message from the server indicating why the
+    update was rejected.
+
+    @property message
     @type {string}
   */
-  core: null,
+  this.message = message;
+}
 
-  /**
-    The handler to route the request to.
+ConcurrentModificationError.prototype = create(Ember.Error.prototype);
 
-    @property handler
-    @type {SolrRequestHandler}
-  */
-  handler: null,
-
-  /**
-    Data to send in the request.
-    This property is bound to &#x60;options.data&#x60;.
-
-    @property data
-    @type {object}
-  */
-  data: null,
-
-  /**
-    Options hash that specifies how the request
-    will be executed.
-    &#x60;options.data&#x60; is bound to &#x60;data&#x60;.
-
-    @property options
-    @type {object}
-  */
-  options: null,
-
-  /**
-    Binds &#x60;handler.method&#x60; to &#x60;method&#x60; for convenience.
-    Represents an HTTP method or verb, e.g. &#x60;GET&#x60;, &#x60;POST&#x60;,
-    etc.
-
-    @property method
-    @type {string}
-    @readonly
-  */
-  methodBinding: Ember.Binding.oneWay(&#x27;handler.method&#x27;),
-
-  /**
-    Initialization observer. Checks whether &#x60;options&#x60;,
-    or &#x60;data&#x60; were provided, creates empty hash objects
-    where they were not, and establishes a binding
-    between &#x60;options.data&#x60; and &#x60;data&#x60;.
-
-    @method _init
-    @private
-  */
-  _init: function() {
-    var data = this.get(&#x27;data&#x27;);
-    var options = this.get(&#x27;options&#x27;);
-
-    if (options &amp;&amp; options.data &amp;&amp; data) {
-      throw new Error(&#x27;SolrRequest accepts &#x60;data&#x60; or &#x60;options.data&#x60; but not both.&#x27;);
-    }
-
-    if (!options) {
-      options = {
-        data: data || {}
-      };
-      this.set(&#x27;options&#x27;, options);
-    } else if (!options.data) {
-      options.data = data || {};
-    }
-
-    var binding = Ember.Binding.from(&#x27;options.data&#x27;).to(&#x27;data&#x27;);
-    binding.connect(this);
-  }.on(&#x27;init&#x27;)
-
-});
+export default ConcurrentModificationError;
 
     </pre>
 </div>

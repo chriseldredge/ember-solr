@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>SolrRealTimeGetHandler - ember-solr</title>
+    <title>addon/too-many-results-error.js - ember-solr</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="ember-solr" width="117" height="52"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.0.dad61b69</em>
+            <em>API Docs for: 0.1.0.ee3e9e64</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -38,14 +38,24 @@
                 
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/AtomicMultiValuedSerializerMixin.html">AtomicMultiValuedSerializerMixin</a></li>
+                                <li><a href="../classes/AtomicSerializerMixin.html">AtomicSerializerMixin</a></li>
+                                <li><a href="../classes/ConcurrentModificationError.html">ConcurrentModificationError</a></li>
+                                <li><a href="../classes/DynamicSerializerMixin.html">DynamicSerializerMixin</a></li>
+                                <li><a href="../classes/NotDirtyError.html">NotDirtyError</a></li>
+                                <li><a href="../classes/NotFoundError.html">NotFoundError</a></li>
                                 <li><a href="../classes/SolrAdapter.html">SolrAdapter</a></li>
-                                <li><a href="../classes/SolrDynamicSerializer.html">SolrDynamicSerializer</a></li>
+                                <li><a href="../classes/SolrCommitType.html">SolrCommitType</a></li>
+                                <li><a href="../classes/SolrDeleteHandler.html">SolrDeleteHandler</a></li>
                                 <li><a href="../classes/SolrHandlerType.html">SolrHandlerType</a></li>
                                 <li><a href="../classes/SolrRealTimeGetHandler.html">SolrRealTimeGetHandler</a></li>
                                 <li><a href="../classes/SolrRequest.html">SolrRequest</a></li>
                                 <li><a href="../classes/SolrRequestHandler.html">SolrRequestHandler</a></li>
                                 <li><a href="../classes/SolrSearchHandler.html">SolrSearchHandler</a></li>
                                 <li><a href="../classes/SolrSerializer.html">SolrSerializer</a></li>
+                                <li><a href="../classes/SolrUpdateHandler.html">SolrUpdateHandler</a></li>
+                                <li><a href="../classes/SolrUpdateMode.html">SolrUpdateMode</a></li>
+                                <li><a href="../classes/TooManyResultsError.html">TooManyResultsError</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -83,114 +93,48 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>SolrRealTimeGetHandler Class</h1>
-<div class="box meta">
+<h1 class="file-heading">File: addon/too-many-results-error.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+  @module solr
+*/
 
-        <div class="foundat">
-            Defined in: <a href="../files/addon_requests_handlers.js.html#l103"><code>addon&#x2F;requests&#x2F;handlers.js:103</code></a>
-        </div>
+import Ember from &#x27;ember&#x27;;
 
-            Module: <a href="../modules/solr.html">solr</a>
+var create = Ember.create;
 
-</div>
+/**
+  Thrown by SolrSerializer.extractSingle when more
+  than one document matches a query and exactly one
+  record is expected.
 
+  @class TooManyResultsError
+*/
+function TooManyResultsError(type, id, count) {
+  type = typeof type === &#x27;string&#x27; ? type : type.typeKey;
+  var message = &#x27;Query for single document of type &quot;&#x27; +
+                type + &#x27;&quot; returned more than 1 document: &#x27; + count;
 
-<div class="box intro">
-    <p>Represents a default configuration of a request
-to a Solr Real Time Get handler.</p>
+  Ember.Error.call(this, message);
+  this.type = type;
+  this.id = id;
 
-</div>
+  /**
+    The actual number of documents that were returned.
 
+    @property count
+    @type {number}
+  */
+  this.count = count;
+}
 
-<div id="classdocs" class="tabview">
-    <ul class="api-class-tabs">
-        <li class="api-class-tab index"><a href="#index">Index</a></li>
+TooManyResultsError.prototype = create(Ember.Error.prototype);
 
-            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
-    </ul>
+export default TooManyResultsError;
 
-    <div>
-        <div id="index" class="api-class-tabpanel index">
-            <h2 class="off-left">Item Index</h2>
-
-
-                <div class="index-section properties">
-                    <h3>Properties</h3>
-
-                    <ul class="index-list properties">
-                            <li class="index-item property">
-                                <a href="#property_path">path</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#property_type">type</a>
-
-                            </li>
-                    </ul>
-                </div>
-
-
-        </div>
-
-
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
-
-                    <div id="property_path" class="property item">
-                        <h3 class="name"><code>path</code></h3>
-                        <span class="type">Unknown</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_requests_handlers.js.html#l116"><code>addon&#x2F;requests&#x2F;handlers.js:116</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;get&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="property_type" class="property item">
-                        <h3 class="name"><code>type</code></h3>
-                        <span class="type">Unknown</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_requests_handlers.js.html#l110"><code>addon&#x2F;requests&#x2F;handlers.js:110</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x60;SolrHandlerType.RealTimeGet&#x60;</p>
-                    
-                    
-                    </div>
-            </div>
-
-
-    </div>
+    </pre>
 </div>
                     </div>
                 </div>

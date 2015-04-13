@@ -1,14 +1,24 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
+        "AtomicMultiValuedSerializerMixin",
+        "AtomicSerializerMixin",
+        "ConcurrentModificationError",
+        "DynamicSerializerMixin",
+        "NotDirtyError",
+        "NotFoundError",
         "SolrAdapter",
-        "SolrDynamicSerializer",
+        "SolrCommitType",
+        "SolrDeleteHandler",
         "SolrHandlerType",
         "SolrRealTimeGetHandler",
         "SolrRequest",
         "SolrRequestHandler",
         "SolrSearchHandler",
-        "SolrSerializer"
+        "SolrSerializer",
+        "SolrUpdateHandler",
+        "SolrUpdateMode",
+        "TooManyResultsError"
     ],
     "modules": [
         "solr"
