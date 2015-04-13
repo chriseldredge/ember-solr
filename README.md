@@ -89,17 +89,21 @@ that are `multiValued="true"`.
 `SolrAdapter` has the following properties:
 
 * `baseURL` usually injected from `config/environment`
+* `commit` (Default: `EmberSolr.CommitType.None`) include commit command in updates
+* `commitWithinMilliseconds` (Default: `undefined`) include `commitWithin` in updates
 * `dataType` (Default: `jsonp`) chooses normal `json` or `jsonp` to side-step cross origin restrictions
 * `defaultCore` specify a Solr Core to route requests to by default
 * `defaultSerializer` (Default: `-solr`)
 * `enableRealtimeGet` (Default: `false`) use Solr's RealTimeGetHandler when applicable
-
+* `updateMode` (Default: `EmberSolr.SolrUpdateMode.None`) enables optimistic concurrency by sending appropriate `_version_` on updates
 `SolrAdapter` also has these methods that can be overridden:
 
 * `coreForType` choose another Solr Core for a given type
 * `filterQueryForType` create an optional filter query to filter documents
 * `handlerForType` select a Solr request handler path and type for an operation
 * `uniqueKeyForType` override the canonical `id` field with something else
+
+See [SolrAdapter](http://chris.eldredge.io/ember-solr/latest/classes/SolrAdapter.html).
 
 ## Dynamic Fields
 
