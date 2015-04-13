@@ -138,9 +138,9 @@ export default DS.Adapter.extend({
 
     @property updateMode
     @type {SolrUpdateMode}
-    @default SolrUpdateType.OptimisticConcurrency
+    @default SolrUpdateType.None
   */
-  updateMode: SolrUpdateMode.OptimisticConcurrency,
+  updateMode: SolrUpdateMode.None,
 
   /**
     Find a record by its unique ID.
