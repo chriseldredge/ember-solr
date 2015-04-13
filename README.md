@@ -2,9 +2,6 @@
 
 Ember Data adapter that connects to a Solr server.
 
-The `SolrAdapter` currently provides the read methods on `DS.Adapter`
-like `find` and `findQuery`.
-
 # Installing ember-solr with Ember CLI
 
     $ ember install:addon ember-solr
@@ -20,6 +17,10 @@ This will make a subclass of `SolrAdapter` for you to configure
 and register it as the application adapter.
 
 See [SolrAdapter](http://chris.eldredge.io/ember-solr/latest/classes/SolrAdapter.html) for properties and methods you can override.
+
+## Documentation
+
+Additional documentation is available at [http://chris.eldredge.io/ember-solr/latest/](http://chris.eldredge.io/ember-solr/latest/).
 
 ## `long`, `double` and `BigNumber`
 
