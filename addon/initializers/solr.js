@@ -6,7 +6,7 @@ import IdentityTransform from '../transforms/identity';
 
 export default {
   name: 'solr',
-  before: 'store',
+  before: 'ember-data',
   initialize: function (container, app) {
     app.register('adapter:-solr', SolrAdapter);
     app.register('serializer:-solr', SolrSerializer);
