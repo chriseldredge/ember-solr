@@ -274,19 +274,6 @@ export default DS.Adapter.extend({
   },
 
   /**
-    Determines the [unique key](https://wiki.apache.org/solr/UniqueKey)
-    for a given type. Default Solr schemas use the canonical field `id`
-    and this method defaults to the same field.
-    @method uniqueKeyForType
-    @param {String} modelName
-    @return {String}
-    @protected
-  */
-  uniqueKeyForType: function() {
-    return 'id';
-  },
-
-  /**
     Determines which Solr Core should handle queries for
     a given type and operation.
 

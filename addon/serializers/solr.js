@@ -28,6 +28,18 @@ export default DS.JSONSerializer.extend({
   versionFieldName: '_version_',
 
   /**
+    Determines the [unique key](https://wiki.apache.org/solr/UniqueKey)
+    for a given type. Default Solr schemas use the canonical field `id`
+    and this method defaults to the same field, which is also the default
+    used by Ember Data.
+
+    @property primaryKey
+    @type {String}
+    @default 'id'
+  */
+  primaryKey: 'id',
+
+  /**
     Converts attributes to underscore to use conventional
     Solr field names
 

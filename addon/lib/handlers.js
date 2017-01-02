@@ -145,8 +145,9 @@ const SolrSearchHandler = SolrRequestHandler.extend({
   path: 'select',
 
   prepare: function(adapter, store, type, operation, data) {
-    data = data || {};
-    var key = adapter.uniqueKeyForType(type);
+    var serializer = store.serializerFor(type.modelName);
+    var key = serializer.primaryKey;
+    var data = data || {};
 
     if (Array.isArray(data)) {
       var query = data.map(function(id) {
@@ -250,9 +251,9 @@ const SolrRealTimeGetHandler = SolrRequestHandler.extend({
   path: 'get',
 
   prepare: function(adapter, store, type, operation, data) {
-    var key = adapter.uniqueKeyForType(type);
+    var serializer = store.serializerFor(type.modelName);
     var payload = {};
-    payload[key] = data;
+    payload[serializer.primaryKey] = data;
     set(this, 'data', payload);
   }
 });
@@ -313,11 +314,13 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
 */
 const SolrDeleteHandler = SolrUpdateHandler.extend({
   prepare: function(adapter, store, type, operation, data) {
+    var serializer = store.serializerFor(type.modelName);
+
     var payload = {
       'delete': {}
     };
-    payload['delete'][adapter.uniqueKeyForType(type.modelName)] = data.id;
-    var versionFieldName = get(store.serializerFor(type.modelName), 'versionFieldName');
+    payload['delete'][serializer.primaryKey] = data.id;
+    var versionFieldName = get(serializer, 'versionFieldName');
     if (versionFieldName && typeof data[versionFieldName] !== 'undefined') {
       var path = get(this, 'path');
       path += (path.indexOf('?') > 0) ? '&' : '?';

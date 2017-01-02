@@ -22,7 +22,8 @@ moduleFor('adapter:solr', 'SolrAdapter', {
     var container = this.container;
     this.register('store:main', DS.Store);
     this.register('serializer:dummy', DS.Serializer.extend({
-      versionFieldName: '_version_'
+      versionFieldName: '_version_',
+      primaryKey: 'id'
     }));
 
     set(this.subject(), 'dataType', 'json');
