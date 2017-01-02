@@ -163,12 +163,11 @@ const SolrSearchHandler = SolrRequestHandler.extend({
     var data = data || {};
 
     if (Array.isArray(data)) {
-      var query = data.map(function(id) {
-        return key + ':' + id;
-      }).join(' OR ');
+      data = data.join(' OR ');
 
+      var query = `${key}:(${data})`;
       data = {
-        q: query
+        q:query
       };
     } else if (typeof data !== 'object') {
       data = {

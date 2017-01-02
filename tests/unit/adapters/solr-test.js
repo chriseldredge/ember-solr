@@ -95,6 +95,23 @@ test('find by id includes filter query', function() {
   });
 });
 
+test('findMany query multiple ids', function(assert) {
+  var self = this;
+  var expectedRequestData = {
+    q: 'id:(101 OR 102)',
+    wt: 'json'
+  };
+
+  this.expectAjax('/solr/select', expectedRequestData);
+
+  var adapter = this.subject();
+
+  return adapter.findMany(this.store, this.dummyType, [101, 102])
+  .then(function() {
+    self.verifySingleAjaxCall();
+  });
+});
+
 test('query includes start and rows', function() {
   var self = this;
   var expectedRequestData = {
