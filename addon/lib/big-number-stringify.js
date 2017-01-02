@@ -1,11 +1,7 @@
-import Ember from 'ember';
-
-const forEach = Ember.EnumerableUtils.forEach;
-
 function stringifyArray(arr) {
   var buffer = '[';
 
-  forEach(arr, function(item, index) {
+  arr.forEach(function(item, index) {
     if (index !== 0) {
       buffer += ',';
     }

@@ -17,8 +17,7 @@ import SolrUpdateMode from 'ember-solr/lib/update-mode';
 import bigNumberStringify from 'ember-solr/lib/big-number-stringify';
 import ConcurrentModificationError from 'ember-solr/concurrent-modification-error';
 
-const forEach = Ember.ArrayPolyfills.forEach,
-      get = Ember.get,
+const get = Ember.get,
       set = Ember.set;
 
 /**
@@ -478,7 +477,7 @@ export default DS.Adapter.extend({
     var headers = get(this, 'headers');
     if (headers !== undefined) {
       hash.beforeSend = function (xhr) {
-        forEach.call(Ember.keys(headers), function(key) {
+        Object.keys(headers).forEach(function(key) {
           xhr.setRequestHeader(key, headers[key]);
         });
       };

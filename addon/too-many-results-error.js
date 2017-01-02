@@ -4,8 +4,6 @@
 
 import Ember from 'ember';
 
-var create = Ember.create;
-
 /**
   Thrown by SolrSerializer.extractSingle when more
   than one document matches a query and exactly one
@@ -14,9 +12,8 @@ var create = Ember.create;
   @class TooManyResultsError
 */
 function TooManyResultsError(type, id, count) {
-  type = typeof type === 'string' ? type : type.typeKey;
-  var message = 'Query for single document of type "' +
-                type + '" returned more than 1 document: ' + count;
+  type = typeof type === 'string' ? type : type.modelName;
+  var message = `Query for single document of type '${type}' returned ${count} documents when exactly one was expected.`;
 
   Ember.Error.call(this, message);
   this.type = type;
@@ -31,6 +28,6 @@ function TooManyResultsError(type, id, count) {
   this.count = count;
 }
 
-TooManyResultsError.prototype = create(Ember.Error.prototype);
+TooManyResultsError.prototype = Ember.Error.prototype;
 
 export default TooManyResultsError;

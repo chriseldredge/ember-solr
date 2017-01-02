@@ -3,7 +3,6 @@ import QUnit from 'qunit';
 
 const get = Ember.get,
       set = Ember.set,
-      map = Ember.EnumerableUtils.map,
       mockjax = Ember.$.mockjax,
       assert = QUnit.assert;
 
@@ -62,8 +61,8 @@ export default Ember.Object.extend({
   },
 
   verifyAll: function() {
-    var actual = map(get(this, 'calls'), function(i) {
-      return { url: i.url, data: i.data };
+    var actual = get(this, 'calls').map(function(c) {
+      return { url: c.url, data: c.data };
     });
 
     var expectations = get(this, 'expectations');

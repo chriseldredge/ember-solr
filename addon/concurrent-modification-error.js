@@ -4,8 +4,6 @@
 
 import Ember from 'ember';
 
-var create = Ember.create;
-
 /**
   Thrown when an update is rejected by Solr because
   the `_version_` contraint was not met by the server.
@@ -34,6 +32,6 @@ function ConcurrentModificationError(message) {
   this.message = message;
 }
 
-ConcurrentModificationError.prototype = create(Ember.Error.prototype);
+ConcurrentModificationError.prototype = Ember.Error.prototype;
 
 export default ConcurrentModificationError;

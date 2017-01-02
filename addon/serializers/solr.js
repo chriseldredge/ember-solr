@@ -8,7 +8,6 @@ import NotFoundError from 'ember-solr/not-found-error';
 import TooManyResultsError from 'ember-solr/too-many-results-error';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 
-const forEach = Ember.EnumerableUtils.forEach;
 const get = Ember.get;
 
 /**
