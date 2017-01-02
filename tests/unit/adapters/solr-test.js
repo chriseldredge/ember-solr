@@ -3,8 +3,6 @@ import DS from 'ember-data';
 import ConcurrentModificationError from 'ember-solr/concurrent-modification-error';
 import SolrCommitType from 'ember-solr/lib/commit-type';
 import {
-  SolrSearchHandler,
-  SolrRealTimeGetHandler,
   SolrUpdateHandler
 } from 'ember-solr/lib/handlers';
 
@@ -12,8 +10,6 @@ import {
   moduleFor,
   test
 } from 'ember-qunit';
-
-import QUnit from 'qunit';
 
 import AjaxMock from '../../helpers/ajax-mock';
 
@@ -24,15 +20,15 @@ moduleFor('adapter:solr', 'SolrAdapter', {
   needs: ['model:dummy'],
   beforeEach: function() {
     var container = this.container;
-    container.register('store:main', DS.Store);
-    container.register('serializer:dummy', DS.Serializer.extend({
+    this.register('store:main', DS.Store);
+    this.register('serializer:dummy', DS.Serializer.extend({
       versionFieldName: '_version_'
     }));
 
     set(this.subject(), 'dataType', 'json');
 
     this.store = container.lookup('store:main');
-    this.dummyType = container.lookupFactory('model:dummy');
+    this.dummyType = this.store.modelFor('dummy');
     this.dummyType.typeKey = 'dummy';
 
     var ajaxMock = AjaxMock.create();
@@ -70,14 +66,14 @@ test('find by id uses search handler', function(assert) {
 
   var adapter = this.subject();
 
-  return adapter.find(this.store, this.dummyType, 101)
+  return adapter.findRecord(this.store, this.dummyType, 101)
   .then(function(data) {
     self.verifySingleAjaxCall();
     assert.deepEqual(responseData, data, 'response data');
   });
 });
 
-test('find by id includes filter query', function(assert) {
+test('find by id includes filter query', function() {
   var self = this;
   var expectedRequestData = {
     q: 'id:101',
@@ -92,13 +88,13 @@ test('find by id includes filter query', function(assert) {
     return 'type:' + type.typeKey;
   };
 
-  return adapter.find(this.store, this.dummyType, 101)
+  return adapter.findRecord(this.store, this.dummyType, 101)
   .then(function() {
     self.verifySingleAjaxCall();
   });
 });
 
-test('findQuery includes start and rows', function(assert) {
+test('query includes start and rows', function() {
   var self = this;
   var expectedRequestData = {
     q: '*:*',
@@ -111,7 +107,7 @@ test('findQuery includes start and rows', function(assert) {
 
   var adapter = this.subject();
 
-  return adapter.findQuery(this.store, this.dummyType, { limit: 12, offset: 24})
+  return adapter.query(this.store, this.dummyType, { limit: 12, offset: 24})
   .then(function() {
     self.verifySingleAjaxCall();
   });
@@ -125,7 +121,7 @@ test('find by id uses real time get handler', function(assert) {
   var adapter = this.subject();
   set(adapter, 'enableRealTimeGet', true);
 
-  return adapter.find(this.store, this.dummyType, 101)
+  return adapter.findRecord(this.store, this.dummyType, 101)
   .then(function(data) {
     self.verifySingleAjaxCall();
     assert.deepEqual(responseData, data, 'response data');
@@ -282,7 +278,7 @@ test('deleteRecord', function(assert) {
     return adapter.deleteRecord(self.store, self.dummyType, snapshot)
     .then(function(result) {
       self.verifyAjax();
-      assert.deepEqual(result, updateResponseData, 'promise result should be null');
+      assert.deepEqual(result, updateResponseData, 'promise result');
     });
   });
 });
@@ -334,7 +330,7 @@ test('updateRecord handles 409 conflict', function(assert) {
 
   return Ember.run(function() {
     return adapter.updateRecord(self.store, self.dummyType, snapshot)
-    .then(function(data) {
+    .then(function() {
       assert.ok(false, 'Should have rejected with DS.InvalidError');
     }).catch(function(err) {
       self.verifyAjax();

@@ -21,8 +21,8 @@ const SolrHandlerType = {
     other standard request handlers.
 
     This is the handler type that will be used in
-    `findQuery`, and when real-time get is not enabled
-    it will also be used in all `find*` operations.
+    `query`, `findAll`, and when real-time get is not enabled
+    it will also be used in all `findRecord` and `findMany` operations.
 
     See [SearchHandler](http://wiki.apache.org/solr/SearchHandler).
 
@@ -38,7 +38,7 @@ const SolrHandlerType = {
 
     This is the handler type that will be used when
     {{#crossLink "SolrAdapter/enableRealTimeGet:property"}}{{/crossLink}}
-    is set to `true` for `find`, and `findMany`.
+    is set to `true` for `findRecord`, and `findMany`.
 
     See [RealTimeGet](http://wiki.apache.org/solr/RealTimeGet).
 
@@ -112,7 +112,7 @@ const SolrRequestHandler = Ember.Object.extend({
     This method mutates the state of the instance it is invoked
     on and has no return value.
 
-    @method buildPayload
+    @method prepare
     @param {SolrAdapter} adapter the adapter invoking this method
     @param {DS.Store} the store related to the type and data
     @param {subclass of DS.Model} type the type corresponding to the operation
@@ -120,7 +120,7 @@ const SolrRequestHandler = Ember.Object.extend({
     @param {object} data the ID(s), query or snapshot payload to prepare.
   */
   prepare: function(/*adapter, store, type, operation, data*/) {
-    throw new Error('The method `buildPayload` must be overridden by a subclass.');
+    throw new Error('The method `pepare` must be overridden by a subclass.');
   }
 });
 
@@ -316,10 +316,8 @@ const SolrDeleteHandler = SolrUpdateHandler.extend({
     var payload = {
       'delete': {}
     };
-
-    payload['delete'][adapter.uniqueKeyForType(type)] = data.id;
-
-    var versionFieldName = get(store.serializerFor(type), 'versionFieldName');
+    payload['delete'][adapter.uniqueKeyForType(type.modelName)] = data.id;
+    var versionFieldName = get(store.serializerFor(type.modelName), 'versionFieldName');
     if (versionFieldName && typeof data[versionFieldName] !== 'undefined') {
       var path = get(this, 'path');
       path += (path.indexOf('?') > 0) ? '&' : '?';

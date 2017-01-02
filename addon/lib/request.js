@@ -71,7 +71,7 @@ export default Ember.Object.extend({
     @type {string}
     @readonly
   */
-  methodBinding: Ember.Binding.oneWay('handler.method'),
+  method: Ember.computed.oneWay('handler.method'),
 
   /**
     Initialization observer. Checks whether `options`,
@@ -85,7 +85,6 @@ export default Ember.Object.extend({
   _init: Ember.on('init', function() {
     var data = get(this, 'data');
     var options = get(this, 'options');
-
     if (options && options.data && data) {
       throw new Error('SolrRequest accepts `data` or `options.data` but not both.');
     }
@@ -99,8 +98,9 @@ export default Ember.Object.extend({
       options.data = data || {};
     }
 
-    var binding = Ember.Binding.from('options.data').to('data');
-    binding.connect(this);
+    Ember.defineProperty(this, 'data', {get: function() {
+      return this.get('options.data');
+    }});
   })
 
 });

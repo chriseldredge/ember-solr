@@ -80,7 +80,7 @@ test('init with options binds to data', function(assert) {
 test('init throws when providing data and options.data', function(assert) {
   Ember.run(function() {
     try {
-      var result = SolrRequest.create({
+      SolrRequest.create({
         data: { key: 'other value' },
         options: {
           data: { key: 'value' }

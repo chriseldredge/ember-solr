@@ -9,7 +9,7 @@ export default DS.Transform.extend({
   elementTransform: Ember.computed('elementType', function() {
     var elementType = get(this, 'elementType');
     var key = 'transform:' + elementType;
-    var result = this.container.lookup(key);
+    var result = Ember.getOwner(this).lookup(key);
     if (!result) {
       throw new Error("Unable to find transform for '" + elementType + "'");
     }

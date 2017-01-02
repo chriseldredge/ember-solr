@@ -7,7 +7,7 @@ import IdentityTransform from '../transforms/identity';
 export default {
   name: 'solr',
   before: 'store',
-  initialize: function (container, app) {
+  initialize: function (app) {
     app.register('adapter:-solr', SolrAdapter);
     app.register('serializer:-solr', SolrSerializer);
 

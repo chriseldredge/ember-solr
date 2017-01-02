@@ -39,60 +39,65 @@ export default DS.JSONSerializer.extend({
     return Ember.String.underscore(attr);
   },
 
-  extractSingle: function(store, type, payload, id, requestType) {
+  normalizeResponse(store, primaryModelClass, payload) {
+    var meta = this.normalizeMeta(store, primaryModelClass, payload);
+    var documentHash = this._super(...arguments);
+    //TODO: don't clobber meta
+    documentHash.meta = meta;
+    return documentHash;
+  },
+
+  normalizeSingleResponse: function(store, primaryModelClass, payload, id, requestType) {
     var response = payload.response;
     var docLength = (response && Array.isArray(response.docs)) ?
                         response.docs.length
                       : NaN;
 
     if (payload.hasOwnProperty('doc') && payload.doc === null) {
-      throw new NotFoundError(type, id);
+      throw new NotFoundError(primaryModelClass, id);
     } else if (docLength === 0) {
-      throw new NotFoundError(type, id);
+      throw new NotFoundError(primaryModelClass, id);
     } else if (docLength > 1) {
-      throw new TooManyResultsError(type, id, docLength);
+      throw new TooManyResultsError(primaryModelClass, id, docLength);
     }
 
     payload = payload.doc || response.docs[0];
 
-    return this._super(store, type, payload, id, requestType);
+    return this._super(store, primaryModelClass, payload, id, requestType);
   },
 
-  extractArray: function(store, type, arrayPayload, id, requestType) {
-    var response = arrayPayload.response;
-
+  normalizeArrayResponse: function(store, primaryModelClass, payload, id, requestType) {
+    var response = payload.response;
     if (!response || !Array.isArray(response.docs)) {
       throw new Error('Expected Solr response payload to contain property `response.docs`.');
     }
 
-    arrayPayload = response.docs;
-
-    return this._super(store, type, arrayPayload, id, requestType);
+    payload = response.docs;
+    return this._super(store, primaryModelClass, payload, id, requestType);
   },
 
-  extractDeleteRecord: function() {
+  normalizeDeleteRecordResponse: function(/*store, primaryModelClass, payload, id, requestType*/) {
   },
 
-  extractMeta: function(store, type, payload) {
-    var versionFieldName = get(this, 'versionFieldName');
+  normalizeMeta: function(store, type, payload) {
     var response = payload.response || {};
-    var docs = Ember.A(response.docs || []);
-
-    if (payload.doc) {
-      docs.pushObject(payload.doc);
-    }
-
     var meta = payload.responseHeader || {};
-
     meta.offset = response.start;
     meta.total = response.numFound;
-    meta.versions = {};
+    return meta;
+  },
 
-    forEach(docs, function(doc) {
-      meta.versions[doc.id] = doc[versionFieldName];
-    });
+  normalize(modelClass, resourceHash) {
+    var versionFieldName = get(this, 'versionFieldName');
+    var dataHash = this._super(...arguments);
 
-    store.setMetadataFor(type, meta);
+    if (versionFieldName in resourceHash) {
+      dataHash.data.attributes[versionFieldName] = resourceHash[versionFieldName];
+    }
+
+    //TODO: store score somewhere too
+
+    return dataHash;
   },
 
   serialize: function(snapshot, options) {
@@ -137,17 +142,11 @@ export default DS.JSONSerializer.extend({
   },
 
   getRecordVersion: function(snapshot) {
-    var store = snapshot.record.store;
-    var meta = store.metadataFor(snapshot.typeKey);
-
-    if (!meta || !meta.versions) {
-      throw new Error('Missing metadata for record type `' + snapshot.typeKey + '`');
-    }
-
-    var version = meta.versions[snapshot.id];
+    var versionFieldName = get(this, 'versionFieldName');
+    var version = snapshot.record.data[versionFieldName];
 
     if (!version) {
-      throw new Error('Missing document version for record id `' + snapshot.id + '` of type `' + snapshot.typeKey + '`');
+      throw new Error(`Missing document version attribute "${versionFieldName}" for record id ${snapshot.id} of type "${snapshot.modelName}".`);
     }
 
     return version;

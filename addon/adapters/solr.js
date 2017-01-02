@@ -146,8 +146,8 @@ export default DS.Adapter.extend({
 
     @method find
   */
-  find: function(store, type, id) {
-    var request = this.buildRequest(store, type, 'find', id);
+  findRecord: function(store, type, id /*, snapshot*/) {
+    var request = this.buildRequest(store, type, 'findRecord', id);
 
     return this.executeRequest(request);
   },
@@ -157,8 +157,7 @@ export default DS.Adapter.extend({
 
     @method findAll
   */
-  findAll: function(store, type, sinceToken) {
-    console.log('findAll since', sinceToken);
+  findAll: function(store, type /*, sinceToken, snapshotRecordArray */) {
     var request = this.buildRequest(store, type, 'findAll');
 
     return this.executeRequest(request);
@@ -169,7 +168,7 @@ export default DS.Adapter.extend({
 
     @method findMany
   */
-  findMany: function(store, type, ids) {
+  findMany: function(store, type, ids /*, snapshots */) {
     var request = this.buildRequest(store, type, 'findMany', ids);
 
     return this.executeRequest(request);
@@ -187,10 +186,10 @@ export default DS.Adapter.extend({
     `offset` to override the Solr request handler's
     page size and retrieve rows from a given offset.
 
-    @method findQuery
+    @method query
   */
-  findQuery: function(store, type, query) {
-    var request = this.buildRequest(store, type, 'findQuery', query);
+  query: function(store, type, query /*, recordArray */) {
+    var request = this.buildRequest(store, type, 'query', query);
 
     return this.executeRequest(request);
   },
@@ -226,13 +225,13 @@ export default DS.Adapter.extend({
     var self = this;
 
     return promise.then(function() {
-      return self.find(store, type, snapshot.id);
+      return self.findRecord(store, type, snapshot.id, snapshot);
     });
   },
 
   serialize: function(snapshot, options) {
     var store = snapshot.record.store;
-    var serializer = store.serializerFor(snapshot.typeKey);
+    var serializer = store.serializerFor(snapshot.modelName);
     return serializer.serialize(snapshot, options);
   },
 
@@ -242,7 +241,7 @@ export default DS.Adapter.extend({
     @method buildRequest
     @param {instance of DS.Store} store
     @param {subclass of DS.Model} type the model type
-    @param {string} operation one of `find`, `findQuery`, etc.
+    @param {string} operation one of `findRecord`, `query`, etc.
     @param {data} data to be sent in the request
     @return {SolrRequest} request
     @protected
@@ -255,7 +254,7 @@ export default DS.Adapter.extend({
     return SolrRequest.create({
       core: this.coreForType(type, operation),
       handler: handler,
-      data: get(handler, 'data')
+      data: handler.data
     });
   },
 
@@ -279,7 +278,7 @@ export default DS.Adapter.extend({
     for a given type. Default Solr schemas use the canonical field `id`
     and this method defaults to the same field.
     @method uniqueKeyForType
-    @param {subclass of DS.Model} type
+    @param {String} modelName
     @return {String}
     @protected
   */
@@ -309,7 +308,7 @@ export default DS.Adapter.extend({
     var enableRealTimeGet = get(this, 'enableRealTimeGet');
 
     if (enableRealTimeGet &&
-        (operation === 'find' || operation === 'findMany')) {
+        (operation === 'findRecord' || operation === 'findMany')) {
       return SolrRealTimeGetHandler.create();
     }
 

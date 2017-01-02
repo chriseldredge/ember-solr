@@ -5,10 +5,8 @@ import {
 
 import Ember from 'ember';
 import DS from 'ember-data';
-import MultiValuedTransform from 'ember-solr/transforms/multi-valued';
 
-const get = Ember.get,
-      set = Ember.set;
+const set = Ember.set;
 
 moduleFor('transform:multi-valued', 'MultiValuedTransform', {
 });

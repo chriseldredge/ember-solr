@@ -10,18 +10,17 @@ import MultiValuedTransform from 'ember-solr/transforms/multi-valued';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 import NotDirtyError from 'ember-solr/not-dirty-error';
 
-const set = Ember.set,
-      get = Ember.get;
+const set = Ember.set;
 
 moduleFor('serializer:atomic', 'AtomicSerializerMixin', {
   needs: ['model:atomic'],
   beforeEach: function() {
     var container = this.container;
-    container.register('store:main', DS.Store);
-    container.register('transform:string', DS.StringTransform);
-    container.register('transform:strings', MultiValuedTransform);
-    container.register('transform:boolean', DS.BooleanTransform);
-    container.register('transform:number', DS.NumberTransform);
+    this.register('store:main', DS.Store);
+    this.register('transform:string', DS.StringTransform);
+    this.register('transform:strings', MultiValuedTransform);
+    this.register('transform:boolean', DS.BooleanTransform);
+    this.register('transform:number', DS.NumberTransform);
 
     this.createRecord = function(type, options) {
       return Ember.run(function() {
@@ -82,7 +81,7 @@ test('serialize: no changes throws NotDirtyError', function(assert) {
     assert.ok(false, 'Expected NotDirtyError to be thrown');
   } catch (err) {
     assert.ok(err instanceof NotDirtyError);
-    assert.equal(err.message, 'Cannot use atomic update because record of type `atomic` with id `atom-1` has no pending changes.', err.message);
+    assert.equal(err.message, "Cannot use atomic update because record of type 'atomic' with id 'atom-1' has no pending changes.", err.message);
   }
 });
 

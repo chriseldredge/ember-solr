@@ -8,16 +8,15 @@ import DS from 'ember-data';
 
 import SolrDynamicSerializer from 'dummy/serializers/dynamic';
 
-const get = Ember.get,
-      set = Ember.set;
+const set = Ember.set;
 
 moduleFor('serializer:dynamic', 'SolrDynamicSerializer', {
   needs: ['model:dummy'],
   beforeEach: function() {
     var container = this.container;
-    container.register('store:main', DS.Store);
-    container.register('transform:string', DS.StringTransform);
-    container.register('transform:number', DS.NumberTransform);
+    this.register('store:main', DS.Store);
+    this.register('transform:string', DS.StringTransform);
+    this.register('transform:number', DS.NumberTransform);
 
     this.createDummy = function(options) {
       return Ember.run(function() {
@@ -32,13 +31,13 @@ moduleFor('serializer:dynamic', 'SolrDynamicSerializer', {
 test('normalize string', function(assert) {
   var serializer = this.subject();
   var result = serializer.normalize(this.dummyType, { title_s: 'a title'});
-  assert.deepEqual(result, {title: 'a title'});
+  assert.deepEqual(result.data.attributes, {title: 'a title'});
 });
 
 test('normalize int', function(assert) {
   var serializer = this.subject();
   var result = serializer.normalize(this.dummyType, { flags_i: 42});
-  assert.deepEqual(result, { flags: 42 });
+  assert.deepEqual(result.data.attributes, { flags: 42 });
 });
 
 test('normalize int with prefix', function(assert) {
@@ -47,21 +46,15 @@ test('normalize int with prefix', function(assert) {
   set(serializer, 'dynamicFieldSuffixes', null);
 
   var result = serializer.normalize(this.dummyType, { int_flags: 42});
-  assert.deepEqual(result, { flags: 42 });
+  assert.deepEqual(result.data.attributes, { flags: 42 });
 });
 
 test('normalize with attr mapping', function(assert) {
   var serializer = this.subject();
-  set(serializer, 'attrs', { isWeird: 'weird_n' });
+  set(serializer, 'attrs', { title: 'a_special_title' });
 
-  var result = serializer.normalize(this.dummyType, { weird_n: true});
-  assert.deepEqual(result, { isWeird: true });
-});
-
-test('normalize string', function(assert) {
-  var serializer = this.subject();
-  var result = serializer.normalize(this.dummyType, { title_s: 'a title'});
-  assert.deepEqual(result, {title: 'a title'});
+  var result = serializer.normalize(this.dummyType, { a_special_title: 'a title'});
+  assert.deepEqual(result.data.attributes, { title: 'a title' });
 });
 
 test('serialize string', function(assert) {
