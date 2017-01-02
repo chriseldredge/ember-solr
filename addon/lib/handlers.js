@@ -121,6 +121,19 @@ const SolrRequestHandler = Ember.Object.extend({
   */
   prepare: function(/*adapter, store, type, operation, data*/) {
     throw new Error('The method `pepare` must be overridden by a subclass.');
+  },
+
+  setCommit: function(adapter, store, type, operation, data) {
+    var commitWithin = get(adapter, 'commitWithinMilliseconds');
+    var commit = get(adapter, 'commit');
+
+    if (commitWithin > 0 && (operation === 'createRecord' || operation === 'updateRecord')) {
+      data.add.commitWithin = commitWithin;
+    } else if (commit === SolrCommitType.Hard) {
+      data.commit = {};
+    } else if (commit === SolrCommitType.Soft) {
+      data.commit = {softCommit: true};
+    }
   }
 });
 
@@ -290,16 +303,7 @@ const SolrUpdateHandler = SolrRequestHandler.extend({
       }
     };
 
-    var commitWithin = get(adapter, 'commitWithinMilliseconds');
-    var commit = get(adapter, 'commit');
-
-    if (commitWithin > 0) {
-      data.add.commitWithin = commitWithin;
-    } else if (commit === SolrCommitType.Hard) {
-      data.commit = {};
-    } else if (commit === SolrCommitType.Soft) {
-      data.commit = {softCommit: true};
-    }
+    this.setCommit(adapter, store, type, operation, data);
 
     set(this, 'data', data);
   }
@@ -328,14 +332,7 @@ const SolrDeleteHandler = SolrUpdateHandler.extend({
       set(this, 'path', path);
     }
 
-    var commit = get(adapter, 'commit');
-
-    if (commit === SolrCommitType.Hard) {
-      payload.commit = {};
-    } else if (commit === SolrCommitType.Soft) {
-      payload.commit = {softCommit: true};
-    }
-
+    this.setCommit(adapter, store, type, operation, payload);
     set(this, 'data', payload);
   }
 });
