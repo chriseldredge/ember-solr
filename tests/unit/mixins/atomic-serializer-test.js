@@ -25,16 +25,13 @@ moduleFor('serializer:atomic', 'AtomicSerializerMixin', {
     this.createRecord = function(type, options) {
       return Ember.run(function() {
         options = options || {};
-        var isNew = !!options.isNew;
-        delete options.isNew;
-        var record = container.lookup('store:main').createRecord(type, options);
-        delete options.id;
-
-        // make attributes values work in changedAttributes():
-        record._preloadData(options);
-
-        set(record, 'currentState.parentState.isNew', isNew);
-        return record;
+        return container.lookup('store:main').push({
+          data: {
+            id: options.id,
+            type: 'atomic',
+            attributes: options
+          }
+        });
       });
     };
 

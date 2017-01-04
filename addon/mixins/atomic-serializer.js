@@ -75,7 +75,7 @@ export default Ember.Mixin.create({
     }
 
     var value = snapshot.attr(key);
-    var previousValue = get(snapshot.record, 'data')[key];
+    var previousValue = get(get(snapshot.record, 'data'), key);
 
     var type = attribute.type;
     if (type) {
@@ -92,7 +92,7 @@ export default Ember.Mixin.create({
 
     // this is bad and you should feel bad:
     if (typeof this._getMappedKey === 'function') {
-      payloadKey = this._getMappedKey(key);
+      payloadKey = this._getMappedKey(key, snapshot.type);
     }
 
     if (payloadKey === key && typeof this.keyForAttribute === 'function') {

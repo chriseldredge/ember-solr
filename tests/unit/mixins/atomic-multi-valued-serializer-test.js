@@ -9,8 +9,6 @@ import DS from 'ember-data';
 import MultiValuedTransform from 'ember-solr/transforms/multi-valued';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 
-const set = Ember.set;
-
 moduleFor('serializer:atomic-multi-valued', 'AtomicMultiValuedSerializerMixin', {
   needs: ['model:atomic'],
   beforeEach: function() {
@@ -24,16 +22,13 @@ moduleFor('serializer:atomic-multi-valued', 'AtomicMultiValuedSerializerMixin', 
     this.createRecord = function(type, options) {
       return Ember.run(function() {
         options = options || {};
-        var isNew = !!options.isNew;
-        delete options.isNew;
-        var record = container.lookup('store:main').createRecord(type, options);
-        delete options.id;
-
-        // make attributes values work in changedAttributes():
-        record._preloadData(options);
-
-        set(record, 'currentState.parentState.isNew', isNew);
-        return record;
+        return container.lookup('store:main').push({
+          data: {
+            id: options.id,
+            type: 'atomic',
+            attributes: options
+          }
+        });
       });
     };
 

@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 import SolrAdapter from '../adapters/solr';
 import SolrSerializer from '../serializers/solr';
+import SolrStore from '../services/store';
 import MultiValuedTransform from '../transforms/multi-valued';
 import IdentityTransform from '../transforms/identity';
 
@@ -10,6 +11,7 @@ export default {
   initialize: function (app) {
     app.register('adapter:-solr', SolrAdapter);
     app.register('serializer:-solr', SolrSerializer);
+    app.register('service:store', SolrStore);
 
     app.register('transform:float', DS.NumberTransform);
     app.register('transform:int', DS.NumberTransform);

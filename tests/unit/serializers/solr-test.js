@@ -5,6 +5,7 @@ import {
 
 import Ember from 'ember';
 import DS from 'ember-data';
+import SolrStore from 'ember-solr/services/store';
 import SolrUpdateMode from 'ember-solr/lib/update-mode';
 import NotFoundError from 'ember-solr/not-found-error';
 import TooManyResultsError from 'ember-solr/too-many-results-error';
@@ -15,7 +16,7 @@ moduleFor('serializer:solr', 'SolrSerializer', {
   needs: ['model:dummy'],
   beforeEach: function() {
     var container = this.container;
-    this.register('store:main', DS.Store);
+    this.register('store:main', SolrStore);
     this.register('transform:string', DS.StringTransform);
     this.register('transform:boolean', DS.BooleanTransform);
     this.register('transform:number', DS.NumberTransform);
@@ -34,12 +35,13 @@ moduleFor('serializer:solr', 'SolrSerializer', {
     this.store = this.container.lookup('store:main');
     this.dummyType = this.store.modelFor('dummy');
 
-    this.buildExpectedData = function(id, attributes, relationships, type) {
+    this.buildExpectedData = function(id, attributes, relationships, type, meta) {
       return {
         id: id,
         attributes: attributes || {},
         relationships: relationships || {},
-        type: type || 'dummy'
+        type: type || 'dummy',
+        meta: meta || {}
       };
     };
   }
@@ -95,8 +97,8 @@ test('normalizeResponse document versions', function(assert) {
   var result = serializer.normalizeResponse(this.store, this.dummyType, payload, null, 'query');
   var data = result.data;
 
-  assert.equal(data[0].attributes._version_, 1234, 'data[0].version');
-  assert.equal(data[1].attributes._version_, 5678, 'data[1].version');
+  assert.equal(data[0].meta.version, 1234, 'data[0].version');
+  assert.equal(data[1].meta.version, 5678, 'data[1].version');
 });
 
 test('normalizeResponse single document version', function(assert) {
@@ -111,7 +113,7 @@ test('normalizeResponse single document version', function(assert) {
   var result = serializer.normalizeResponse(this.store, this.dummyType, payload, null, 'findRecord');
   var data = result.data;
 
-  assert.equal(data.attributes._version_, 1234, 'data.versions[1]');
+  assert.equal(data.meta.version, 1234, 'data.versions[1]');
 });
 
 test('normalizeResponse findRecord doc', function(assert) {
@@ -196,7 +198,7 @@ test('serialize optimistic: update record', function(assert) {
   var record = this.createDummy({ title: 'My Dummy', flags: 37, id: 'doc-id-1234', isNew: false });
   var snapshot = record._createSnapshot();
 
-  record.data._version_ = 1563456;
+  record._internalModel._meta.version = 1563456;
   var options = { updateMode: SolrUpdateMode.OptimisticConcurrency };
 
   var result = serializer.serialize(snapshot, options);
@@ -213,7 +215,7 @@ test('serialize optimistic: update record throws on missing version', function(a
     serializer.serialize(snapshot, options);
     assert.ok(false, 'Expected error to be thrown.');
   } catch (err) {
-    assert.equal(err.message, 'Missing document version attribute "_version_" for record id 532 of type "dummy".', 'err.message');
+    assert.equal(err.message, 'Missing document version for record id 532 of type "dummy".', 'err.message');
   }
 });
 

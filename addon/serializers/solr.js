@@ -52,10 +52,8 @@ export default DS.JSONSerializer.extend({
   },
 
   normalizeResponse(store, primaryModelClass, payload) {
-    var meta = this.normalizeMeta(store, primaryModelClass, payload);
     var documentHash = this._super(...arguments);
-    //TODO: don't clobber meta
-    documentHash.meta = meta;
+    documentHash.meta = this.normalizeMeta(store, primaryModelClass, payload);
     return documentHash;
   },
 
@@ -91,23 +89,33 @@ export default DS.JSONSerializer.extend({
   normalizeDeleteRecordResponse: function(/*store, primaryModelClass, payload, id, requestType*/) {
   },
 
+  /**
+    Returns Solr metadata from `responseHeader`, if present, and adds
+    offset/total metadata from `response.start` and `response.numFound`.
+  */
   normalizeMeta: function(store, type, payload) {
     var response = payload.response || {};
     var meta = payload.responseHeader || {};
-    meta.offset = response.start;
-    meta.total = response.numFound;
+    if ('start' in response) {
+      meta.offset = response.start;
+    }
+    if ('numFound' in response) {
+      meta.total = response.numFound;
+    }
     return meta;
   },
 
   normalize(modelClass, resourceHash) {
     var versionFieldName = get(this, 'versionFieldName');
     var dataHash = this._super(...arguments);
+    var meta = {};
 
     if (versionFieldName in resourceHash) {
-      dataHash.data.attributes[versionFieldName] = resourceHash[versionFieldName];
+      meta.version = resourceHash[versionFieldName];
+    }
     }
 
-    //TODO: store score somewhere too
+    dataHash.data.meta = meta;
 
     return dataHash;
   },
@@ -154,11 +162,10 @@ export default DS.JSONSerializer.extend({
   },
 
   getRecordVersion: function(snapshot) {
-    var versionFieldName = get(this, 'versionFieldName');
-    var version = snapshot.record.data[versionFieldName];
+    var version = snapshot.record.meta.version;
 
     if (!version) {
-      throw new Error(`Missing document version attribute "${versionFieldName}" for record id ${snapshot.id} of type "${snapshot.modelName}".`);
+      throw new Error(`Missing document version for record id ${snapshot.id} of type "${snapshot.modelName}".`);
     }
 
     return version;
