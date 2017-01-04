@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 
-var assign = Ember.assign || Ember.merge;
 var set = Ember.set;
 
 export default DS.Store.extend({
@@ -25,7 +24,7 @@ export default DS.Store.extend({
           return this._internalModel._meta;
         }
       });
-    }
+    };
 
     return internalModel;
   }

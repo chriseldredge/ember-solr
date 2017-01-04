@@ -95,7 +95,7 @@ test('find by id includes filter query', function() {
   });
 });
 
-test('findMany query multiple ids', function(assert) {
+test('findMany query multiple ids', function() {
   var self = this;
   var expectedRequestData = {
     q: 'id:(101 OR 102)',
