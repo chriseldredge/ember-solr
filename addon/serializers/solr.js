@@ -113,6 +113,8 @@ export default DS.JSONSerializer.extend({
     if (versionFieldName in resourceHash) {
       meta.version = resourceHash[versionFieldName];
     }
+    if ('score' in resourceHash) {
+      meta.score = resourceHash['score'];
     }
 
     dataHash.data.meta = meta;

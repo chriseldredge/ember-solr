@@ -160,7 +160,7 @@ const SolrSearchHandler = SolrRequestHandler.extend({
   prepare: function(adapter, store, type, operation, data) {
     var serializer = store.serializerFor(type.modelName);
     var key = serializer.primaryKey;
-    var data = data || {};
+    data = data || {};
 
     if (Array.isArray(data)) {
       data = data.join(' OR ');
@@ -223,6 +223,10 @@ const SolrSearchHandler = SolrRequestHandler.extend({
     var solrQuery = {
       wt: 'json'
     };
+
+    if (operation === 'query') {
+      solrQuery.fl = '*,score';
+    }
 
     if (query.limit) {
       solrQuery.rows = query.limit;

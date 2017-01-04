@@ -117,6 +117,7 @@ test('query includes start and rows', function() {
   var expectedRequestData = {
     q: '*:*',
     wt: 'json',
+    fl: '*,score',
     rows: 12,
     start: 24
   };
