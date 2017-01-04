@@ -86,7 +86,8 @@ export default DS.JSONSerializer.extend({
     return this._super(store, primaryModelClass, payload, id, requestType);
   },
 
-  normalizeDeleteRecordResponse: function(/*store, primaryModelClass, payload, id, requestType*/) {
+  normalizeSaveResponse: function(/*store, primaryModelClass, payload, id, requestType*/) {
+    return {};
   },
 
   /**

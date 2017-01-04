@@ -183,6 +183,21 @@ test('normalizeResponse findRecord response.docs not single', function(assert) {
   }
 });
 
+test('normalizeResponse deleteRecord meta', function(assert) {
+  var serializer = this.subject();
+  var payload = {
+    responseHeader: {
+      QTime: 2,
+      status: 0
+    }
+  };
+
+  var result = serializer.normalizeResponse(this.store, this.dummyType, payload, null, 'deleteRecord');
+  var meta = result.meta;
+
+  assert.deepEqual(meta, {QTime: 2, status:0}, 'meta');
+});
+
 test('serialize optimistic: new record', function(assert) {
   var serializer = this.subject();
   var snapshot = this.createDummy({ title: 'My Dummy', flags: 37, isNew: true })._createSnapshot();
